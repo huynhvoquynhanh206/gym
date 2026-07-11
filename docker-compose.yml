@@ -1,0 +1,15 @@
+services:
+  kho-mon-gym:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      PORT: 8787
+      DB_FILE: /data/kho-mon-gym.sqlite
+      APP_TIME_ZONE: Asia/Ho_Chi_Minh
+    volumes:
+      - kho_mon_data:/data
+    restart: unless-stopped
+
+volumes:
+  kho_mon_data:
