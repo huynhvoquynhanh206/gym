@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { useEffect, useState, type FormEvent } from "react";
-import { api, ApiError, getToken, setToken, type Account, type CommunityPost, type KitchenOrder, type MenuItem } from "../lib/api";
-=======
 import { useEffect, useState } from "react";
->>>>>>> 99fc191 (Initial commit)
 import {
   Activity,
   Dumbbell,
@@ -28,26 +23,14 @@ import {
   Share2,
   ArrowRight,
   Bike,
-<<<<<<< HEAD
-  RotateCcw,
-  Mail,
-  LockKeyhole,
-  LogOut,
-  LoaderCircle,
-  Send,
-} from "lucide-react";
-=======
   X,
 } from "lucide-react";
 import coreLogo from "../assets/core-fitness-logo.png";
 import collabLogo from "../assets/core-bts-collab.png";
->>>>>>> 99fc191 (Initial commit)
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
 
-<<<<<<< HEAD
-=======
 type Exercise = {
   name: string;
   sets: string;
@@ -58,7 +41,6 @@ type Exercise = {
   cue: string;
 };
 
->>>>>>> 99fc191 (Initial commit)
 interface UserData {
   name: string;
   height: string;
@@ -71,15 +53,6 @@ interface UserData {
 }
 
 const defaultUser: UserData = {
-<<<<<<< HEAD
-  name: "",
-  height: "",
-  weight: "",
-  age: "",
-  gender: "male",
-  goal: "lose_weight",
-  targetWeight: "",
-=======
   name: "Alex Turner",
   height: "172",
   weight: "75",
@@ -87,7 +60,6 @@ const defaultUser: UserData = {
   gender: "male",
   goal: "lose_weight",
   targetWeight: "68",
->>>>>>> 99fc191 (Initial commit)
   workoutsPerWeek: 3,
 };
 
@@ -99,17 +71,10 @@ function calcBMI(weight: string, height: string): string | null {
 }
 
 function getBMIInfo(bmi: number) {
-<<<<<<< HEAD
-  if (bmi < 18.5) return { label: "Underweight", color: "#60a5fa", bg: "#1e3a5f" };
-  if (bmi < 25) return { label: "Normal", color: "#c8f135", bg: "#1a2e0a" };
-  if (bmi < 30) return { label: "Overweight", color: "#fbbf24", bg: "#3d2a00" };
-  return { label: "Obese", color: "#ff4757", bg: "#3d0a0e" };
-=======
   if (bmi < 18.5) return { label: "Underweight", color: "#3b82f6", bg: "#0f2857" };
   if (bmi < 25) return { label: "Normal", color: "#2563eb", bg: "#0d1f3c" };
   if (bmi < 30) return { label: "Overweight", color: "#3b82f6", bg: "#10254d" };
   return { label: "Obese", color: "#2563eb", bg: "#0b1f45" };
->>>>>>> 99fc191 (Initial commit)
 }
 
 const goalLabels: Record<Goal, string> = {
@@ -119,102 +84,6 @@ const goalLabels: Record<Goal, string> = {
   endurance: "Improve Endurance",
 };
 
-<<<<<<< HEAD
-const STORAGE_KEYS = {
-  tab: "kho-mon-gym:active-tab",
-  splash: "kho-mon-gym:splash-seen",
-} as const;
-
-const validTabs: Tab[] = ["home", "workout", "nutrition", "social", "checkin"];
-
-function readStoredTab(): Tab {
-  try {
-    const tab = localStorage.getItem(STORAGE_KEYS.tab) as Tab | null;
-    return tab && validTabs.includes(tab) ? tab : "home";
-  } catch {
-    return "home";
-  }
-}
-
-function hasSeenSplash(): boolean {
-  try {
-    return sessionStorage.getItem(STORAGE_KEYS.splash) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function formatToday(): string {
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(new Date());
-}
-
-function toLocalDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-type BrandLogoProps = {
-  size?: "sm" | "md" | "lg";
-};
-
-function BrandLogo({
-  size = "md",
-}: BrandLogoProps) {
-  const sizeClasses = {
-    sm: {
-      wrapper: "gap-2",
-      brand: "text-[15px] leading-none",
-      gym: "text-[13px] h-6 px-2",
-    },
-    md: {
-      wrapper: "gap-2.5",
-      brand: "text-xl leading-none",
-      gym: "text-base h-7 px-2.5",
-    },
-    lg: {
-      wrapper: "gap-3",
-      brand: "text-4xl leading-none",
-      gym: "text-3xl h-11 px-4",
-    },
-  };
-
-  const styles = sizeClasses[size];
-
-  return (
-    <div
-      className={`inline-flex items-center ${styles.wrapper}`}
-      aria-label="Khơ Mon Gym"
-    >
-      <span
-        className={`
-          font-barlow italic font-black
-          tracking-[-0.06em]
-          text-[#243878]
-          ${styles.brand}
-        `}
-      >
-        KHƠ MON
-      </span>
-
-      <span
-        className={`
-          inline-flex items-center justify-center
-          font-barlow italic font-black
-          tracking-[-0.04em] leading-none
-          text-white bg-[#ed1c24] rounded-md
-          ${styles.gym}
-        `}
-      >
-        GYM
-      </span>
-    </div>
-=======
 type BrandLogoProps = {
   variant?: "light" | "dark";
   size?: "sm" | "md" | "lg";
@@ -234,33 +103,10 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
       className={`${sizes[size]} h-auto object-contain`}
       style={{ filter: variant === "light" ? "brightness(0)" : "none" }}
     />
->>>>>>> 99fc191 (Initial commit)
   );
 }
 
 function SplashScreen({ onComplete }: { onComplete: () => void }) {
-<<<<<<< HEAD
-  const [fadeToBlack, setFadeToBlack] = useState(false);
-  const [hideLogo, setHideLogo] = useState(false);
-
-  useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setFadeToBlack(true);
-    }, 1400);
-
-    const timer2 = setTimeout(() => {
-      setHideLogo(true);
-    }, 1800);
-
-    const timer3 = setTimeout(() => {
-      onComplete();
-    }, 2500);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-=======
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
@@ -269,140 +115,10 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
     return () => {
       window.clearTimeout(exitTimer);
       window.clearTimeout(completeTimer);
->>>>>>> 99fc191 (Initial commit)
     };
   }, [onComplete]);
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen relative overflow-hidden bg-white">
-      {/* Logo ở nền trắng */}
-      <div
-        className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-          hideLogo ? "opacity-0 scale-95" : "opacity-100 scale-100"
-        }`}
-      >
-        <BrandLogo size="lg" />
-      </div>
-
-      {/* Lớp đen fade lên */}
-      <div
-        className={`absolute inset-0 bg-black transition-opacity duration-700 ${
-          fadeToBlack ? "opacity-100" : "opacity-0"
-        }`}
-      />
-    </div>
-  );
-}
-
-function AuthScreen({
-  onAuthenticated,
-}: {
-  onAuthenticated: (account: Account, profile: UserData | null) => void;
-}) {
-  const [mode, setMode] = useState<"login" | "register">("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const submit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (submitting) return;
-    setErrorMessage("");
-    setSubmitting(true);
-
-    try {
-      const result = mode === "login"
-        ? await api.login(email, password)
-        : await api.register(email, password);
-      setToken(result.token);
-      onAuthenticated(result.user, result.profile as UserData | null);
-    } catch (error) {
-      setErrorMessage(error instanceof ApiError ? error.message : "Unable to connect to the server.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-5 py-10">
-      <div className="w-full max-w-md">
-        <div className="mb-8 flex justify-center">
-          <BrandLogo size="lg" />
-        </div>
-
-        <div className="rounded-3xl border border-border bg-card p-6 shadow-2xl shadow-black/20 sm:p-8">
-          <h1 className="font-barlow text-4xl font-black text-foreground">
-            {mode === "login" ? "Welcome back" : "Create account"}
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "login"
-              ? "Sign in to sync your profile, check-ins and meal orders."
-              : "Your fitness data will be stored securely in the gym database."}
-          </p>
-
-          <form onSubmit={submit} className="mt-7 space-y-4">
-            <label className="block">
-              <span className="mb-2 block text-xs uppercase tracking-wider text-muted-foreground">Email</span>
-              <div className="relative">
-                <Mail size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="w-full rounded-xl border border-border bg-background py-3.5 pl-11 pr-4 text-foreground outline-none transition-colors focus:border-primary"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-xs uppercase tracking-wider text-muted-foreground">Password</span>
-              <div className="relative">
-                <LockKeyhole size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="password"
-                  autoComplete={mode === "login" ? "current-password" : "new-password"}
-                  minLength={8}
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="w-full rounded-xl border border-border bg-background py-3.5 pl-11 pr-4 text-foreground outline-none transition-colors focus:border-primary"
-                  placeholder="At least 8 characters"
-                />
-              </div>
-            </label>
-
-            {errorMessage && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-                {errorMessage}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 font-bold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-            >
-              {submitting && <LoaderCircle size={17} className="animate-spin" />}
-              {mode === "login" ? "Sign in" : "Create account"}
-            </button>
-          </form>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMode((current) => current === "login" ? "register" : "login");
-              setErrorMessage("");
-            }}
-            className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground"
-          >
-            {mode === "login" ? "No account yet? Create one" : "Already have an account? Sign in"}
-          </button>
-=======
     <div
       className={`min-h-screen bg-black text-white flex items-center justify-center overflow-hidden transition-opacity duration-500 ${
         leaving ? "opacity-0" : "opacity-100"
@@ -434,16 +150,11 @@ function AuthScreen({
 
         <div className="w-28 h-0.5 bg-white/10 rounded-full overflow-hidden mx-auto mt-10">
           <div className="h-full bg-primary splash-progress" />
->>>>>>> 99fc191 (Initial commit)
         </div>
       </div>
     </div>
   );
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 99fc191 (Initial commit)
 // ─── ONBOARDING ──────────────────────────────────────────────────────────────
 
 function StepPersonal({
@@ -455,23 +166,11 @@ function StepPersonal({
   onChange: (d: UserData) => void;
   onNext: () => void;
 }) {
-<<<<<<< HEAD
-  const age = Number(data.age);
-  const canContinue = data.name.trim().length >= 2 && age >= 13 && age <= 100;
-
-=======
->>>>>>> 99fc191 (Initial commit)
   return (
     <div className="w-full max-w-sm px-6">
       <div className="mb-10">
         <div className="mb-8">
-<<<<<<< HEAD
-  <BrandLogo
-    size="md"
-  />
-=======
   <BrandLogo variant="dark" size="md" />
->>>>>>> 99fc191 (Initial commit)
 
   <div className="mt-4 h-[2px] w-12 rounded-full bg-primary" />
 </div>
@@ -497,12 +196,6 @@ function StepPersonal({
           <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Age</label>
           <input
             type="number"
-<<<<<<< HEAD
-            min="13"
-            max="100"
-            inputMode="numeric"
-=======
->>>>>>> 99fc191 (Initial commit)
             className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
             placeholder="25"
             value={data.age}
@@ -531,11 +224,7 @@ function StepPersonal({
 
       <button
         onClick={onNext}
-<<<<<<< HEAD
-        disabled={!canContinue}
-=======
         disabled={!data.name || !data.age}
->>>>>>> 99fc191 (Initial commit)
         className="w-full mt-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-30 hover:opacity-90 transition-opacity"
       >
         Next <ArrowRight size={17} />
@@ -557,12 +246,6 @@ function StepMetrics({
 }) {
   const bmi = calcBMI(data.weight, data.height);
   const info = bmi ? getBMIInfo(parseFloat(bmi)) : null;
-<<<<<<< HEAD
-  const height = Number(data.height);
-  const weight = Number(data.weight);
-  const canContinue = height >= 100 && height <= 250 && weight >= 30 && weight <= 300;
-=======
->>>>>>> 99fc191 (Initial commit)
 
   return (
     <div className="w-full max-w-sm px-6">
@@ -579,12 +262,6 @@ function StepMetrics({
           <div className="relative">
             <input
               type="number"
-<<<<<<< HEAD
-              min="100"
-              max="250"
-              inputMode="decimal"
-=======
->>>>>>> 99fc191 (Initial commit)
               className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
               placeholder="170"
               value={data.height}
@@ -598,12 +275,6 @@ function StepMetrics({
           <div className="relative">
             <input
               type="number"
-<<<<<<< HEAD
-              min="30"
-              max="300"
-              inputMode="decimal"
-=======
->>>>>>> 99fc191 (Initial commit)
               className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
               placeholder="65"
               value={data.weight}
@@ -634,11 +305,7 @@ function StepMetrics({
       </div>
       <button
         onClick={onNext}
-<<<<<<< HEAD
-        disabled={!canContinue}
-=======
         disabled={!data.height || !data.weight}
->>>>>>> 99fc191 (Initial commit)
         className="w-full mt-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-30 hover:opacity-90 transition-opacity"
       >
         See Results <ArrowRight size={17} />
@@ -670,17 +337,10 @@ function StepBMIResult({
   };
 
   const ranges = [
-<<<<<<< HEAD
-    { label: "Underweight", range: "< 18.5", color: "#60a5fa" },
-    { label: "Normal", range: "18.5–24.9", color: "#c8f135" },
-    { label: "Overweight", range: "25–29.9", color: "#fbbf24" },
-    { label: "Obese", range: "≥ 30", color: "#ff4757" },
-=======
     { label: "Underweight", range: "< 18.5", color: "#3b82f6" },
     { label: "Normal", range: "18.5–24.9", color: "#2563eb" },
     { label: "Overweight", range: "25–29.9", color: "#3b82f6" },
     { label: "Obese", range: "≥ 30", color: "#2563eb" },
->>>>>>> 99fc191 (Initial commit)
   ];
 
   return (
@@ -707,11 +367,7 @@ function StepBMIResult({
         <div className="relative mb-3">
           <div
             className="h-3 rounded-full overflow-hidden"
-<<<<<<< HEAD
-            style={{ background: "linear-gradient(to right, #60a5fa 0%, #c8f135 30%, #fbbf24 58%, #ff4757 100%)" }}
-=======
             style={{ background: "linear-gradient(to right, #3b82f6 0%, #2563eb 30%, #3b82f6 58%, #2563eb 100%)" }}
->>>>>>> 99fc191 (Initial commit)
           />
           <div
             className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white shadow-lg border-2 transition-all"
@@ -730,11 +386,7 @@ function StepBMIResult({
             >
               <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
               <div>
-<<<<<<< HEAD
-                <p className="text-xs font-medium" style={{ color: info.label === label ? color : "#7a8fa6" }}>{label}</p>
-=======
                 <p className="text-xs font-medium" style={{ color: info.label === label ? color : "#94a3b8" }}>{label}</p>
->>>>>>> 99fc191 (Initial commit)
                 <p className="text-xs text-muted-foreground">{range}</p>
               </div>
             </div>
@@ -781,12 +433,6 @@ function StepGoal({
   onBack: () => void;
   onComplete: () => void;
 }) {
-<<<<<<< HEAD
-  const targetWeight = Number(data.targetWeight);
-  const canComplete = targetWeight >= 30 && targetWeight <= 300;
-
-=======
->>>>>>> 99fc191 (Initial commit)
   const goals: { id: Goal; desc: string; Icon: typeof TrendingUp }[] = [
     { id: "lose_weight", desc: "Burn fat and improve body composition", Icon: TrendingUp },
     { id: "gain_muscle", desc: "Build lean muscle mass", Icon: Dumbbell },
@@ -833,12 +479,6 @@ function StepGoal({
         <div className="relative">
           <input
             type="number"
-<<<<<<< HEAD
-            min="30"
-            max="300"
-            inputMode="decimal"
-=======
->>>>>>> 99fc191 (Initial commit)
             className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
             placeholder="60"
             value={data.targetWeight}
@@ -869,12 +509,7 @@ function StepGoal({
 
       <button
         onClick={onComplete}
-<<<<<<< HEAD
-        disabled={!canComplete}
-        className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-30 hover:opacity-90 transition-opacity"
-=======
         className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
->>>>>>> 99fc191 (Initial commit)
       >
         Let's Go! <Zap size={17} />
       </button>
@@ -895,11 +530,7 @@ function OnboardingFlow({ onComplete }: { onComplete: (d: UserData) => void }) {
             className="h-1 rounded-full transition-all duration-300"
             style={{
               width: i === step ? 28 : 12,
-<<<<<<< HEAD
-              backgroundColor: i <= step ? "#c8f135" : "rgba(255,255,255,0.12)",
-=======
               backgroundColor: i <= step ? "#2563eb" : "rgba(255,255,255,0.12)",
->>>>>>> 99fc191 (Initial commit)
             }}
           />
         ))}
@@ -916,11 +547,7 @@ function OnboardingFlow({ onComplete }: { onComplete: (d: UserData) => void }) {
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
-<<<<<<< HEAD
-function HomeTab({ user, onReset, onLogout }: { user: UserData; onReset: () => void; onLogout: () => void }) {
-=======
 function HomeTab({ user }: { user: UserData }) {
->>>>>>> 99fc191 (Initial commit)
   const bmi = calcBMI(user.weight, user.height);
   const bmiNum = bmi ? parseFloat(bmi) : 0;
   const info = bmi ? getBMIInfo(bmiNum) : null;
@@ -944,46 +571,6 @@ function HomeTab({ user }: { user: UserData }) {
   
   const gymBranches = [
   {
-<<<<<<< HEAD
-    name: "Khơ Mon Gym Trần Quang Khải",
-    shortName: "District 1",
-    address:
-      "214 Trần Quang Khải Street, Tân Định Ward, District 1, Ho Chi Minh City",
-    currentLevel: 82,
-    traffic: [20, 70, 85, 52, 30, 42, 60, 76, 82, 73, 48, 25],
-  },
-  {
-    name: "Khơ Mon Gym Âu Cơ",
-    shortName: "Tan Binh District",
-    address:
-      "58 Âu Cơ Street, Tân Hòa Ward, Tân Bình District, Ho Chi Minh City",
-    currentLevel: 46,
-    traffic: [15, 38, 54, 40, 24, 30, 44, 52, 46, 41, 30, 18],
-  },
-  {
-    name: "Khơ Mon Gym Centre Mall Phạm Hùng",
-    shortName: "District 8",
-    address:
-      "Centre Mall Phạm Hùng, C6/27 Phạm Hùng Street, Bình Đông Ward, District 8, Ho Chi Minh City",
-    currentLevel: 24,
-    traffic: [12, 25, 34, 28, 18, 22, 31, 30, 24, 27, 20, 14],
-  },
-  {
-    name: "Khơ Mon Gym Gò Dưa",
-    shortName: "Thu Duc City",
-    address:
-      "05 Gò Dưa Street, Tam Bình Ward, Thu Duc City, Ho Chi Minh City",
-    currentLevel: 36,
-    traffic: [18, 40, 48, 36, 22, 26, 38, 43, 36, 34, 25, 16],
-  },
-  {
-    name: "Khơ Mon Gym Trường Vĩnh Ký",
-    shortName: "Tan Phu District",
-    address:
-      "80 Trường Vĩnh Ký Street, Tân Thành Ward, Tân Phú District, Ho Chi Minh City",
-    currentLevel: 59,
-    traffic: [16, 45, 61, 43, 27, 35, 49, 64, 59, 54, 37, 21],
-=======
     name: "Core Fitness & Yoga Lê Quang Định",
     shortName: "Branch 1",
     address:
@@ -1009,20 +596,13 @@ function HomeTab({ user }: { user: UserData }) {
     note: "Fitness branch",
     currentLevel: 57,
     traffic: [17, 35, 48, 41, 26, 32, 46, 54, 57, 51, 37, 24],
->>>>>>> 99fc191 (Initial commit)
   },
 ];
   
   const getCrowdColor = (level: number) => {
-<<<<<<< HEAD
-    if (level >= 75) return "#ff4757";
-    if (level >= 45) return "#fbbf24";
-    return "#c8f135";
-=======
     if (level >= 75) return "#2563eb";
     if (level >= 45) return "#3b82f6";
     return "#2563eb";
->>>>>>> 99fc191 (Initial commit)
   };
   
   const getCrowdLabel = (level: number) => {
@@ -1072,52 +652,6 @@ function HomeTab({ user }: { user: UserData }) {
     : 32;
 
   return (
-<<<<<<< HEAD
-    <div className="p-4 space-y-4 pb-4 sm:p-6">
-      <div className="flex items-center justify-between gap-4 pt-3">
-        <div className="min-w-0">
-          <div className="mb-2 md:hidden">
-            <BrandLogo size="sm" />
-          </div>
-
-          <p className="text-muted-foreground text-sm">Hello 👋</p>
-
-          <h2 className="font-barlow text-2xl font-bold text-foreground truncate">
-            {user.name}
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => window.alert("You have no new notifications.")}
-            className="relative w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center hover:border-primary/40 transition-colors"
-            aria-label="Notifications"
-          >
-            <Bell size={17} className="text-muted-foreground" />
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent rounded-full border-2 border-background" />
-          </button>
-
-          <button
-            type="button"
-            onClick={onReset}
-            className="md:hidden w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center hover:border-primary/40 transition-colors"
-            aria-label="Reset profile"
-            title="Reset profile"
-          >
-            <RotateCcw size={16} className="text-muted-foreground" />
-          </button>
-
-          <button
-            type="button"
-            onClick={onLogout}
-            className="md:hidden w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center hover:border-primary/40 transition-colors"
-            aria-label="Sign out"
-            title="Sign out"
-          >
-            <LogOut size={16} className="text-muted-foreground" />
-          </button>
-=======
     <div className="p-4 space-y-4 pb-4">
       <div className="flex items-center justify-between pt-3">
         <div>
@@ -1138,7 +672,6 @@ function HomeTab({ user }: { user: UserData }) {
             <Bell size={17} className="text-muted-foreground" />
           </div>
           <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent rounded-full border-2 border-background" />
->>>>>>> 99fc191 (Initial commit)
         </div>
       </div>
 
@@ -1183,15 +716,9 @@ function HomeTab({ user }: { user: UserData }) {
 
       <div className="grid grid-cols-3 gap-2.5">
         {[
-<<<<<<< HEAD
-          { icon: Flame, label: "Calories Today", value: "1,840", sub: "/ 2,200 kcal", color: "#ff4757" },
-          { icon: Clock, label: "Minutes Trained", value: "45", sub: "today", color: "#c8f135" },
-          { icon: Activity, label: "Heart Rate", value: "72", sub: "avg bpm", color: "#60a5fa" },
-=======
           { icon: Flame, label: "Calories Today", value: "1,840", sub: "/ 2,200 kcal", color: "#2563eb" },
           { icon: Clock, label: "Minutes Trained", value: "45", sub: "today", color: "#2563eb" },
           { icon: Activity, label: "Heart Rate", value: "72", sub: "avg bpm", color: "#3b82f6" },
->>>>>>> 99fc191 (Initial commit)
         ].map(({ icon: Icon, label, value, sub, color }) => (
           <div key={label} className="bg-card rounded-xl p-3 border border-border">
             <Icon size={15} style={{ color }} className="mb-2" />
@@ -1209,17 +736,10 @@ function HomeTab({ user }: { user: UserData }) {
     </h3>
 
     <div className="flex items-center gap-1.5">
-<<<<<<< HEAD
-      <div className="w-2 h-2 rounded-full bg-accent" />
-
-      <span className="text-xs text-accent font-medium">
-        Estimated
-=======
       <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
 
       <span className="text-xs text-accent font-medium">
         Live
->>>>>>> 99fc191 (Initial commit)
       </span>
     </div>
   </div>
@@ -1314,15 +834,9 @@ function HomeTab({ user }: { user: UserData }) {
   {/* Chú thích màu */}
   <div className="flex gap-4 mt-3 mb-4 flex-wrap">
     {[
-<<<<<<< HEAD
-      ["#c8f135", "Quiet"],
-      ["#fbbf24", "Moderate"],
-      ["#ff4757", "Very Busy"],
-=======
       ["#2563eb", "Quiet"],
       ["#3b82f6", "Moderate"],
       ["#2563eb", "Very Busy"],
->>>>>>> 99fc191 (Initial commit)
     ].map(([color, label]) => (
       <div
         key={label}
@@ -1414,11 +928,6 @@ function HomeTab({ user }: { user: UserData }) {
                 )}
               </div>
 
-<<<<<<< HEAD
-              <p className="text-xs text-primary mt-0.5">
-                {branch.shortName}
-              </p>
-=======
               <div className="mt-0.5">
   <p className="text-xs text-primary">
     {branch.shortName}
@@ -1430,7 +939,6 @@ function HomeTab({ user }: { user: UserData }) {
     </p>
   )}
 </div>
->>>>>>> 99fc191 (Initial commit)
 
               <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
                 {branch.address}
@@ -1491,10 +999,6 @@ function HomeTab({ user }: { user: UserData }) {
 function WorkoutTab({ user }: { user: UserData }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const [trainingMode, setTrainingMode] = useState<"gym" | "home">("gym");
-<<<<<<< HEAD
-
-  const roadmapByGoal: Record<Goal, { title: string; note: string; days: { day: string; focus: string | null }[] }> = {
-=======
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null);
 
   useEffect(() => {
@@ -1510,7 +1014,6 @@ function WorkoutTab({ user }: { user: UserData }) {
     Goal,
     { title: string; note: string; days: { day: string; focus: string | null }[] }
   > = {
->>>>>>> 99fc191 (Initial commit)
     lose_weight: {
       title: "Fat-loss foundation",
       note: "Alternates strength and conditioning to burn calories while preserving muscle.",
@@ -1565,56 +1068,6 @@ function WorkoutTab({ user }: { user: UserData }) {
     },
   };
 
-<<<<<<< HEAD
-  type Exercise = {
-    name: string;
-    sets: string;
-    equipment: string;
-    kcal: number;
-    level: "Beginner" | "Intermediate" | "Advanced";
-    rest: string;
-    cue: string;
-  };
-
-  const gymCatalog: Record<string, Exercise[]> = {
-    "Upper Body": [
-      { name: "Chest Press", sets: "4 × 10", equipment: "Chest Press Machine", kcal: 95, level: "Beginner", rest: "75 sec", cue: "Keep shoulder blades back" },
-      { name: "Lat Pulldown", sets: "4 × 10", equipment: "Lat Pulldown Machine", kcal: 90, level: "Beginner", rest: "75 sec", cue: "Pull elbows toward ribs" },
-      { name: "Seated Row", sets: "3 × 12", equipment: "Cable Row Machine", kcal: 80, level: "Intermediate", rest: "60 sec", cue: "Do not lean backward" },
-      { name: "Shoulder Press", sets: "3 × 10", equipment: "Shoulder Press Machine", kcal: 75, level: "Intermediate", rest: "60 sec", cue: "Stop before elbows lock" },
-      { name: "Tricep Pushdown", sets: "3 × 12", equipment: "Cable Machine", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Keep elbows beside torso" },
-    ],
-    "Lower Body": [
-      { name: "Leg Press", sets: "4 × 12", equipment: "45° Leg Press", kcal: 130, level: "Intermediate", rest: "90 sec", cue: "Knees track over toes" },
-      { name: "Romanian Deadlift", sets: "3 × 10", equipment: "Barbell", kcal: 115, level: "Advanced", rest: "90 sec", cue: "Hinge hips, neutral spine" },
-      { name: "Leg Curl", sets: "3 × 12", equipment: "Leg Curl Machine", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Control the return" },
-      { name: "Leg Extension", sets: "3 × 12", equipment: "Leg Extension Machine", kcal: 65, level: "Beginner", rest: "60 sec", cue: "Pause at the top" },
-      { name: "Calf Raise", sets: "4 × 15", equipment: "Standing Calf Machine", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Use full ankle range" },
-    ],
-    "Full Body": [
-      { name: "Treadmill Warm-up", sets: "8 min", equipment: "Treadmill", kcal: 70, level: "Beginner", rest: "—", cue: "Easy conversational pace" },
-      { name: "Goblet Squat", sets: "4 × 12", equipment: "Dumbbell", kcal: 120, level: "Beginner", rest: "75 sec", cue: "Chest tall, knees outward" },
-      { name: "Chest Press", sets: "3 × 12", equipment: "Chest Press Machine", kcal: 85, level: "Beginner", rest: "60 sec", cue: "Wrists stay neutral" },
-      { name: "Seated Row", sets: "3 × 12", equipment: "Cable Row Machine", kcal: 80, level: "Intermediate", rest: "60 sec", cue: "Squeeze shoulder blades" },
-      { name: "Bike Finisher", sets: "10 min", equipment: "Stationary Bike", kcal: 115, level: "Intermediate", rest: "—", cue: "Alternate 30 sec hard/easy" },
-    ],
-    "Cardio & Core": [
-      { name: "Incline Walk", sets: "15 min", equipment: "Treadmill", kcal: 145, level: "Beginner", rest: "—", cue: "Avoid holding the rails" },
-      { name: "Row Intervals", sets: "8 × 45 sec", equipment: "Rowing Machine", kcal: 135, level: "Intermediate", rest: "45 sec", cue: "Drive with legs first" },
-      { name: "Cable Crunch", sets: "3 × 15", equipment: "Cable Machine", kcal: 55, level: "Intermediate", rest: "45 sec", cue: "Curl ribs toward hips" },
-      { name: "Plank", sets: "3 × 45 sec", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "45 sec", cue: "Keep hips level" },
-    ],
-    "Mobility": [
-      { name: "Bike Recovery", sets: "10 min", equipment: "Stationary Bike", kcal: 70, level: "Beginner", rest: "—", cue: "Keep resistance light" },
-      { name: "Hip Mobility Flow", sets: "2 rounds", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "30 sec", cue: "Move slowly through range" },
-      { name: "Shoulder Mobility", sets: "2 rounds", equipment: "Resistance Band", kcal: 25, level: "Beginner", rest: "30 sec", cue: "No pinching sensation" },
-    ],
-    "Core & Mobility": [
-      { name: "Cable Woodchop", sets: "3 × 12/side", equipment: "Cable Machine", kcal: 60, level: "Intermediate", rest: "45 sec", cue: "Rotate through torso" },
-      { name: "Back Extension", sets: "3 × 12", equipment: "Back Extension Bench", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Stop at neutral spine" },
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep lower back down" },
-      { name: "Mobility Flow", sets: "8 min", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "—", cue: "Use controlled breathing" },
-=======
   const gymCatalog: Record<string, Exercise[]> = {
     "Upper Body": [
       { name: "Chest Press", sets: "4 × 10", equipment: "Chest Press Machine", kcal: 95, level: "Beginner", rest: "75 sec", cue: "Keep shoulder blades back and press without locking the elbows." },
@@ -1653,55 +1106,11 @@ function WorkoutTab({ user }: { user: UserData }) {
       { name: "Back Extension", sets: "3 × 12", equipment: "Back Extension Bench", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Stop when the body reaches a neutral line." },
       { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep the lower back gently pressed into the mat." },
       { name: "Mobility Flow", sets: "8 min", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "—", cue: "Match controlled movement with slow breathing." },
->>>>>>> 99fc191 (Initial commit)
     ],
   };
 
   const homeCatalog: Record<string, Exercise[]> = {
     "Upper Body": [
-<<<<<<< HEAD
-      { name: "Incline Push-up", sets: "4 × 10", equipment: "Chair / Bench", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Body stays in one line" },
-      { name: "Backpack Row", sets: "4 × 12", equipment: "Loaded Backpack", kcal: 75, level: "Beginner", rest: "60 sec", cue: "Pull elbows behind body" },
-      { name: "Pike Push-up", sets: "3 × 8", equipment: "Bodyweight", kcal: 65, level: "Intermediate", rest: "60 sec", cue: "Head travels between hands" },
-      { name: "Chair Tricep Dip", sets: "3 × 10", equipment: "Stable Chair", kcal: 55, level: "Intermediate", rest: "45 sec", cue: "Keep shoulders away from ears" },
-    ],
-    "Lower Body": [
-      { name: "Bodyweight Squat", sets: "4 × 15", equipment: "Bodyweight", kcal: 100, level: "Beginner", rest: "60 sec", cue: "Knees track over toes" },
-      { name: "Reverse Lunge", sets: "3 × 10/side", equipment: "Bodyweight", kcal: 95, level: "Intermediate", rest: "60 sec", cue: "Front heel stays grounded" },
-      { name: "Single-leg Glute Bridge", sets: "3 × 12/side", equipment: "Exercise Mat", kcal: 65, level: "Intermediate", rest: "45 sec", cue: "Keep pelvis level" },
-      { name: "Calf Raise", sets: "4 × 18", equipment: "Step / Floor", kcal: 50, level: "Beginner", rest: "30 sec", cue: "Pause at the top" },
-    ],
-    "Full Body": [
-      { name: "Marching Warm-up", sets: "5 min", equipment: "No equipment", kcal: 40, level: "Beginner", rest: "—", cue: "Build pace gradually" },
-      { name: "Squat to Reach", sets: "4 × 12", equipment: "Bodyweight", kcal: 95, level: "Beginner", rest: "45 sec", cue: "Reach tall at the top" },
-      { name: "Push-up", sets: "3 × 8–12", equipment: "Bodyweight", kcal: 70, level: "Intermediate", rest: "60 sec", cue: "Lower chest between hands" },
-      { name: "Backpack Row", sets: "3 × 12", equipment: "Loaded Backpack", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Keep spine neutral" },
-      { name: "Mountain Climber", sets: "4 × 30 sec", equipment: "Exercise Mat", kcal: 90, level: "Intermediate", rest: "30 sec", cue: "Keep shoulders above wrists" },
-    ],
-    "Cardio & Core": [
-      { name: "Low-impact Jumping Jack", sets: "5 × 45 sec", equipment: "No equipment", kcal: 100, level: "Beginner", rest: "30 sec", cue: "Land softly" },
-      { name: "High Knees", sets: "6 × 30 sec", equipment: "No equipment", kcal: 115, level: "Intermediate", rest: "30 sec", cue: "Stay tall" },
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep lower back down" },
-      { name: "Plank", sets: "3 × 40 sec", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "40 sec", cue: "Squeeze glutes" },
-    ],
-    "Mobility": [
-      { name: "Cat–Cow", sets: "2 × 10", equipment: "Exercise Mat", kcal: 15, level: "Beginner", rest: "20 sec", cue: "Move one vertebra at a time" },
-      { name: "World's Greatest Stretch", sets: "2 × 6/side", equipment: "Exercise Mat", kcal: 25, level: "Beginner", rest: "20 sec", cue: "Breathe into the rotation" },
-      { name: "90/90 Hip Switch", sets: "2 × 10", equipment: "Exercise Mat", kcal: 20, level: "Beginner", rest: "20 sec", cue: "Keep movement controlled" },
-    ],
-    "Core & Mobility": [
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep lower back down" },
-      { name: "Side Plank", sets: "3 × 30 sec/side", equipment: "Exercise Mat", kcal: 35, level: "Intermediate", rest: "30 sec", cue: "Keep hips stacked" },
-      { name: "Bird Dog", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "30 sec", cue: "Do not rotate hips" },
-      { name: "Mobility Flow", sets: "8 min", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "—", cue: "Use controlled breathing" },
-    ],
-  };
-
-  const levelColors: Record<string, string> = {
-    Beginner: "text-primary bg-primary/15",
-    Intermediate: "text-yellow-400 bg-yellow-400/15",
-    Advanced: "text-accent bg-accent/15",
-=======
       { name: "Incline Push-up", sets: "4 × 10", equipment: "Chair / Bench", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Keep the body in one straight line from head to heels." },
       { name: "Backpack Row", sets: "4 × 12", equipment: "Loaded Backpack", kcal: 75, level: "Beginner", rest: "60 sec", cue: "Pull the elbows behind the body without shrugging." },
       { name: "Pike Push-up", sets: "3 × 8", equipment: "Bodyweight", kcal: 65, level: "Intermediate", rest: "60 sec", cue: "Let the head travel between the hands." },
@@ -1754,7 +1163,6 @@ function WorkoutTab({ user }: { user: UserData }) {
     if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return "/videos/plank.mp4";
     if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return "/videos/mobility.mp4";
     return "/videos/cardio.mp4";
->>>>>>> 99fc191 (Initial commit)
   };
 
   const roadmap = roadmapByGoal[user.goal];
@@ -1765,152 +1173,6 @@ function WorkoutTab({ user }: { user: UserData }) {
   const estimatedCalories = exercises.reduce((sum, exercise) => sum + exercise.kcal, 0);
 
   return (
-<<<<<<< HEAD
-    <div className="p-4 space-y-4 pb-4 relative">
-      <div className="pt-3">
-        <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
-        <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
-      </div>
-
-      <div className="bg-card rounded-2xl p-4 border border-border">
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div>
-            <h3 className="font-barlow text-xl font-bold text-foreground">{roadmap.title}</h3>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{roadmap.note}</p>
-          </div>
-          <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
-            <Zap size={17} className="text-primary" />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-2 bg-muted p-1 rounded-xl">
-          {(["gym", "home"] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setTrainingMode(mode)}
-              className={`py-2.5 rounded-lg text-xs font-semibold transition-all ${
-                trainingMode === mode ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              {mode === "gym" ? "Gym machines" : "Train at home"}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1">
-        {roadmap.days.map(({ day, focus }, index) => (
-          <button
-            key={day}
-            onClick={() => setSelectedDay(index)}
-            className={`flex-shrink-0 flex flex-col items-center gap-1.5 w-10 py-2.5 rounded-xl border transition-all ${
-              selectedDay === index
-                ? "bg-primary border-primary"
-                : focus === null
-                ? "bg-card/50 border-border opacity-50"
-                : "bg-card border-border hover:border-primary/40"
-            }`}
-          >
-            <span className={`text-xs font-bold ${selectedDay === index ? "text-primary-foreground" : "text-muted-foreground"}`}>{day}</span>
-            <div className={`w-1.5 h-1.5 rounded-full ${focus ? selectedDay === index ? "bg-primary-foreground" : "bg-primary" : "bg-transparent"}`} />
-          </button>
-        ))}
-      </div>
-
-      <div className="bg-card rounded-2xl p-4 border border-border">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <span className="font-barlow text-2xl font-bold text-foreground">{currentDay.focus ?? "Recovery Day"}</span>
-            {exercises.length > 0 && (
-              <p className="text-sm text-muted-foreground mt-1">Follow the order below · {exercises.length} exercises</p>
-            )}
-          </div>
-          {exercises.length > 0 && (
-            <div className="text-right flex-shrink-0">
-              <span className="text-xs text-muted-foreground block">Estimated</span>
-              <span className="font-barlow text-lg font-bold text-primary">~{estimatedCalories} kcal</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {exercises.length > 0 ? (
-        <div className="space-y-2.5">
-          {exercises.map((exercise, index) => (
-            <div key={exercise.name} className="bg-card rounded-xl p-4 border border-border hover:border-primary/30 transition-colors">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-foreground text-xs font-barlow font-black">{index + 1}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-3 mb-1.5">
-                    <div className="flex items-center gap-2 flex-wrap min-w-0">
-                      <span className="font-bold text-foreground text-sm">{exercise.name}</span>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-medium ${levelColors[exercise.level]}`}>{exercise.level}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
-                      <div
-                        className="w-8 h-8 rounded-lg border border-primary/30 bg-primary/10 flex items-center justify-center"
-                        aria-label={`AI camera preview for ${exercise.name}`}
-                        title="AI camera checks exercise form"
-                      >
-                        <Camera size={15} className="text-primary" />
-                      </div>
-                      <ChevronRight size={16} className="text-muted-foreground" />
-                    </div>
-                  </div>
-                  <p className="text-xs text-primary mb-2 flex items-center gap-1.5">
-                    <Dumbbell size={11} /> {exercise.equipment}
-                  </p>
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                    <span><Activity size={10} className="inline mr-1" />{exercise.sets}</span>
-                    <span><Clock size={10} className="inline mr-1" />Rest {exercise.rest}</span>
-                    <span className="col-span-2 text-foreground/80">Technique tip: {exercise.cue}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-card rounded-2xl p-10 border border-border text-center">
-          <div className="text-5xl mb-3">😴</div>
-          <p className="font-barlow text-xl font-bold text-foreground mb-1">Recovery Day</p>
-          <p className="text-sm text-muted-foreground">Walk gently, hydrate and let your body adapt.</p>
-        </div>
-      )}
-    </div>
-  );
-}
-function NutritionTab() {
-  const [section, setSection] = useState<"track" | "order">("track");
-  const [desiredMealCalories, setDesiredMealCalories] = useState(300);
-  const [kitchenOrderCalories, setKitchenOrderCalories] = useState(350);
-  const [kitchenNotes, setKitchenNotes] = useState("");
-  const [selectedMealId, setSelectedMealId] = useState<number | null>(null);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [orders, setOrders] = useState<KitchenOrder[]>([]);
-  const [loadingMenu, setLoadingMenu] = useState(true);
-  const [sendingOrder, setSendingOrder] = useState(false);
-  const [notice, setNotice] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    let active = true;
-    Promise.all([api.getMenu(), api.getOrders()])
-      .then(([menuResult, orderResult]) => {
-        if (!active) return;
-        setMenuItems(menuResult.items);
-        setOrders(orderResult.orders);
-      })
-      .catch((error) => {
-        if (active) setErrorMessage(error instanceof ApiError ? error.message : "Could not load the kitchen menu.");
-      })
-      .finally(() => {
-        if (active) setLoadingMenu(false);
-      });
-    return () => { active = false; };
-  }, []);
-=======
     <>
       <div className="p-4 space-y-4 pb-4 relative">
         <div className="pt-3 flex items-end justify-between gap-4">
@@ -2103,71 +1365,10 @@ function NutritionTab() {
   const [kitchenNotes, setKitchenNotes] = useState("");
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
   const [ordered, setOrdered] = useState(false);
->>>>>>> 99fc191 (Initial commit)
 
   const calorieGoal = 2200;
   const consumed = 1450;
   const pct = (consumed / calorieGoal) * 100;
-<<<<<<< HEAD
-  const macros = [
-    { name: "Protein", eaten: 85, goal: 120, color: "#60a5fa", unit: "g" },
-    { name: "Carbs", eaten: 165, goal: 220, color: "#c8f135", unit: "g" },
-    { name: "Fat", eaten: 45, goal: 65, color: "#fbbf24", unit: "g" },
-  ];
-  const meals = [
-    { time: "7:30", name: "Breakfast", desc: "Oatmeal + scrambled eggs + spinach", kcal: 420 },
-    { time: "12:00", name: "Lunch", desc: "Grilled chicken breast + sweet potato + salad", kcal: 580 },
-    { time: "15:00", name: "Snack", desc: "Banana + whey protein", kcal: 250 },
-    { time: "19:00", name: "Dinner", desc: "Not logged yet", kcal: 0 },
-  ];
-
-  const suggestedMeals = [...menuItems]
-    .sort((a, b) => Math.abs(a.calories - desiredMealCalories) - Math.abs(b.calories - desiredMealCalories))
-    .slice(0, 4);
-  const selectedMeal = menuItems.find((item) => item.id === selectedMealId) ?? null;
-
-  const chooseMeal = (meal: MenuItem) => {
-    setSelectedMealId(meal.id);
-    setKitchenOrderCalories(meal.calories);
-    setKitchenNotes(`Preferred meal: ${meal.name}`);
-    setNotice("");
-    setErrorMessage("");
-  };
-
-  const sendKitchenOrder = async () => {
-    if (sendingOrder || kitchenOrderCalories < 100 || kitchenOrderCalories > 1500) return;
-    setSendingOrder(true);
-    setNotice("");
-    setErrorMessage("");
-    try {
-      const result = await api.createOrder({
-        calorieTarget: kitchenOrderCalories,
-        notes: kitchenNotes,
-        menuItemId: selectedMealId,
-      });
-      setOrders((current) => [result.order, ...current]);
-      setNotice(`Order #${result.order.id} was sent to the gym kitchen.`);
-    } catch (error) {
-      setErrorMessage(error instanceof ApiError ? error.message : "The order could not be submitted.");
-    } finally {
-      setSendingOrder(false);
-    }
-  };
-
-  return (
-    <div className="p-4 space-y-4 pb-4 sm:p-6">
-      <div className="pt-3">
-        <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Nutrition</h2>
-        <p className="text-muted-foreground text-sm mt-1">{formatToday()}</p>
-      </div>
-
-      <div className="flex gap-1.5 bg-muted p-1 rounded-xl">
-        {[
-          { id: "track" as const, label: "Calorie Tracking" },
-          { id: "order" as const, label: "Order a Meal" },
-        ].map(({ id, label }) => (
-          <button key={id} onClick={() => setSection(id)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${section === id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>
-=======
 
   const macros = [
     {
@@ -2376,41 +1577,11 @@ function NutritionTab() {
                 : "text-muted-foreground"
             }`}
           >
->>>>>>> 99fc191 (Initial commit)
             {label}
           </button>
         ))}
       </div>
 
-<<<<<<< HEAD
-      {section === "track" && (
-        <>
-          <div className="bg-card rounded-2xl p-5 border border-border flex items-center gap-5">
-            <div className="relative w-24 h-24 flex-shrink-0">
-              <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
-                <circle cx="40" cy="40" r="30" fill="none" stroke="#1c2535" strokeWidth="8" />
-                <circle cx="40" cy="40" r="30" fill="none" stroke="#c8f135" strokeWidth="8" strokeDasharray={`${(2 * Math.PI * 30 * pct) / 100} ${2 * Math.PI * 30}`} strokeLinecap="round" />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-barlow text-lg font-black text-foreground leading-none">{consumed}</span>
-                <span className="text-xs text-muted-foreground">kcal</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Remaining</p>
-              <p className="font-barlow text-4xl font-black text-primary">{calorieGoal - consumed}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">kcal · goal {calorieGoal}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2.5">
-            {macros.map(({ name, eaten, goal, color, unit }) => (
-              <div key={name} className="bg-card rounded-xl p-3 border border-border">
-                <p className="text-xs text-muted-foreground mb-1.5">{name}</p>
-                <p className="font-barlow text-lg font-bold text-foreground">{eaten}<span className="text-xs font-normal text-muted-foreground">/{goal}{unit}</span></p>
-                <div className="h-1.5 bg-muted rounded-full mt-2 overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${(eaten / goal) * 100}%`, backgroundColor: color }} />
-=======
       {/* CALORIE TRACKING */}
       {section === "track" && (
         <>
@@ -2498,130 +1669,11 @@ function NutritionTab() {
                       backgroundColor: color,
                     }}
                   />
->>>>>>> 99fc191 (Initial commit)
                 </div>
               </div>
             ))}
           </div>
 
-<<<<<<< HEAD
-          <div className="bg-card rounded-2xl p-4 border border-border">
-            <h3 className="font-barlow text-lg font-bold text-foreground mb-3">Today&apos;s Meals</h3>
-            <div className="space-y-3">
-              {meals.map((meal) => (
-                <div key={meal.time} className="flex items-center gap-3 rounded-xl bg-muted/45 p-3">
-                  <span className="w-11 text-xs font-semibold text-primary">{meal.time}</span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-foreground">{meal.name}</p>
-                    <p className="truncate text-xs text-muted-foreground">{meal.desc}</p>
-                  </div>
-                  <span className="text-xs font-semibold text-foreground">{meal.kcal || "—"} {meal.kcal ? "kcal" : ""}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {section === "order" && (
-        <>
-          <div className="bg-card rounded-2xl p-4 border border-border">
-            <div className="flex items-center justify-between gap-4 mb-4">
-              <div>
-                <h3 className="font-barlow text-lg font-bold text-foreground">Meals near your calorie target</h3>
-                <p className="text-xs text-muted-foreground mt-1">Menu items are loaded from the SQLite database.</p>
-              </div>
-              <div className="relative w-28 flex-shrink-0">
-                <input type="number" min={100} max={1500} value={desiredMealCalories} onChange={(event) => setDesiredMealCalories(Number(event.target.value))} className="w-full rounded-xl border border-border bg-muted px-3 py-2 pr-10 text-sm text-foreground outline-none focus:border-primary" />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">kcal</span>
-              </div>
-            </div>
-
-            {loadingMenu ? (
-              <div className="flex items-center justify-center py-10 text-muted-foreground"><LoaderCircle size={20} className="animate-spin" /></div>
-            ) : (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {suggestedMeals.map((meal) => {
-                  const difference = meal.calories - desiredMealCalories;
-                  const selected = selectedMealId === meal.id;
-                  return (
-                    <div key={meal.id} className={`overflow-hidden rounded-xl border bg-background ${selected ? "border-primary" : "border-border"}`}>
-                      <img src={meal.image} alt={meal.name} className="h-32 w-full object-cover bg-muted" />
-                      <div className="p-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <h4 className="text-sm font-bold text-foreground">{meal.name}</h4>
-                          <span className="whitespace-nowrap text-xs font-bold text-foreground">${(meal.priceCents / 100).toFixed(2)}</span>
-                        </div>
-                        <p className="mt-1 line-clamp-2 min-h-[34px] text-[11px] leading-relaxed text-muted-foreground">{meal.description}</p>
-                        <div className="mt-2 flex items-center justify-between text-xs">
-                          <span className="font-semibold text-primary">{meal.calories} kcal · {meal.protein}g protein</span>
-                          <span className="text-muted-foreground">{difference === 0 ? "Exact" : `${difference > 0 ? "+" : ""}${difference}`}</span>
-                        </div>
-                        <button onClick={() => chooseMeal(meal)} className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-bold ${selected ? "bg-primary/15 text-primary" : "bg-primary text-primary-foreground"}`}>
-                          {selected ? <><Check size={13} /> Selected</> : <><ShoppingBag size={13} /> Choose Meal</>}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="bg-card rounded-2xl p-4 border border-border">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0"><ShoppingBag size={18} className="text-primary-foreground" /></div>
-              <div>
-                <h3 className="font-barlow text-lg font-bold text-foreground">Custom Kitchen Order</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">The order will be stored in your account and can be viewed below.</p>
-              </div>
-            </div>
-
-            <label className="mb-4 block">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider block mb-2">Meal calorie target</span>
-              <div className="relative">
-                <input type="number" min={100} max={1500} step={10} value={kitchenOrderCalories} onChange={(event) => { setKitchenOrderCalories(Number(event.target.value)); setNotice(""); }} className="w-full bg-muted border border-border rounded-xl px-4 py-3.5 pr-16 text-foreground focus:outline-none focus:border-primary" />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">kcal</span>
-              </div>
-            </label>
-
-            <label className="mb-4 block">
-              <span className="text-xs text-muted-foreground uppercase tracking-wider block mb-2">Food preferences — optional</span>
-              <textarea rows={4} value={kitchenNotes} onChange={(event) => { setKitchenNotes(event.target.value); setNotice(""); }} className="w-full bg-muted border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary resize-none" placeholder="No oil, low salt, no peanuts..." />
-            </label>
-
-            <div className="rounded-xl bg-muted/50 border border-border p-3.5 mb-4 text-xs">
-              <div className="flex justify-between gap-4"><span className="text-muted-foreground">Meal</span><span className="text-right text-foreground">{selectedMeal?.name ?? "Kitchen's choice"}</span></div>
-              <div className="mt-2 flex justify-between gap-4"><span className="text-muted-foreground">Target</span><span className="text-foreground">{kitchenOrderCalories || 0} kcal</span></div>
-            </div>
-
-            {notice && <div className="mb-4 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">{notice}</div>}
-            {errorMessage && <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{errorMessage}</div>}
-
-            <button onClick={sendKitchenOrder} disabled={sendingOrder || kitchenOrderCalories < 100 || kitchenOrderCalories > 1500} className="w-full py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40">
-              {sendingOrder ? <LoaderCircle size={16} className="animate-spin" /> : <Send size={16} />}
-              {sendingOrder ? "Sending order..." : "Send order to gym kitchen"}
-            </button>
-          </div>
-
-          <div className="bg-card rounded-2xl p-4 border border-border">
-            <h3 className="font-barlow text-lg font-bold text-foreground mb-3">Recent Orders</h3>
-            {orders.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No orders yet.</p>
-            ) : (
-              <div className="space-y-2.5">
-                {orders.slice(0, 5).map((order) => (
-                  <div key={order.id} className="rounded-xl border border-border bg-muted/35 p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-foreground">#{order.id} · {order.mealName ?? "Custom meal"}</p>
-                      <span className="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase text-primary">{order.status}</span>
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{order.calorieTarget} kcal · {new Date(order.createdAt).toLocaleString()}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-=======
           {/* Meal log */}
           <div className="bg-card rounded-2xl p-4 border border-border">
             <div className="flex items-center justify-between mb-3">
@@ -3049,7 +2101,6 @@ function NutritionTab() {
                 depending on available ingredients.
               </p>
             </div>
->>>>>>> 99fc191 (Initial commit)
           </div>
         </>
       )}
@@ -3059,17 +2110,6 @@ function NutritionTab() {
 
 function SocialTab() {
   const [feedType, setFeedType] = useState<"feed" | "reels">("feed");
-<<<<<<< HEAD
-  const [topic, setTopic] = useState<"All" | "Training" | "Nutrition">("All");
-  const [posts, setPosts] = useState<CommunityPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [composerOpen, setComposerOpen] = useState(false);
-  const [postTopic, setPostTopic] = useState<"Training" | "Nutrition">("Training");
-  const [postBody, setPostBody] = useState("");
-  const [postImage, setPostImage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-=======
   const [liked, setLiked] = useState<Record<string, boolean>>({});
   const [topic, setTopic] = useState<"All" | "Training" | "Nutrition">("All");
 
@@ -3097,7 +2137,6 @@ function SocialTab() {
       comments: 34,
     },
   ];
->>>>>>> 99fc191 (Initial commit)
 
   const reels = [
     { user: "Ryan Chen", title: "5 shoulder exercises at home — no weights needed", views: "12.4k", thumb: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=220&h=340&fit=crop&auto=format" },
@@ -3106,59 +2145,6 @@ function SocialTab() {
     { user: "Lily Park", title: "500 kcal meal for a heavy training day", views: "6.3k", thumb: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=220&h=340&fit=crop&auto=format" },
   ];
 
-<<<<<<< HEAD
-  useEffect(() => {
-    let active = true;
-    api.getPosts()
-      .then((result) => { if (active) setPosts(result.posts); })
-      .catch((error) => { if (active) setErrorMessage(error instanceof ApiError ? error.message : "Could not load community posts."); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, []);
-
-  const visiblePosts = topic === "All" ? posts : posts.filter((post) => post.topic === topic);
-
-  const toggleLike = async (post: CommunityPost) => {
-    const nextLiked = !post.liked;
-    setPosts((current) => current.map((item) => item.id === post.id ? { ...item, liked: nextLiked, likes: Math.max(0, item.likes + (nextLiked ? 1 : -1)) } : item));
-    try {
-      const result = await api.setPostLike(post.id, nextLiked);
-      setPosts((current) => current.map((item) => item.id === post.id ? { ...item, liked: result.liked, likes: result.likes } : item));
-    } catch (error) {
-      setPosts((current) => current.map((item) => item.id === post.id ? post : item));
-      setErrorMessage(error instanceof ApiError ? error.message : "Could not update the like.");
-    }
-  };
-
-  const publishPost = async () => {
-    if (submitting || postBody.trim().length < 3) return;
-    setSubmitting(true);
-    setErrorMessage("");
-    try {
-      const result = await api.createPost({ topic: postTopic, body: postBody, imageUrl: postImage || undefined });
-      setPosts((current) => [result.post, ...current]);
-      setPostBody("");
-      setPostImage("");
-      setComposerOpen(false);
-      setFeedType("feed");
-      setTopic("All");
-    } catch (error) {
-      setErrorMessage(error instanceof ApiError ? error.message : "Could not publish the post.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="pb-4">
-      <div className="p-4 pb-0 sm:p-6 sm:pb-0">
-        <div className="flex items-center justify-between pt-3 mb-3">
-          <div>
-            <h2 className="font-barlow text-4xl font-black text-foreground">Community</h2>
-            <p className="text-xs text-muted-foreground mt-1">Posts and likes are saved to the database</p>
-          </div>
-          <button onClick={() => setComposerOpen((current) => !current)} className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center hover:opacity-90 transition-colors" aria-label="Create a post">
-=======
   const visiblePosts = topic === "All" ? posts : posts.filter((post) => post.topic === topic);
 
   return (
@@ -3170,47 +2156,20 @@ function SocialTab() {
             <p className="text-xs text-muted-foreground mt-1">Training and nutrition posts only</p>
           </div>
           <button className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center hover:opacity-90 transition-colors">
->>>>>>> 99fc191 (Initial commit)
             <Plus size={17} className="text-primary-foreground" />
           </button>
         </div>
 
-<<<<<<< HEAD
-        {composerOpen && (
-          <div className="mb-3 rounded-2xl border border-primary/30 bg-card p-4">
-            <div className="mb-3 flex gap-2">
-              {(["Training", "Nutrition"] as const).map((item) => (
-                <button key={item} onClick={() => setPostTopic(item)} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${postTopic === item ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"}`}>{item}</button>
-              ))}
-            </div>
-            <textarea value={postBody} onChange={(event) => setPostBody(event.target.value)} rows={4} maxLength={1000} className="w-full resize-none rounded-xl border border-border bg-muted px-4 py-3 text-sm text-foreground outline-none focus:border-primary" placeholder="Share a workout, progress update or healthy meal…" />
-            <input value={postImage} onChange={(event) => setPostImage(event.target.value)} className="mt-3 w-full rounded-xl border border-border bg-muted px-4 py-3 text-xs text-foreground outline-none focus:border-primary" placeholder="Optional image URL" />
-            <div className="mt-3 flex items-center justify-between gap-3">
-              <span className="text-xs text-muted-foreground">{postBody.length}/1000</span>
-              <button onClick={publishPost} disabled={submitting || postBody.trim().length < 3} className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground disabled:opacity-40">
-                {submitting ? <LoaderCircle size={14} className="animate-spin" /> : <Send size={14} />}
-                Publish
-              </button>
-            </div>
-          </div>
-        )}
-
-        {errorMessage && <div className="mb-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{errorMessage}</div>}
-=======
         <div className="bg-card rounded-2xl border border-border p-3 mb-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center text-xs font-bold text-primary">YOU</div>
           <button className="flex-1 text-left bg-muted rounded-xl px-3.5 py-2.5 text-xs text-muted-foreground">Share a workout, progress update or healthy meal…</button>
         </div>
->>>>>>> 99fc191 (Initial commit)
 
         <div className="flex gap-1.5 bg-muted p-1 rounded-xl mb-3">
           {[
             { id: "feed" as const, label: "Feed" },
             { id: "reels" as const, label: "Reels" },
           ].map(({ id, label }) => (
-<<<<<<< HEAD
-            <button key={id} onClick={() => setFeedType(id)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${feedType === id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>{label}</button>
-=======
             <button
               key={id}
               onClick={() => setFeedType(id)}
@@ -3220,16 +2179,12 @@ function SocialTab() {
             >
               {label}
             </button>
->>>>>>> 99fc191 (Initial commit)
           ))}
         </div>
 
         {feedType === "feed" && (
           <div className="flex gap-2 overflow-x-auto scrollbar-none pb-3">
             {(["All", "Training", "Nutrition"] as const).map((item) => (
-<<<<<<< HEAD
-              <button key={item} onClick={() => setTopic(item)} className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border ${topic === item ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"}`}>{item}</button>
-=======
               <button
                 key={item}
                 onClick={() => setTopic(item)}
@@ -3239,25 +2194,12 @@ function SocialTab() {
               >
                 {item}
               </button>
->>>>>>> 99fc191 (Initial commit)
             ))}
           </div>
         )}
       </div>
 
       {feedType === "feed" && (
-<<<<<<< HEAD
-        <div className="px-4 space-y-4 sm:px-6">
-          {loading ? (
-            <div className="flex justify-center py-12 text-muted-foreground"><LoaderCircle size={22} className="animate-spin" /></div>
-          ) : visiblePosts.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-card p-8 text-center text-sm text-muted-foreground">No posts in this topic yet.</div>
-          ) : visiblePosts.map((post) => (
-            <div key={post.id} className="bg-card rounded-2xl border border-border overflow-hidden">
-              <div className="p-4 pb-3">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span className="text-primary-foreground text-xs font-bold">{post.avatar}</span></div>
-=======
         <div className="px-4 space-y-4">
           {visiblePosts.map((post) => (
             <div key={post.id} className="bg-card rounded-2xl border border-border overflow-hidden">
@@ -3266,7 +2208,6 @@ function SocialTab() {
                   <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
                     <span className="text-primary-foreground text-xs font-bold">{post.avatar}</span>
                   </div>
->>>>>>> 99fc191 (Initial commit)
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-foreground">{post.user}</p>
                     <p className="text-xs text-muted-foreground">{post.time}</p>
@@ -3275,18 +2216,6 @@ function SocialTab() {
                 </div>
                 <p className="text-sm text-foreground leading-relaxed">{post.body}</p>
               </div>
-<<<<<<< HEAD
-              {post.img && <img src={post.img} alt={post.user} className="w-full h-44 object-cover bg-muted" />}
-              <div className="p-3.5 flex items-center gap-4">
-                <button onClick={() => toggleLike(post)} className="flex items-center gap-1.5 transition-colors" style={{ color: post.liked ? "#ff4757" : "#7a8fa6" }}>
-                  <Heart size={16} fill={post.liked ? "#ff4757" : "none"} />
-                  <span className="text-xs">{post.likes}</span>
-                </button>
-                <button className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
-                  <MessageCircle size={16} /><span className="text-xs">{post.comments}</span>
-                </button>
-                <button onClick={() => navigator.clipboard?.writeText(window.location.href)} className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors ml-auto"><Share2 size={16} /></button>
-=======
               <img src={post.img} alt={post.user} className="w-full h-44 object-cover bg-muted" />
               <div className="p-3.5 flex items-center gap-4">
                 <button
@@ -3304,7 +2233,6 @@ function SocialTab() {
                 <button className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors ml-auto">
                   <Share2 size={16} />
                 </button>
->>>>>>> 99fc191 (Initial commit)
               </div>
             </div>
           ))}
@@ -3312,22 +2240,12 @@ function SocialTab() {
       )}
 
       {feedType === "reels" && (
-<<<<<<< HEAD
-        <div className="px-4 sm:px-6">
-=======
         <div className="px-4">
->>>>>>> 99fc191 (Initial commit)
           <div className="grid grid-cols-2 gap-2.5">
             {reels.map((reel) => (
               <div key={reel.user + reel.title} className="relative rounded-xl overflow-hidden bg-card border border-border aspect-[9/14]">
                 <img src={reel.thumb} alt={reel.title} className="w-full h-full object-cover bg-muted" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-<<<<<<< HEAD
-                <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm rounded-full p-1.5 border border-white/10"><Play size={11} className="text-white fill-white" /></div>
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-white text-xs font-semibold leading-snug mb-1 line-clamp-2">{reel.title}</p>
-                  <div className="flex items-center justify-between"><span className="text-white/60 text-xs">{reel.user}</span><span className="text-white/60 text-xs">{reel.views}</span></div>
-=======
                 <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm rounded-full p-1.5 border border-white/10">
                   <Play size={11} className="text-white fill-white" />
                 </div>
@@ -3337,7 +2255,6 @@ function SocialTab() {
                     <span className="text-white/60 text-xs">{reel.user}</span>
                     <span className="text-white/60 text-xs">{reel.views}</span>
                   </div>
->>>>>>> 99fc191 (Initial commit)
                 </div>
               </div>
             ))}
@@ -3348,54 +2265,6 @@ function SocialTab() {
   );
 }
 
-<<<<<<< HEAD
-function CheckinTab({ user }: { user: UserData }) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayKey = toLocalDateKey(today);
-  const [checkinDates, setCheckinDates] = useState<string[]>([]);
-  const [streak, setStreak] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [checkingIn, setCheckingIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const checkedIn = checkinDates.includes(todayKey);
-  const goal = 100;
-
-  useEffect(() => {
-    let active = true;
-    api.getCheckins()
-      .then((result) => {
-        if (!active) return;
-        setCheckinDates(result.dates);
-        setStreak(result.streak);
-      })
-      .catch((error) => {
-        if (active) setErrorMessage(error instanceof ApiError ? error.message : "Could not load check-ins.");
-      })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, []);
-
-  const monday = new Date(today);
-  const mondayOffset = (today.getDay() + 6) % 7;
-  monday.setDate(today.getDate() - mondayOffset);
-
-  const week = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + index);
-    const dateKey = toLocalDateKey(date);
-    return {
-      label: new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date).slice(0, 2),
-      date: String(date.getDate()),
-      today: dateKey === todayKey,
-      done: checkinDates.includes(dateKey),
-    };
-  });
-
-  const userInitials = user.name.trim().split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
-  const friends = [
-    { name: user.name, streak, avatar: userInitials || "YOU", isMe: true },
-=======
 
 function CheckinTab({ user }: { user: UserData }) {
   const [checkedIn, setCheckedIn] = useState(false);
@@ -3415,48 +2284,11 @@ function CheckinTab({ user }: { user: UserData }) {
 
   const friends = [
     { name: user.name, streak, avatar: user.name.slice(0, 2).toUpperCase(), isMe: true },
->>>>>>> 99fc191 (Initial commit)
     { name: "Jake Morgan", streak: 52, avatar: "JM", isMe: false },
     { name: "Sophie Lee", streak: 31, avatar: "SL", isMe: false },
     { name: "Marcus Hill", streak: 18, avatar: "MH", isMe: false },
   ];
 
-<<<<<<< HEAD
-  const checkInToday = async () => {
-    if (checkedIn || checkingIn) return;
-    setCheckingIn(true);
-    setErrorMessage("");
-    try {
-      const result = await api.checkin(todayKey);
-      setCheckinDates(result.dates);
-      setStreak(result.streak);
-    } catch (error) {
-      setErrorMessage(error instanceof ApiError ? error.message : "Check-in failed.");
-    } finally {
-      setCheckingIn(false);
-    }
-  };
-
-  return (
-    <div className="p-4 space-y-4 pb-4 sm:p-6">
-      <div className="pt-3">
-        <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Streak</h2>
-        <p className="text-muted-foreground text-sm mt-1.5">Keep up {user.workoutsPerWeek} sessions/week to maintain your streak</p>
-      </div>
-
-      {errorMessage && <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{errorMessage}</div>}
-
-      <div className="bg-card rounded-2xl p-5 border border-border relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 80% 20%, rgba(230,57,70,0.08) 0%, transparent 60%)" }} />
-        <div className="text-center mb-5 relative">
-          <div className="font-barlow text-7xl font-black text-primary leading-none">{loading ? "—" : streak}</div>
-          <div className="flex items-center justify-center gap-1 mt-1 text-sm text-muted-foreground"><Flame size={14} className="text-accent" />days in a row</div>
-        </div>
-        <div className="mb-2"><div className="h-2 bg-muted rounded-full overflow-hidden"><div className="h-full bg-primary rounded-full transition-all" style={{ width: `${Math.min((streak / goal) * 100, 100)}%` }} /></div></div>
-        <p className="text-xs text-muted-foreground text-center mb-5">{streak}/{goal} days — {Math.max(goal - streak, 0)} days to the next reward</p>
-        <button type="button" onClick={checkInToday} disabled={loading || checkedIn || checkingIn} className={`w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${checkedIn ? "bg-muted text-muted-foreground cursor-default" : "bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50"}`}>
-          {checkingIn ? <><LoaderCircle size={16} className="animate-spin" />Checking in...</> : checkedIn ? <><Check size={16} />Checked in today!</> : <><MapPin size={16} />Check In Workout</>}
-=======
   return (
     <div className="p-4 space-y-4 pb-4">
       <div className="pt-3">
@@ -3502,19 +2334,12 @@ function CheckinTab({ user }: { user: UserData }) {
           ) : (
             <><MapPin size={16} /> Check In Workout</>
           )}
->>>>>>> 99fc191 (Initial commit)
         </button>
       </div>
 
       <div className="bg-card rounded-2xl p-4 border border-border">
         <h3 className="font-barlow text-lg font-bold text-foreground mb-3">This Week</h3>
         <div className="flex gap-1">
-<<<<<<< HEAD
-          {week.map(({ label, date, done, today: isToday }) => (
-            <div key={`${label}-${date}`} className="flex-1 flex flex-col items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">{label}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${done ? "bg-primary text-primary-foreground" : isToday ? "border-2 border-primary text-primary" : "bg-muted text-muted-foreground"}`}>{done ? <Check size={13} /> : date}</div>
-=======
           {week.map(({ label, date, done, today }) => (
             <div key={label} className="flex-1 flex flex-col items-center gap-1.5">
               <span className="text-xs text-muted-foreground">{label}</span>
@@ -3529,23 +2354,12 @@ function CheckinTab({ user }: { user: UserData }) {
               >
                 {done ? <Check size={13} /> : date}
               </div>
->>>>>>> 99fc191 (Initial commit)
             </div>
           ))}
         </div>
       </div>
 
       <div className="bg-card rounded-2xl p-4 border border-border">
-<<<<<<< HEAD
-        <div className="flex items-center justify-between mb-3"><h3 className="font-barlow text-lg font-bold text-foreground">Friends Leaderboard</h3><button type="button" onClick={() => navigator.clipboard?.writeText(window.location.href)} className="text-xs text-primary font-medium">Invite More</button></div>
-        <div className="space-y-2">
-          {[...friends].sort((a, b) => b.streak - a.streak).map(({ name, streak: value, avatar, isMe }, rank) => (
-            <div key={name} className={`flex items-center gap-3 p-2.5 rounded-xl ${isMe ? "bg-primary/10 border border-primary/25" : ""}`}>
-              <span className="text-xs font-barlow font-bold w-4 flex-shrink-0" style={{ color: rank === 0 ? "#fbbf24" : "#7a8fa6" }}>{rank + 1}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${isMe ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{avatar}</div>
-              <span className="text-sm text-foreground flex-1 min-w-0 truncate">{name}{isMe ? " (you)" : ""}</span>
-              <div className="flex items-center gap-1"><Flame size={12} className="text-accent" /><span className="font-barlow text-sm font-bold text-foreground">{value}</span></div>
-=======
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-barlow text-lg font-bold text-foreground">Friends Leaderboard</h3>
           <button className="text-xs text-primary font-medium">Invite More</button>
@@ -3576,7 +2390,6 @@ function CheckinTab({ user }: { user: UserData }) {
                 <Flame size={12} className="text-accent" />
                 <span className="font-barlow text-sm font-bold text-foreground">{s}</span>
               </div>
->>>>>>> 99fc191 (Initial commit)
             </div>
           ))}
         </div>
@@ -3585,136 +2398,6 @@ function CheckinTab({ user }: { user: UserData }) {
   );
 }
 
-<<<<<<< HEAD
-const appTabs: { id: Tab; Icon: typeof Activity; label: string }[] = [
-  { id: "home", Icon: Activity, label: "Overview" },
-  { id: "workout", Icon: Dumbbell, label: "Workout" },
-  { id: "nutrition", Icon: Utensils, label: "Nutrition" },
-  { id: "social", Icon: Users, label: "Community" },
-  { id: "checkin", Icon: CheckCircle2, label: "Streak" },
-];
-
-function BottomNav({ active, onChange }: { active: Tab; onChange: (tab: Tab) => void }) {
-  return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-xl safe-area-bottom">
-      <div className="max-w-lg mx-auto grid grid-cols-5 px-2 py-2">
-        {appTabs.map(({ id, Icon, label }) => {
-          const isActive = active === id;
-
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => onChange(id)}
-              className="flex flex-col items-center justify-center gap-1 py-1.5"
-              aria-current={isActive ? "page" : undefined}
-            >
-              <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <Icon size={18} />
-              </div>
-              <span
-                className={`text-[11px] font-medium ${
-                  isActive ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
-
-function DesktopSidebar({
-  active,
-  user,
-  onChange,
-  onReset,
-  onLogout,
-  account,
-}: {
-  active: Tab;
-  user: UserData;
-  account: Account;
-  onChange: (tab: Tab) => void;
-  onReset: () => void;
-  onLogout: () => void;
-}) {
-  const initials = user.name
-    .trim()
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  return (
-    <aside className="hidden md:flex sticky top-0 h-screen w-64 lg:w-72 flex-shrink-0 flex-col border-r border-border bg-card/35 px-5 py-6">
-      <BrandLogo size="md" />
-
-      <nav className="mt-10 space-y-2" aria-label="Main navigation">
-        {appTabs.map(({ id, Icon, label }) => {
-          const isActive = active === id;
-
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => onChange(id)}
-              className={`w-full flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm transition-all ${
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-              aria-current={isActive ? "page" : undefined}
-            >
-              <Icon size={18} />
-              <span className="font-semibold">{label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="mt-auto rounded-2xl border border-border bg-background/55 p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-secondary text-secondary-foreground flex items-center justify-center text-xs font-bold">
-            {initials || "YOU"}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-foreground truncate">{user.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{account.email}</p>
-          </div>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={onReset}
-            className="flex items-center justify-center gap-2 rounded-xl border border-border px-2 py-2.5 text-xs font-semibold text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
-          >
-            <RotateCcw size={14} />
-            Reset
-          </button>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="flex items-center justify-center gap-2 rounded-xl border border-border px-2 py-2.5 text-xs font-semibold text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
-          >
-            <LogOut size={14} />
-            Sign out
-          </button>
-        </div>
-      </div>
-    </aside>
-=======
 function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
   const tabs: { id: Tab; Icon: typeof Activity; label: string }[] = [
     { id: "home", Icon: Activity, label: "Overview" },
@@ -3754,139 +2437,10 @@ function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => vo
         ))}
       </div>
     </div>
->>>>>>> 99fc191 (Initial commit)
   );
 }
 
 export default function App() {
-<<<<<<< HEAD
-  const [showSplash, setShowSplash] = useState(() => !hasSeenSplash());
-  const [booting, setBooting] = useState(true);
-  const [account, setAccount] = useState<Account | null>(null);
-  const [user, setUser] = useState<UserData | null>(null);
-  const [activeTab, setActiveTab] = useState<Tab>(() => readStoredTab());
-
-  useEffect(() => {
-    let active = true;
-    if (!getToken()) {
-      setBooting(false);
-      return () => { active = false; };
-    }
-
-    api.me()
-      .then((result) => {
-        if (!active) return;
-        setAccount(result.user);
-        setUser(result.profile as UserData | null);
-      })
-      .catch(() => {
-        setToken(null);
-      })
-      .finally(() => {
-        if (active) setBooting(false);
-      });
-
-    return () => { active = false; };
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.tab, activeTab);
-    } catch {
-      // Navigation remains functional when browser storage is unavailable.
-    }
-  }, [activeTab]);
-
-  const completeSplash = () => {
-    try {
-      sessionStorage.setItem(STORAGE_KEYS.splash, "1");
-    } catch {
-      // The splash will simply appear again next session if storage is blocked.
-    }
-    setShowSplash(false);
-  };
-
-  const handleAuthenticated = (nextAccount: Account, profile: UserData | null) => {
-    setAccount(nextAccount);
-    setUser(profile);
-    setActiveTab("home");
-  };
-
-  const completeOnboarding = async (data: UserData) => {
-    try {
-      const result = await api.saveProfile(data);
-      setUser(result.profile as UserData);
-      setActiveTab("home");
-    } catch (error) {
-      window.alert(error instanceof ApiError ? error.message : "Could not save your profile.");
-    }
-  };
-
-  const resetProfile = async () => {
-    const confirmed = window.confirm("Reset your profile and check-in history? Your account and meal orders will remain available.");
-    if (!confirmed) return;
-    try {
-      await api.resetProfile();
-      setUser(null);
-      setActiveTab("home");
-    } catch (error) {
-      window.alert(error instanceof ApiError ? error.message : "Could not reset your profile.");
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await api.logout();
-    } catch {
-      // Clear the local session even if the server is temporarily unavailable.
-    }
-    setToken(null);
-    setAccount(null);
-    setUser(null);
-    setActiveTab("home");
-  };
-
-  if (showSplash) return <SplashScreen onComplete={completeSplash} />;
-
-  if (booting) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <BrandLogo size="md" />
-          <LoaderCircle size={22} className="animate-spin text-primary" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!account) return <AuthScreen onAuthenticated={handleAuthenticated} />;
-  if (!user) return <OnboardingFlow onComplete={completeOnboarding} />;
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl">
-        <DesktopSidebar
-          active={activeTab}
-          user={user}
-          account={account}
-          onChange={setActiveTab}
-          onReset={resetProfile}
-          onLogout={logout}
-        />
-
-        <main className="min-w-0 flex-1 pb-24 md:pb-8">
-          <div className="mx-auto w-full max-w-2xl">
-            {activeTab === "home" && <HomeTab user={user} onReset={resetProfile} onLogout={logout} />}
-            {activeTab === "workout" && <WorkoutTab user={user} />}
-            {activeTab === "nutrition" && <NutritionTab />}
-            {activeTab === "social" && <SocialTab />}
-            {activeTab === "checkin" && <CheckinTab user={user} />}
-          </div>
-        </main>
-      </div>
-
-      <BottomNav active={activeTab} onChange={setActiveTab} />
-=======
   const [showSplash, setShowSplash] = useState(true);
   const [user, setUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("home");
@@ -3946,7 +2500,6 @@ export default function App() {
           })}
         </div>
       </div>
->>>>>>> 99fc191 (Initial commit)
     </div>
   );
 }

@@ -24,14 +24,11 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-<<<<<<< HEAD
   server: {
     proxy: {
       '/api': 'http://localhost:8787',
     },
   },
-=======
->>>>>>> 99fc191 (Initial commit)
   resolve: {
     alias: {
       // Alias @ to the src directory
