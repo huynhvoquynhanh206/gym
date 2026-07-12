@@ -23,10 +23,8 @@ import {
   Share2,
   ArrowRight,
   Bike,
-  X,
 } from "lucide-react";
-import coreLogo from "../assets/core-fitness-logo.png";
-import collabLogo from "../assets/core-bts-collab.png";
+import brandLogo from "../assets/core-bts-new-logo.svg";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -53,13 +51,13 @@ interface UserData {
 }
 
 const defaultUser: UserData = {
-  name: "Alex Turner",
-  height: "172",
-  weight: "75",
-  age: "26",
+  name: "",
+  height: "",
+  weight: "",
+  age: "",
   gender: "male",
   goal: "lose_weight",
-  targetWeight: "68",
+  targetWeight: "",
   workoutsPerWeek: 3,
 };
 
@@ -90,19 +88,29 @@ type BrandLogoProps = {
 };
 
 function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
-  const sizes = {
-    sm: "w-[116px]",
-    md: "w-[158px]",
-    lg: "w-[260px]",
+  const frames = {
+    sm: "w-[170px] h-[52px]",
+    md: "w-[220px] h-[70px]",
+    lg: "w-[300px] h-[96px]",
   };
 
   return (
-    <img
-      src={coreLogo}
-      alt="Core Fitness & Yoga"
-      className={`${sizes[size]} h-auto object-contain`}
-      style={{ filter: variant === "light" ? "brightness(0)" : "none" }}
-    />
+    <div className={`${frames[size]} overflow-hidden flex items-center justify-center`} aria-label="CORE Fitness & Yoga x BTS">
+      <img
+        src={brandLogo}
+        alt="CORE Fitness & Yoga x BTS Bonus To Score"
+        className="w-[120%] max-w-none h-auto object-contain"
+        style={{ filter: variant === "light" ? "brightness(0)" : "none" }}
+      />
+    </div>
+  );
+}
+
+function PageBrandBar() {
+  return (
+    <div className="px-4 pt-2 pb-1 border-b border-border/70 bg-background">
+      <BrandLogo variant="dark" size="sm" />
+    </div>
   );
 }
 
@@ -129,11 +137,9 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
           Official training experience
         </p>
 
-        <img
-          src={collabLogo}
-          alt="Core Fitness & Yoga x BTS Bonus To Score"
-          className="w-full max-w-[720px] mx-auto h-auto object-contain"
-        />
+        <div className="flex justify-center">
+          <BrandLogo variant="dark" size="lg" />
+        </div>
 
         <div className="flex items-center gap-4 max-w-md mx-auto my-7">
           <div className="h-px flex-1 bg-white/20" />
@@ -142,8 +148,8 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
         </div>
 
         <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 backdrop-blur-sm">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-white/50">Presented by</span>
-          <span className="font-barlow text-xl sm:text-2xl font-black tracking-[0.06em] text-white">
+          <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-white/50">Presented by</span>
+          <span className="font-sans text-sm sm:text-base font-medium uppercase tracking-[0.25em] text-white">
             DTB7_<span className="text-primary">Group 3</span>
           </span>
         </div>
@@ -187,7 +193,7 @@ function StepPersonal({
           <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">Full Name</label>
           <input
             className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
-            placeholder="John Smith"
+            placeholder="Write your name here"
             value={data.name}
             onChange={(e) => onChange({ ...data, name: e.target.value })}
           />
@@ -197,7 +203,7 @@ function StepPersonal({
           <input
             type="number"
             className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
-            placeholder="25"
+            placeholder="Write your age here"
             value={data.age}
             onChange={(e) => onChange({ ...data, age: e.target.value })}
           />
@@ -253,6 +259,7 @@ function StepMetrics({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-8">
+        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">Body<br />Metrics</h1>
         <p className="text-muted-foreground text-sm">Enter your measurements for an accurate BMI</p>
       </div>
@@ -263,7 +270,7 @@ function StepMetrics({
             <input
               type="number"
               className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
-              placeholder="170"
+              placeholder="Write your height here"
               value={data.height}
               onChange={(e) => onChange({ ...data, height: e.target.value })}
             />
@@ -276,7 +283,7 @@ function StepMetrics({
             <input
               type="number"
               className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
-              placeholder="65"
+              placeholder="Write your weight here"
               value={data.weight}
               onChange={(e) => onChange({ ...data, weight: e.target.value })}
             />
@@ -349,6 +356,7 @@ function StepBMIResult({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-6">
+        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">BMI<br />Results</h1>
       </div>
 
@@ -446,6 +454,7 @@ function StepGoal({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-8">
+        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">Your<br />Goal</h1>
         <p className="text-muted-foreground text-sm">The app will build a personalized plan based on this goal</p>
       </div>
@@ -480,7 +489,7 @@ function StepGoal({
           <input
             type="number"
             className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors pr-14"
-            placeholder="60"
+            placeholder="Write your target weight here"
             value={data.targetWeight}
             onChange={(e) => onChange({ ...data, targetWeight: e.target.value })}
           />
@@ -509,7 +518,8 @@ function StepGoal({
 
       <button
         onClick={onComplete}
-        className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+        disabled={!data.targetWeight}
+        className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-30 hover:opacity-90 transition-opacity"
       >
         Let's Go! <Zap size={17} />
       </button>
@@ -655,10 +665,6 @@ function HomeTab({ user }: { user: UserData }) {
     <div className="p-4 space-y-4 pb-4">
       <div className="flex items-center justify-between pt-3">
         <div>
-  <div className="mb-2">
-    <BrandLogo variant="dark" size="sm" />
-  </div>
-
   <p className="text-muted-foreground text-sm">
     Hello 👋
   </p>
@@ -1154,15 +1160,15 @@ function WorkoutTab({ user }: { user: UserData }) {
     Advanced: "text-white bg-white/10 border-white/15",
   };
 
-  const getExerciseVideo = (exercise: Exercise) => {
+  const getExerciseImage = (exercise: Exercise) => {
     const key = `${exercise.name} ${exercise.equipment}`.toLowerCase();
-    if (/squat|leg press|leg extension|leg curl|calf|bridge|deadlift/.test(key)) return "/videos/squat.mp4";
-    if (/lunge|split/.test(key)) return "/videos/lunge.mp4";
-    if (/press|push-up|dip|tricep/.test(key)) return "/videos/press.mp4";
-    if (/row|pulldown|woodchop|backpack/.test(key)) return "/videos/pull.mp4";
-    if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return "/videos/plank.mp4";
-    if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return "/videos/mobility.mp4";
-    return "/videos/cardio.mp4";
+    if (/deadlift|row|pulldown|woodchop|backpack/.test(key)) return "/images/exercises/pull.svg";
+    if (/lunge|split/.test(key)) return "/images/exercises/lunge.svg";
+    if (/press|push-up|dip|tricep/.test(key)) return "/images/exercises/press.svg";
+    if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return "/images/exercises/plank.svg";
+    if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return "/images/exercises/mobility.svg";
+    if (/squat|leg press|leg extension|leg curl|calf|bridge/.test(key)) return "/images/exercises/squat.svg";
+    return "/images/exercises/cardio.svg";
   };
 
   const roadmap = roadmapByGoal[user.goal];
@@ -1181,9 +1187,14 @@ function WorkoutTab({ user }: { user: UserData }) {
             <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
             <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl border border-primary/25 bg-primary/10 flex items-center justify-center">
-            <Play size={19} className="text-primary fill-primary" />
-          </div>
+          <button
+            type="button"
+            onClick={() => undefined}
+            className="w-12 h-12 rounded-2xl border border-primary/25 bg-primary/10 flex items-center justify-center active:scale-90 transition-transform"
+            aria-label="Camera"
+          >
+            <Camera size={19} className="text-primary" />
+          </button>
         </div>
 
         <div className="bg-card rounded-2xl p-4 border border-border">
@@ -1237,7 +1248,7 @@ function WorkoutTab({ user }: { user: UserData }) {
             <div>
               <span className="font-barlow text-2xl font-bold text-foreground">{currentDay.focus ?? "Recovery Day"}</span>
               {exercises.length > 0 && (
-                <p className="text-sm text-muted-foreground mt-1">Tap an exercise to open its vertical form demo.</p>
+                <p className="text-sm text-muted-foreground mt-1">Tap the exercise card to open the illustrated form guide.</p>
               )}
             </div>
             {exercises.length > 0 && (
@@ -1252,25 +1263,47 @@ function WorkoutTab({ user }: { user: UserData }) {
         {exercises.length > 0 ? (
           <div className="space-y-2.5">
             {exercises.map((exercise, index) => (
-              <button
+              <div
                 key={`${exercise.name}-${index}`}
+                role="button"
+                tabIndex={0}
                 onClick={() => setActiveExercise(exercise)}
-                className="w-full text-left bg-card rounded-xl p-4 border border-border hover:border-primary/50 hover:bg-primary/[0.035] active:scale-[0.99] transition-all group"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") setActiveExercise(exercise);
+                }}
+                className="w-full text-left bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/50 hover:bg-primary/[0.035] active:scale-[0.99] transition-all group cursor-pointer"
               >
-                <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(37,99,235,0.18)]">
-                    <span className="text-primary-foreground text-xs font-barlow font-black">{String(index + 1).padStart(2, "0")}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3 mb-1.5">
-                      <div className="flex items-center gap-2 flex-wrap min-w-0">
-                        <span className="font-bold text-foreground text-sm">{exercise.name}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${levelClasses[exercise.level]}`}>{exercise.level}</span>
-                      </div>
-                      <div className="w-8 h-8 rounded-lg border border-primary/30 bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                        <Play size={13} className="text-primary fill-primary group-hover:text-white group-hover:fill-white" />
-                      </div>
+                <div className="flex min-h-[122px]">
+                  <div className="relative w-[104px] flex-shrink-0 bg-white overflow-hidden">
+                    <img
+                      src={getExerciseImage(exercise)}
+                      alt={`${exercise.name} illustration`}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 left-2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg">
+                      <span className="text-primary-foreground text-xs font-barlow font-black">{String(index + 1).padStart(2, "0")}</span>
                     </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0 p-3.5">
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-foreground text-sm">{exercise.name}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${levelClasses[exercise.level]}`}>{exercise.level}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(event) => event.stopPropagation()}
+                        className="w-9 h-9 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+                        aria-label={`Camera button for ${exercise.name}`}
+                      >
+                        <Camera size={15} className="text-primary" />
+                      </button>
+                    </div>
+
                     <p className="text-xs text-primary mb-2 flex items-center gap-1.5">
                       <Dumbbell size={11} /> {exercise.equipment}
                     </p>
@@ -1281,7 +1314,7 @@ function WorkoutTab({ user }: { user: UserData }) {
                     </div>
                   </div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         ) : (
@@ -1296,56 +1329,82 @@ function WorkoutTab({ user }: { user: UserData }) {
       </div>
 
       {activeExercise && (
-        <div className="fixed inset-0 z-[100] bg-black" role="dialog" aria-modal="true" aria-label={`${activeExercise.name} exercise demo`}>
-          <div className="relative h-full w-full max-w-sm mx-auto overflow-hidden bg-black">
-            <video
-              key={activeExercise.name}
-              src={getExerciseVideo(activeExercise)}
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/45 pointer-events-none" />
-
-            <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-[max(16px,env(safe-area-inset-top))]">
-              <div className="h-0.5 bg-white/20 rounded-full overflow-hidden mb-4">
-                <div className="h-full w-full bg-primary reel-progress" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.28em] text-primary font-bold">Workout demo</p>
-                  <p className="text-xs text-white/60 mt-0.5">CORE × BTS · DTB7_Group 3</p>
-                </div>
+        <div className="fixed inset-0 z-[100] bg-background overflow-y-auto" role="dialog" aria-modal="true" aria-label={`${activeExercise.name} exercise guide`}>
+          <div className="min-h-full w-full max-w-sm mx-auto bg-background">
+            <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3">
+              <div className="flex items-center justify-between gap-3">
                 <button
                   onClick={() => setActiveExercise(null)}
-                  className="w-10 h-10 rounded-full bg-black/45 border border-white/15 backdrop-blur-md flex items-center justify-center"
-                  aria-label="Close exercise demo"
+                  className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center active:scale-95 transition-transform"
+                  aria-label="Back to workout list"
                 >
-                  <X size={18} className="text-white" />
+                  <ChevronLeft size={20} className="text-foreground" />
+                </button>
+
+                <div className="flex-1 flex justify-center overflow-hidden">
+                  <BrandLogo variant="dark" size="sm" />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => undefined}
+                  className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center active:scale-90 transition-transform"
+                  aria-label="Camera"
+                >
+                  <Camera size={19} className="text-primary" />
                 </button>
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 z-20 p-5 pb-[max(24px,env(safe-area-inset-bottom))]">
-              <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-full border font-bold ${levelClasses[activeExercise.level]}`}>
-                {activeExercise.level}
-              </span>
-              <h3 className="font-barlow text-4xl font-black text-white leading-none mt-3 mb-2">{activeExercise.name}</h3>
-              <p className="text-sm text-white/70 mb-3">{activeExercise.equipment}</p>
+            <div className="px-4 pt-5 pb-[max(28px,env(safe-area-inset-bottom))]">
+              <p className="font-sans text-[10px] uppercase tracking-[0.28em] text-primary font-semibold">Workout guide · DTB7_Group 3</p>
+              <h3 className="font-barlow text-4xl font-black text-foreground leading-none mt-2">{activeExercise.name}</h3>
 
-              <div className="flex gap-2 flex-wrap mb-3">
-                <span className="text-xs text-white bg-white/10 border border-white/10 rounded-full px-2.5 py-1.5">{activeExercise.sets}</span>
-                <span className="text-xs text-white bg-white/10 border border-white/10 rounded-full px-2.5 py-1.5">Rest {activeExercise.rest}</span>
-                <span className="text-xs text-primary bg-primary/15 border border-primary/25 rounded-full px-2.5 py-1.5">~{activeExercise.kcal} kcal</span>
+              <div className="flex gap-2 flex-wrap mt-3 mb-4">
+                <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-full border font-bold ${levelClasses[activeExercise.level]}`}>
+                  {activeExercise.level}
+                </span>
+                <span className="text-xs text-muted-foreground bg-card border border-border rounded-full px-2.5 py-1">{activeExercise.equipment}</span>
               </div>
 
-              <div className="bg-black/45 backdrop-blur-xl rounded-2xl p-4 border border-white/15">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-1.5">Form cue</p>
-                <p className="text-sm text-white leading-relaxed">{activeExercise.cue}</p>
+              <div className="rounded-3xl overflow-hidden border border-border bg-white shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
+                <div className="aspect-[4/5] w-full flex items-center justify-center bg-white">
+                  <img
+                    key={activeExercise.name}
+                    src={getExerciseImage(activeExercise)}
+                    alt={`${activeExercise.name} form illustration`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
+
+              <div className="grid grid-cols-3 gap-2 mt-4">
+                <div className="bg-card border border-border rounded-xl p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Volume</p>
+                  <p className="text-sm font-semibold text-foreground mt-1">{activeExercise.sets}</p>
+                </div>
+                <div className="bg-card border border-border rounded-xl p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Rest</p>
+                  <p className="text-sm font-semibold text-foreground mt-1">{activeExercise.rest}</p>
+                </div>
+                <div className="bg-card border border-border rounded-xl p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Energy</p>
+                  <p className="text-sm font-semibold text-primary mt-1">~{activeExercise.kcal} kcal</p>
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-2xl p-4 mt-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-2">Technique</p>
+                <p className="text-sm text-foreground leading-relaxed">{activeExercise.cue}</p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveExercise(null)}
+                className="w-full mt-5 py-4 rounded-xl bg-primary text-primary-foreground font-bold active:scale-[0.99] transition-transform"
+              >
+                Back to workout
+              </button>
             </div>
           </div>
         </div>
@@ -2455,6 +2514,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground max-w-sm mx-auto relative">
+      <PageBrandBar />
       {activeTab === "home" && <HomeTab user={user} />}
       {activeTab === "workout" && <WorkoutTab user={user} />}
       {activeTab === "nutrition" && <NutritionTab />}
