@@ -25,6 +25,13 @@ import {
   Bike,
 } from "lucide-react";
 import brandLogo from "../assets/core-bts-new-logo.svg";
+import cardioImage from "../assets/exercises/cardio.svg";
+import lungeImage from "../assets/exercises/lunge.svg";
+import mobilityImage from "../assets/exercises/mobility.svg";
+import plankImage from "../assets/exercises/plank.svg";
+import pressImage from "../assets/exercises/press.svg";
+import pullImage from "../assets/exercises/pull.svg";
+import squatImage from "../assets/exercises/squat.svg";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -1162,13 +1169,13 @@ function WorkoutTab({ user }: { user: UserData }) {
 
   const getExerciseImage = (exercise: Exercise) => {
     const key = `${exercise.name} ${exercise.equipment}`.toLowerCase();
-    if (/deadlift|row|pulldown|woodchop|backpack/.test(key)) return "/images/exercises/pull.svg";
-    if (/lunge|split/.test(key)) return "/images/exercises/lunge.svg";
-    if (/press|push-up|dip|tricep/.test(key)) return "/images/exercises/press.svg";
-    if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return "/images/exercises/plank.svg";
-    if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return "/images/exercises/mobility.svg";
-    if (/squat|leg press|leg extension|leg curl|calf|bridge/.test(key)) return "/images/exercises/squat.svg";
-    return "/images/exercises/cardio.svg";
+    if (/deadlift|row|pulldown|woodchop|backpack/.test(key)) return pullImage;
+    if (/lunge|split/.test(key)) return lungeImage;
+    if (/press|push-up|dip|tricep/.test(key)) return pressImage;
+    if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return plankImage;
+    if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return mobilityImage;
+    if (/squat|leg press|leg extension|leg curl|calf|bridge/.test(key)) return squatImage;
+    return cardioImage;
   };
 
   const roadmap = roadmapByGoal[user.goal];
@@ -1183,7 +1190,6 @@ function WorkoutTab({ user }: { user: UserData }) {
       <div className="p-4 space-y-4 pb-4 relative">
         <div className="pt-3 flex items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.32em] text-primary font-bold mb-2">Core x BTS</p>
             <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
             <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
           </div>
@@ -1273,44 +1279,40 @@ function WorkoutTab({ user }: { user: UserData }) {
                 }}
                 className="w-full text-left bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/50 hover:bg-primary/[0.035] active:scale-[0.99] transition-all group cursor-pointer"
               >
-                <div className="flex min-h-[122px]">
-                  <div className="relative w-[104px] flex-shrink-0 bg-white overflow-hidden">
-                    <img
-                      src={getExerciseImage(exercise)}
-                      alt={`${exercise.name} illustration`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 left-2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg">
-                      <span className="text-primary-foreground text-xs font-barlow font-black">{String(index + 1).padStart(2, "0")}</span>
-                    </div>
+                <div className="flex items-start gap-3 p-4 min-h-[132px]">
+                  <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(37,99,235,0.18)]">
+                    <span className="text-primary-foreground text-xs font-barlow font-black">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </div>
 
-                  <div className="flex-1 min-w-0 p-3.5">
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-foreground text-sm">{exercise.name}</span>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${levelClasses[exercise.level]}`}>{exercise.level}</span>
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-1.5">
+                      <div className="flex items-center gap-2 flex-wrap min-w-0">
+                        <span className="font-bold text-foreground text-base">{exercise.name}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md border font-medium ${levelClasses[exercise.level]}`}>
+                          {exercise.level}
+                        </span>
                       </div>
 
                       <button
                         type="button"
                         onClick={(event) => event.stopPropagation()}
-                        className="w-9 h-9 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+                        onKeyDown={(event) => event.stopPropagation()}
+                        className="w-10 h-10 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
                         aria-label={`Camera button for ${exercise.name}`}
                       >
-                        <Camera size={15} className="text-primary" />
+                        <Camera size={17} className="text-primary" />
                       </button>
                     </div>
 
-                    <p className="text-xs text-primary mb-2 flex items-center gap-1.5">
-                      <Dumbbell size={11} /> {exercise.equipment}
+                    <p className="text-sm text-primary mb-2 flex items-center gap-1.5">
+                      <Dumbbell size={12} /> {exercise.equipment}
                     </p>
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                      <span><Activity size={10} className="inline mr-1" />{exercise.sets}</span>
-                      <span><Clock size={10} className="inline mr-1" />Rest {exercise.rest}</span>
-                      <span className="col-span-2 text-foreground/75 line-clamp-1">Technique: {exercise.cue}</span>
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm text-muted-foreground">
+                      <span><Activity size={12} className="inline mr-1" />{exercise.sets}</span>
+                      <span><Clock size={12} className="inline mr-1" />Rest {exercise.rest}</span>
+                      <span className="col-span-2 text-foreground/80 line-clamp-1">Technique: {exercise.cue}</span>
                     </div>
                   </div>
                 </div>
@@ -1373,7 +1375,7 @@ function WorkoutTab({ user }: { user: UserData }) {
                     key={activeExercise.name}
                     src={getExerciseImage(activeExercise)}
                     alt={`${activeExercise.name} form illustration`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </div>
