@@ -25,13 +25,13 @@ import {
   Bike,
 } from "lucide-react";
 import brandLogo from "../assets/core-bts-new-logo.svg";
-import cardioImage from "../assets/exercises/cardio.svg";
-import lungeImage from "../assets/exercises/lunge.svg";
-import mobilityImage from "../assets/exercises/mobility.svg";
-import plankImage from "../assets/exercises/plank.svg";
-import pressImage from "../assets/exercises/press.svg";
-import pullImage from "../assets/exercises/pull.svg";
-import squatImage from "../assets/exercises/squat.svg";
+import cardioImage from "../assets/exercises/cardio.png";
+import lungeImage from "../assets/exercises/lunge.png";
+import mobilityImage from "../assets/exercises/mobility.png";
+import plankImage from "../assets/exercises/plank.png";
+import pressImage from "../assets/exercises/press.png";
+import pullImage from "../assets/exercises/pull.png";
+import squatImage from "../assets/exercises/squat.png";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -96,17 +96,20 @@ type BrandLogoProps = {
 
 function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
   const frames = {
-    sm: "w-[170px] h-[52px]",
-    md: "w-[220px] h-[70px]",
-    lg: "w-[300px] h-[96px]",
+    sm: "w-[190px] h-[54px]",
+    md: "w-[260px] h-[74px]",
+    lg: "w-full max-w-[360px] h-[100px]",
   };
 
   return (
-    <div className={`${frames[size]} overflow-hidden flex items-center justify-center`} aria-label="CORE Fitness & Yoga x BTS">
+    <div
+      className={`${frames[size]} max-w-full flex items-center justify-center px-1`}
+      aria-label="CORE Fitness & Yoga x BTS"
+    >
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS Bonus To Score"
-        className="w-[120%] max-w-none h-auto object-contain"
+        className="block w-full h-full object-contain object-center"
         style={{ filter: variant === "light" ? "brightness(0)" : "none" }}
       />
     </div>
@@ -1188,19 +1191,11 @@ function WorkoutTab({ user }: { user: UserData }) {
   return (
     <>
       <div className="p-4 space-y-4 pb-4 relative">
-        <div className="pt-3 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
-            <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => undefined}
-            className="w-12 h-12 rounded-2xl border border-primary/25 bg-primary/10 flex items-center justify-center active:scale-90 transition-transform"
-            aria-label="Camera"
-          >
-            <Camera size={19} className="text-primary" />
-          </button>
+        <div className="pt-3">
+          <h2 className="font-barlow text-4xl font-black text-foreground leading-none">
+            Training<br />Roadmap
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
         </div>
 
         <div className="bg-card rounded-2xl p-4 border border-border">
