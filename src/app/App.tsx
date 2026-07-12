@@ -118,8 +118,12 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
 
 function PageBrandBar() {
   return (
-    <div className="px-4 pt-3 pb-2 border-b border-border/70 bg-background flex items-center justify-start">
-      <BrandLogo variant="dark" size="sm" />
+    <div className="px-4 pt-3 pb-3 border-b border-border/70 bg-background">
+      <img
+        src={brandLogo}
+        alt="CORE Fitness & Yoga x BTS"
+        className="w-[250px] max-w-[65vw] h-auto object-contain object-left"
+      />
     </div>
   );
 }
@@ -1195,14 +1199,7 @@ function WorkoutTab({ user }: { user: UserData }) {
             <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
             <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
           </div>
-          <button
-            type="button"
-            onClick={() => undefined}
-            className="w-12 h-12 rounded-2xl border border-primary/25 bg-primary/10 flex items-center justify-center active:scale-90 transition-transform"
-            aria-label="Camera"
-          >
-            <Camera size={19} className="text-primary" />
-          </button>
+          
         </div>
 
         <div className="bg-card rounded-2xl p-4 border border-border">
@@ -1372,7 +1369,7 @@ function WorkoutTab({ user }: { user: UserData }) {
               </div>
 
               <div className="rounded-3xl overflow-hidden border border-border bg-white shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
-                <div className="aspect-[4/5] w-full flex items-center justify-center bg-white">
+                <div className="aspect-[9/16] w-full flex items-center justify-center bg-white">
                   <img
                     key={activeExercise.name}
                     src={getExerciseImage(activeExercise)}
