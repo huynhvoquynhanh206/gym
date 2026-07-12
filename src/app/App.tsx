@@ -96,20 +96,20 @@ type BrandLogoProps = {
 
 function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
   const frames = {
-    sm: "w-[190px] h-[54px]",
-    md: "w-[260px] h-[74px]",
-    lg: "w-full max-w-[360px] h-[100px]",
+    sm: "w-[190px] sm:w-[220px]",
+    md: "w-[260px] sm:w-[300px]",
+    lg: "w-[78vw] min-w-[300px] max-w-[640px]",
   };
 
   return (
     <div
-      className={`${frames[size]} max-w-full flex items-center justify-center px-1`}
+      className={`${frames[size]} max-w-full flex items-center justify-center`}
       aria-label="CORE Fitness & Yoga x BTS"
     >
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS Bonus To Score"
-        className="block w-full h-full object-contain object-center"
+        className="block w-full h-auto object-contain object-center"
         style={{ filter: variant === "light" ? "brightness(0)" : "none" }}
       />
     </div>
@@ -1191,11 +1191,19 @@ function WorkoutTab({ user }: { user: UserData }) {
   return (
     <>
       <div className="p-4 space-y-4 pb-4 relative">
-        <div className="pt-3">
-          <h2 className="font-barlow text-4xl font-black text-foreground leading-none">
-            Training<br />Roadmap
-          </h2>
-          <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
+        <div className="pt-3 flex items-end justify-between gap-4">
+          <div>
+            <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
+            <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => undefined}
+            className="w-12 h-12 rounded-2xl border border-primary/25 bg-primary/10 flex items-center justify-center active:scale-90 transition-transform"
+            aria-label="Camera"
+          >
+            <Camera size={19} className="text-primary" />
+          </button>
         </div>
 
         <div className="bg-card rounded-2xl p-4 border border-border">
