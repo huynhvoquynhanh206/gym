@@ -96,9 +96,9 @@ type BrandLogoProps = {
 
 function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
   const frames = {
-    sm: "w-[190px] sm:w-[220px]",
-    md: "w-[260px] sm:w-[300px]",
-    lg: "w-[78vw] min-w-[300px] max-w-[640px]",
+    sm: "w-[230px] sm:w-[260px]",
+    md: "w-[310px] sm:w-[340px]",
+    lg: "w-[94vw] min-w-[340px] max-w-[760px]",
   };
 
   return (
@@ -118,7 +118,7 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
 
 function PageBrandBar() {
   return (
-    <div className="px-4 pt-2 pb-1 border-b border-border/70 bg-background">
+    <div className="px-4 pt-3 pb-2 border-b border-border/70 bg-background flex items-center justify-start">
       <BrandLogo variant="dark" size="sm" />
     </div>
   );
@@ -142,12 +142,12 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
         leaving ? "opacity-0" : "opacity-100"
       }`}
     >
-      <div className="w-full max-w-3xl px-7 text-center splash-collab-enter">
+      <div className="w-full max-w-5xl px-3 sm:px-6 text-center splash-collab-enter">
         <p className="text-[10px] sm:text-xs uppercase tracking-[0.42em] text-primary font-bold mb-7">
           Official training experience
         </p>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center w-full">
           <BrandLogo variant="dark" size="lg" />
         </div>
 
@@ -185,11 +185,10 @@ function StepPersonal({
   return (
     <div className="w-full max-w-sm px-6">
       <div className="mb-10">
-        <div className="mb-8">
-  <BrandLogo variant="dark" size="md" />
-
-  <div className="mt-4 h-[2px] w-12 rounded-full bg-primary" />
-</div>
+        <div className="mb-8 flex flex-col items-start">
+          <BrandLogo variant="dark" size="md" />
+          <div className="mt-4 h-[2px] w-12 rounded-full bg-primary" />
+        </div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-3">
           Welcome<br />aboard!
         </h1>
@@ -269,7 +268,7 @@ function StepMetrics({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-8">
-        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
+        <div className="mb-5 flex justify-start"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">Body<br />Metrics</h1>
         <p className="text-muted-foreground text-sm">Enter your measurements for an accurate BMI</p>
       </div>
@@ -366,7 +365,7 @@ function StepBMIResult({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-6">
-        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
+        <div className="mb-5 flex justify-start"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">BMI<br />Results</h1>
       </div>
 
@@ -464,7 +463,7 @@ function StepGoal({
         <ChevronLeft size={16} /> Back
       </button>
       <div className="mb-8">
-        <div className="mb-5"><BrandLogo variant="dark" size="sm" /></div>
+        <div className="mb-5 flex justify-start"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">Your<br />Goal</h1>
         <p className="text-muted-foreground text-sm">The app will build a personalized plan based on this goal</p>
       </div>
@@ -542,8 +541,8 @@ function OnboardingFlow({ onComplete }: { onComplete: (d: UserData) => void }) {
   const [data, setData] = useState<UserData>(defaultUser);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center py-10">
-      <div className="flex gap-1.5 mb-10">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-start pt-[max(18px,env(safe-area-inset-top))] pb-10">
+      <div className="flex gap-1.5 mb-6">
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
