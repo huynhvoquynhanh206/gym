@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "kho-mon-gym-web",
   "private": true,
   "version": "2.0.0",
@@ -11,6 +12,15 @@
     "start": "node server/index.mjs",
     "preview": "vite preview",
     "test": "node --test server/tests/*.test.mjs"
+=======
+  "name": "@figma/my-make-file",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+>>>>>>> 99fc191 (Initial commit)
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -61,19 +71,28 @@
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",
     "react-responsive-masonry": "2.7.1",
+<<<<<<< HEAD
+=======
+    "react-router": "7.13.0",
+>>>>>>> 99fc191 (Initial commit)
     "react-slick": "0.31.0",
     "recharts": "2.15.2",
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
     "tw-animate-css": "1.3.8",
+<<<<<<< HEAD
     "vaul": "1.1.2",
     "react": "18.3.1",
     "react-dom": "18.3.1"
+=======
+    "vaul": "1.1.2"
+>>>>>>> 99fc191 (Initial commit)
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
+<<<<<<< HEAD
     "vite": "6.4.3"
   },
   "pnpm": {
@@ -86,3 +105,25 @@
     "node": ">=22.5.0"
   }
 }
+=======
+    "vite": "6.3.5"
+  },
+  "peerDependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "6.3.5"
+    }
+  }
+}
+>>>>>>> 99fc191 (Initial commit)
