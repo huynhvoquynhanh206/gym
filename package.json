@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "build": "vite build",
-    "dev": "vite"
+    "start": "node server.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -86,5 +87,8 @@
     "overrides": {
       "vite": "6.3.5"
     }
+  },
+  "engines": {
+    "node": ">=20 <25"
   }
 }

@@ -1,17 +1,19 @@
 FROM node:22-alpine AS build
 
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm ci
-
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM node:22-alpine AS runtime
 
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /app
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
 
-EXPOSE 80
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/server.mjs ./server.mjs
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 10000
+CMD ["node", "server.mjs"]
