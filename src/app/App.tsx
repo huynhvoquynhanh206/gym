@@ -3037,6 +3037,7 @@ function CheckinTab({ user }: { user: UserData }) {
   const [streak, setStreak] = useState(baseStreak);
   const [displayStreak, setDisplayStreak] = useState(baseStreak);
   const [celebrating, setCelebrating] = useState(false);
+  const [celebrationTarget, setCelebrationTarget] = useState(baseStreak + 1);
 
   const storageSuffix = user.name.trim().toLowerCase().replace(/\s+/g, "-") || "member";
   const streakStorageKey = `core-streak-${storageSuffix}`;
@@ -3052,48 +3053,68 @@ function CheckinTab({ user }: { user: UserData }) {
 
   useEffect(() => {
     const savedStreak = Number(window.localStorage.getItem(streakStorageKey));
-    const safeStreak = Number.isFinite(savedStreak) && savedStreak > 0
-      ? savedStreak
-      : baseStreak;
-
     const alreadyCheckedIn =
       window.localStorage.getItem(checkinDateStorageKey) === getLocalDateKey();
+    const safeStreak = Number.isFinite(savedStreak) && savedStreak > 0
+      ? savedStreak
+      : alreadyCheckedIn
+      ? baseStreak + 1
+      : baseStreak;
 
     setStreak(safeStreak);
     setDisplayStreak(safeStreak);
     setCheckedIn(alreadyCheckedIn);
+    setCelebrating(false);
   }, [checkinDateStorageKey, streakStorageKey]);
+
+  useEffect(() => {
+    if (!celebrating) return;
+
+    const numberTimer = window.setTimeout(() => {
+      setDisplayStreak(celebrationTarget);
+    }, 620);
+    const finishTimer = window.setTimeout(() => {
+      setCelebrating(false);
+    }, 1900);
+
+    return () => {
+      window.clearTimeout(numberTimer);
+      window.clearTimeout(finishTimer);
+    };
+  }, [celebrating, celebrationTarget]);
 
   const handleCheckIn = () => {
     if (checkedIn || celebrating) return;
 
     const nextStreak = streak + 1;
 
+    // Persist first so a refresh/closed tab cannot award the same day twice.
+    window.localStorage.setItem(streakStorageKey, String(nextStreak));
+    window.localStorage.setItem(checkinDateStorageKey, getLocalDateKey());
+
     setCheckedIn(true);
-    setCelebrating(true);
     setDisplayStreak(streak);
-
-    window.setTimeout(() => {
-      setStreak(nextStreak);
-      setDisplayStreak(nextStreak);
-      window.localStorage.setItem(streakStorageKey, String(nextStreak));
-      window.localStorage.setItem(checkinDateStorageKey, getLocalDateKey());
-    }, 620);
-
-    window.setTimeout(() => {
-      setCelebrating(false);
-    }, 1900);
+    setStreak(nextStreak);
+    setCelebrationTarget(nextStreak);
+    setCelebrating(true);
   };
 
-  const week = [
-    { label: "Mo", date: "7", done: true },
-    { label: "Tu", date: "8", done: false },
-    { label: "We", date: "9", done: false, today: true },
-    { label: "Th", date: "10", done: false },
-    { label: "Fr", date: "11", done: false },
-    { label: "Sa", date: "12", done: false },
-    { label: "Su", date: "13", done: false },
-  ];
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  const todayIndex = (now.getDay() + 6) % 7;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - todayIndex);
+  const week = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map(
+    (label, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+      return {
+        label,
+        date: String(date.getDate()),
+        today: index === todayIndex,
+      };
+    }
+  );
 
   const friends = [
     {
@@ -3337,8 +3358,8 @@ function CheckinTab({ user }: { user: UserData }) {
           </h3>
 
           <div className="flex gap-1">
-            {week.map(({ label, date, done, today }) => {
-              const completed = done || Boolean(today && checkedIn);
+            {week.map(({ label, date, today }) => {
+              const completed = Boolean(today && checkedIn);
 
               return (
                 <div
