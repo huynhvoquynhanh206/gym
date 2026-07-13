@@ -175,7 +175,7 @@ function PageBrandBar({ email, onLogout }: { email: string; onLogout: () => void
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[150px] sm:w-[150px] h-auto object-contain object-left"
+        className="w-[190px] sm:w-[190px] h-auto object-contain object-left"
       />
       <button
         type="button"
@@ -938,7 +938,7 @@ function HomeTab({ user }: { user: UserData }) {
             Hello 👋
           </p>
 
-          <h1 className="font-barlow text-3xl font-black text-foreground mt-1.5 leading-none">
+          <h1 className="font-barlow text-[26px] font-black text-foreground mt-1.5 leading-none">
             {user.name}
           </h1>
         </div>
