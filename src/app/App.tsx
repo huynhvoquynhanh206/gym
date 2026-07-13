@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Camera,
+  Video,
   Flame,
   Clock,
   MapPin,
@@ -25,31 +26,61 @@ import {
   Bike,
 } from "lucide-react";
 import brandLogo from "../assets/core-bts-new-logo.svg";
-import inclinePushUpImage from "../assets/exercises/home/incline-push-up.jpg";
-import backpackRowImage from "../assets/exercises/home/backpack-row.jpg";
-import pikePushUpImage from "../assets/exercises/home/pike-push-up.jpg";
-import chairTricepDipImage from "../assets/exercises/home/chair-tricep-dip.jpg";
+import chestPressImage from "../assets/exercises/gym/chest-press.jpg";
+import latPulldownImage from "../assets/exercises/gym/lat-pulldown.jpg";
+import seatedRowImage from "../assets/exercises/gym/seated-row.jpg";
+import shoulderPressImage from "../assets/exercises/gym/shoulder-press.jpg";
+import tricepPushdownImage from "../assets/exercises/gym/tricep-pushdown.jpg";
 
-import bodyweightSquatImage from "../assets/exercises/home/bodyweight-squat.jpg";
-import reverseLungeImage from "../assets/exercises/home/reverse-lunge.jpg";
-import singleLegGluteBridgeImage from "../assets/exercises/home/single-leg-glute-bridge.jpg";
-import calfRaiseImage from "../assets/exercises/home/calf-raise.jpg";
+import legPressImage from "../assets/exercises/gym/leg-press.jpg";
+import romanianDeadliftImage from "../assets/exercises/gym/romanian-deadlift.jpg";
+import legCurlImage from "../assets/exercises/gym/leg-curl.jpg";
+import legExtensionImage from "../assets/exercises/gym/leg-extension.jpg";
+import gymCalfRaiseImage from "../assets/exercises/gym/calf-raise.jpg";
 
-import marchingWarmUpImage from "../assets/exercises/home/marching-warm-up.jpg";
-import squatToReachImage from "../assets/exercises/home/squat-to-reach.jpg";
-import mountainClimberImage from "../assets/exercises/home/mountain-climber.jpg";
+import treadmillWarmUpImage from "../assets/exercises/gym/treadmill-warm-up.jpg";
+import gobletSquatImage from "../assets/exercises/gym/goblet-squat.jpg";
+import bikeFinisherImage from "../assets/exercises/gym/bike-finisher.jpg";
 
-import jumpingJackImage from "../assets/exercises/home/jumping-jack.jpg";
-import deadBugImage from "../assets/exercises/home/dead-bug.jpg";
-import plankImage from "../assets/exercises/home/plank.jpg";
+import inclineWalkImage from "../assets/exercises/gym/incline-walk.jpg";
+import rowIntervalsImage from "../assets/exercises/gym/row-intervals.jpg";
+import cableCrunchImage from "../assets/exercises/gym/cable-crunch.jpg";
+import gymPlankImage from "../assets/exercises/gym/plank.jpg";
 
-import catCowImage from "../assets/exercises/home/cat-cow.jpg";
-import worldsGreatestStretchImage from "../assets/exercises/home/worlds-greatest-stretch.jpg";
-import hipSwitch9090Image from "../assets/exercises/home/hip-switch-90-90.jpg";
+import bikeRecoveryImage from "../assets/exercises/gym/bike-recovery.jpg";
+import hipMobilityFlowImage from "../assets/exercises/gym/hip-mobility-flow.jpg";
+import shoulderMobilityImage from "../assets/exercises/gym/shoulder-mobility.jpg";
 
-import sidePlankImage from "../assets/exercises/home/side-plank.jpg";
-import birdDogImage from "../assets/exercises/home/bird-dog.jpg";
-import mobilityFlowImage from "../assets/exercises/home/mobility-flow.jpg";
+import cableWoodchopImage from "../assets/exercises/gym/cable-woodchop.jpg";
+import backExtensionImage from "../assets/exercises/gym/back-extension.jpg";
+import gymDeadBugImage from "../assets/exercises/gym/dead-bug.jpg";
+import gymMobilityFlowImage from "../assets/exercises/gym/mobility-flow.jpg";
+
+import homeInclinePushUpImage from "../assets/exercises/home/incline-push-up.jpg";
+import homeBackpackRowImage from "../assets/exercises/home/backpack-row.jpg";
+import homePikePushUpImage from "../assets/exercises/home/pike-push-up.jpg";
+import homeChairTricepDipImage from "../assets/exercises/home/chair-tricep-dip.jpg";
+
+import homeBodyweightSquatImage from "../assets/exercises/home/bodyweight-squat.jpg";
+import homeReverseLungeImage from "../assets/exercises/home/reverse-lunge.jpg";
+import homeSingleLegGluteBridgeImage from "../assets/exercises/home/single-leg-glute-bridge.jpg";
+import homeCalfRaiseImage from "../assets/exercises/home/calf-raise.jpg";
+
+import homeMarchingWarmUpImage from "../assets/exercises/home/marching-warm-up.jpg";
+import homeSquatToReachImage from "../assets/exercises/home/squat-to-reach.jpg";
+import homeMountainClimberImage from "../assets/exercises/home/mountain-climber.jpg";
+
+import homeJumpingJackImage from "../assets/exercises/home/jumping-jack.jpg";
+import homeDeadBugImage from "../assets/exercises/home/dead-bug.jpg";
+import homePlankImage from "../assets/exercises/home/plank.jpg";
+
+import homeCatCowImage from "../assets/exercises/home/cat-cow.jpg";
+import homeWorldsGreatestStretchImage from "../assets/exercises/home/worlds-greatest-stretch.jpg";
+import homeHipSwitch9090Image from "../assets/exercises/home/hip-switch-90-90.jpg";
+
+import homeSidePlankImage from "../assets/exercises/home/side-plank.jpg";
+import homeBirdDogImage from "../assets/exercises/home/bird-dog.jpg";
+import homeMobilityFlowImage from "../assets/exercises/home/mobility-flow.jpg";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -137,11 +168,11 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
 
 function PageBrandBar() {
   return (
-    <div className="px-4 pt-3 pb-0 bg-background">
+    <div className="px-4 pt-2 pb-0 bg-background">
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[195px] max-w-[58vw] h-auto object-contain object-left"
+        className="w-[112px] sm:w-[120px] h-auto object-contain object-left"
       />
     </div>
   );
@@ -654,7 +685,7 @@ function HomeTab({ user }: { user: UserData }) {
   const getCrowdColor = (level: number) => {
     if (level >= 75) return "#ef4444";
     if (level >= 45) return "#f59e0b";
-    return "#2563eb";
+    return "#22c55e";
   };
 
   const getCrowdTextColor = (level: number) =>
@@ -707,17 +738,17 @@ function HomeTab({ user }: { user: UserData }) {
     : 32;
 
   return (
-    <div className="p-4 space-y-4 pb-4">
-      <div className="flex items-center justify-between pt-1">
+    <div className="px-4 pt-1 pb-4 space-y-4">
+      <div className="flex items-start justify-between">
         <div>
-  <p className="text-muted-foreground text-sm">
-    Hello 👋
-  </p>
+          <p className="text-muted-foreground text-lg leading-none">
+            Hello 👋
+          </p>
 
-  <h2 className="font-barlow text-2xl font-bold text-foreground">
-    {user.name}
-  </h2>
-</div>
+          <h1 className="font-barlow text-4xl font-black text-foreground mt-1.5 leading-none">
+            {user.name}
+          </h1>
+        </div>
         <div className="relative">
           <div className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center">
             <Bell size={17} className="text-muted-foreground" />
@@ -886,7 +917,7 @@ function HomeTab({ user }: { user: UserData }) {
   {/* Chú thích màu */}
   <div className="flex gap-4 mt-3 mb-4 flex-wrap">
     {[
-      ["#2563eb", "Quiet"],
+      ["#22c55e", "Quiet"],
       ["#f59e0b", "Moderate"],
       ["#ef4444", "Very Busy"],
     ].map(([color, label]) => (
@@ -921,102 +952,112 @@ function HomeTab({ user }: { user: UserData }) {
 
   {/* Danh sách chi nhánh nằm dưới biểu đồ */}
   <div className="space-y-2">
-    {gymBranches.map((branch, index) => {
-      const branchColor = getCrowdColor(
-        branch.currentLevel
-      );
-
-      const branchLabel = getCrowdLabel(
-        branch.currentLevel
-      );
-
-      const isSelected =
-        selectedBranchIndex === index;
-
-      const isQuietest =
-        quietestBranchIndex === index;
+  {gymBranches.map((branch, index) => {
+      const branchLabel = getCrowdLabel(branch.currentLevel);
+      const isSelected = selectedBranchIndex === index;
+      const isQuietest = quietestBranchIndex === index;
 
       return (
         <button
           key={branch.name}
+          type="button"
           onClick={() => setSelectedBranchIndex(index)}
-          className="w-full rounded-xl p-3 text-left transition-all active:scale-[0.99]"
-          style={{
-            backgroundColor: branchColor,
-            color: getCrowdTextColor(branch.currentLevel),
-            outline: isSelected ? "3px solid rgba(255,255,255,0.85)" : "1px solid rgba(255,255,255,0.10)",
-            boxShadow: isSelected ? `0 12px 28px ${branchColor}45` : "none",
-          }}
+          className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
+            isSelected
+              ? "border-primary bg-primary shadow-[0_12px_35px_rgba(70,98,235,0.30)]"
+              : "border-primary bg-background hover:bg-primary/5"
+          }`}
         >
           <div className="flex items-start gap-3">
-            {/* Location icon */}
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{
-                backgroundColor: "rgba(255,255,255,0.18)",
-                border: "1px solid rgba(255,255,255,0.30)",
-              }}
+              className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 border ${
+                isSelected
+                  ? "bg-white/15 border-white/35"
+                  : "bg-primary/10 border-primary/40"
+              }`}
             >
               <MapPin
-                size={16}
-                style={{
-                  color: getCrowdTextColor(branch.currentLevel),
-                }}
+                size={20}
+                className={isSelected ? "text-white" : "text-primary"}
               />
             </div>
 
-            {/* Thông tin cơ sở */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-semibold" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-                  {branch.name}
-                </p>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p
+                    className={`text-base font-bold leading-snug ${
+                      isSelected ? "text-white" : "text-foreground"
+                    }`}
+                  >
+                    {branch.name}
+                  </p>
 
-                {isQuietest && (
-                  <span className="text-[9px] uppercase tracking-wider bg-black/20 px-2 py-0.5 rounded-full font-bold" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-                    Best choice
+                  {isQuietest && (
+                    <span
+                      className={`inline-block mt-2 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-bold ${
+                        isSelected
+                          ? "bg-blue-700 text-white"
+                          : "bg-primary/15 text-primary"
+                      }`}
+                    >
+                      Best choice
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-right flex-shrink-0">
+                  <span
+                    className={`inline-block text-[10px] px-2.5 py-1 rounded-full font-bold border ${
+                      isSelected
+                        ? "bg-blue-700 border-blue-600 text-white"
+                        : "bg-primary/15 border-primary/30 text-primary"
+                    }`}
+                  >
+                    {branchLabel}
                   </span>
-                )}
+
+                  <p
+                    className={`text-xs mt-1 ${
+                      isSelected ? "text-white/85" : "text-muted-foreground"
+                    }`}
+                  >
+                    {branch.currentLevel}%
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-0.5">
-  <p className="text-xs font-semibold opacity-90" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-    {branch.shortName}
-  </p>
-
-  {branch.note && (
-    <p className="text-[11px] mt-0.5 opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-      {branch.note}
-    </p>
-  )}
-</div>
-
-              <p className="text-[11px] mt-1 leading-relaxed opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-                {branch.address}
-              </p>
-            </div>
-
-            {/* Trạng thái hiện tại */}
-            <div className="text-right flex-shrink-0">
-              <span
-                className="inline-block text-[10px] px-2 py-1 rounded-full font-bold"
-                style={{
-                  color: getCrowdTextColor(branch.currentLevel),
-                  backgroundColor: "rgba(0,0,0,0.18)",
-                }}
+              <p
+                className={`text-sm mt-1 ${
+                  isSelected ? "text-white" : "text-primary"
+                }`}
               >
-                {branchLabel}
-              </span>
+                {branch.shortName}
+              </p>
 
-              <p className="text-[10px] mt-1 opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
-                {branch.currentLevel}%
+              {branch.note && (
+                <p
+                  className={`text-sm mt-1 ${
+                    isSelected ? "text-white/80" : "text-muted-foreground"
+                  }`}
+                >
+                  {branch.note}
+                </p>
+              )}
+
+              <p
+                className={`text-sm mt-3 leading-relaxed ${
+                  isSelected ? "text-white/85" : "text-muted-foreground"
+                }`}
+              >
+                {branch.address}
               </p>
             </div>
           </div>
         </button>
       );
     })}
-  </div>
+</div>
 </div>
 
       <div className="bg-card rounded-2xl p-4 border border-border">
@@ -1119,45 +1160,284 @@ function WorkoutTab({ user }: { user: UserData }) {
   };
 
   const gymCatalog: Record<string, Exercise[]> = {
-    "Upper Body": [
-      { name: "Chest Press", sets: "4 × 10", equipment: "Chest Press Machine", kcal: 95, level: "Beginner", rest: "75 sec", cue: "Keep shoulder blades back and press without locking the elbows." },
-      { name: "Lat Pulldown", sets: "4 × 10", equipment: "Lat Pulldown Machine", kcal: 90, level: "Beginner", rest: "75 sec", cue: "Pull the elbows toward the ribs while keeping the chest tall." },
-      { name: "Seated Row", sets: "3 × 12", equipment: "Cable Row Machine", kcal: 80, level: "Intermediate", rest: "60 sec", cue: "Finish each rep by squeezing the shoulder blades together." },
-      { name: "Shoulder Press", sets: "3 × 10", equipment: "Shoulder Press Machine", kcal: 75, level: "Intermediate", rest: "60 sec", cue: "Brace the core and stop just before the elbows lock." },
-      { name: "Tricep Pushdown", sets: "3 × 12", equipment: "Cable Machine", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Keep the elbows pinned beside the torso." },
-    ],
-    "Lower Body": [
-      { name: "Leg Press", sets: "4 × 12", equipment: "45° Leg Press", kcal: 130, level: "Intermediate", rest: "90 sec", cue: "Keep the knees tracking in line with the toes." },
-      { name: "Romanian Deadlift", sets: "3 × 10", equipment: "Barbell", kcal: 115, level: "Advanced", rest: "90 sec", cue: "Push the hips back while maintaining a neutral spine." },
-      { name: "Leg Curl", sets: "3 × 12", equipment: "Leg Curl Machine", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Curl smoothly and control the return phase." },
-      { name: "Leg Extension", sets: "3 × 12", equipment: "Leg Extension Machine", kcal: 65, level: "Beginner", rest: "60 sec", cue: "Pause briefly at the top without snapping the knees." },
-      { name: "Calf Raise", sets: "4 × 15", equipment: "Standing Calf Machine", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Use the full ankle range and pause at the top." },
-    ],
-    "Full Body": [
-      { name: "Treadmill Warm-up", sets: "8 min", equipment: "Treadmill", kcal: 70, level: "Beginner", rest: "—", cue: "Start easy and build toward a conversational pace." },
-      { name: "Goblet Squat", sets: "4 × 12", equipment: "Dumbbell", kcal: 120, level: "Beginner", rest: "75 sec", cue: "Keep the chest tall and gently drive the knees outward." },
-      { name: "Chest Press", sets: "3 × 12", equipment: "Chest Press Machine", kcal: 85, level: "Beginner", rest: "60 sec", cue: "Keep the wrists neutral and shoulder blades supported." },
-      { name: "Seated Row", sets: "3 × 12", equipment: "Cable Row Machine", kcal: 80, level: "Intermediate", rest: "60 sec", cue: "Pull toward the lower ribs without leaning backward." },
-      { name: "Bike Finisher", sets: "10 min", equipment: "Stationary Bike", kcal: 115, level: "Intermediate", rest: "—", cue: "Alternate 30 seconds hard with 30 seconds easy." },
-    ],
-    "Cardio & Core": [
-      { name: "Incline Walk", sets: "15 min", equipment: "Treadmill", kcal: 145, level: "Beginner", rest: "—", cue: "Stay tall and avoid holding the rails." },
-      { name: "Row Intervals", sets: "8 × 45 sec", equipment: "Rowing Machine", kcal: 135, level: "Intermediate", rest: "45 sec", cue: "Drive with the legs first, then finish with the arms." },
-      { name: "Cable Crunch", sets: "3 × 15", equipment: "Cable Machine", kcal: 55, level: "Intermediate", rest: "45 sec", cue: "Curl the ribs toward the hips rather than pulling with the arms." },
-      { name: "Plank", sets: "3 × 45 sec", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "45 sec", cue: "Keep the hips level and squeeze the glutes." },
-    ],
-    Mobility: [
-      { name: "Bike Recovery", sets: "10 min", equipment: "Stationary Bike", kcal: 70, level: "Beginner", rest: "—", cue: "Keep resistance light and breathing relaxed." },
-      { name: "Hip Mobility Flow", sets: "2 rounds", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "30 sec", cue: "Move slowly through the available range." },
-      { name: "Shoulder Mobility", sets: "2 rounds", equipment: "Resistance Band", kcal: 25, level: "Beginner", rest: "30 sec", cue: "Use a pain-free range with no pinching sensation." },
-    ],
-    "Core & Mobility": [
-      { name: "Cable Woodchop", sets: "3 × 12/side", equipment: "Cable Machine", kcal: 60, level: "Intermediate", rest: "45 sec", cue: "Rotate through the torso while keeping the hips controlled." },
-      { name: "Back Extension", sets: "3 × 12", equipment: "Back Extension Bench", kcal: 55, level: "Beginner", rest: "45 sec", cue: "Stop when the body reaches a neutral line." },
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep the lower back gently pressed into the mat." },
-      { name: "Mobility Flow", sets: "8 min", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "—", cue: "Match controlled movement with slow breathing." },
-    ],
-  };
+  "Upper Body": [
+    {
+      name: "Chest Press",
+      sets: "4 × 10",
+      equipment: "Chest Press Machine",
+      kcal: 95,
+      level: "Beginner",
+      rest: "75 sec",
+      cue: "Keep shoulder blades back and press without locking the elbows.",
+      image: chestPressImage,
+    },
+    {
+      name: "Lat Pulldown",
+      sets: "4 × 10",
+      equipment: "Lat Pulldown Machine",
+      kcal: 90,
+      level: "Beginner",
+      rest: "75 sec",
+      cue: "Pull the elbows toward the ribs while keeping the chest tall.",
+      image: latPulldownImage,
+    },
+    {
+      name: "Seated Row",
+      sets: "3 × 12",
+      equipment: "Cable Row Machine",
+      kcal: 80,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Finish each rep by squeezing the shoulder blades together.",
+      image: seatedRowImage,
+    },
+    {
+      name: "Shoulder Press",
+      sets: "3 × 10",
+      equipment: "Shoulder Press Machine",
+      kcal: 75,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Brace the core and stop just before the elbows lock.",
+      image: shoulderPressImage,
+    },
+    {
+      name: "Tricep Pushdown",
+      sets: "3 × 12",
+      equipment: "Cable Machine",
+      kcal: 55,
+      level: "Beginner",
+      rest: "45 sec",
+      cue: "Keep the elbows pinned beside the torso.",
+      image: tricepPushdownImage,
+    },
+  ],
+
+  "Lower Body": [
+    {
+      name: "Leg Press",
+      sets: "4 × 12",
+      equipment: "45° Leg Press",
+      kcal: 130,
+      level: "Intermediate",
+      rest: "90 sec",
+      cue: "Keep the knees tracking in line with the toes.",
+      image: legPressImage,
+    },
+    {
+      name: "Romanian Deadlift",
+      sets: "3 × 10",
+      equipment: "Barbell",
+      kcal: 115,
+      level: "Advanced",
+      rest: "90 sec",
+      cue: "Push the hips back while maintaining a neutral spine.",
+      image: romanianDeadliftImage,
+    },
+    {
+      name: "Leg Curl",
+      sets: "3 × 12",
+      equipment: "Leg Curl Machine",
+      kcal: 70,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Curl smoothly and control the return phase.",
+      image: legCurlImage,
+    },
+    {
+      name: "Leg Extension",
+      sets: "3 × 12",
+      equipment: "Leg Extension Machine",
+      kcal: 65,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Pause briefly at the top without snapping the knees.",
+      image: legExtensionImage,
+    },
+    {
+      name: "Calf Raise",
+      sets: "4 × 15",
+      equipment: "Standing Calf Machine",
+      kcal: 55,
+      level: "Beginner",
+      rest: "45 sec",
+      cue: "Use the full ankle range and pause at the top.",
+      image: gymCalfRaiseImage,
+    },
+  ],
+
+  "Full Body": [
+    {
+      name: "Treadmill Warm-up",
+      sets: "8 min",
+      equipment: "Treadmill",
+      kcal: 70,
+      level: "Beginner",
+      rest: "—",
+      cue: "Start easy and build toward a conversational pace.",
+      image: treadmillWarmUpImage,
+    },
+    {
+      name: "Goblet Squat",
+      sets: "4 × 12",
+      equipment: "Dumbbell",
+      kcal: 120,
+      level: "Beginner",
+      rest: "75 sec",
+      cue: "Keep the chest tall and gently drive the knees outward.",
+      image: gobletSquatImage,
+    },
+    {
+      name: "Chest Press",
+      sets: "3 × 12",
+      equipment: "Chest Press Machine",
+      kcal: 85,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Keep the wrists neutral and shoulder blades supported.",
+      image: chestPressImage,
+    },
+    {
+      name: "Seated Row",
+      sets: "3 × 12",
+      equipment: "Cable Row Machine",
+      kcal: 80,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Pull toward the lower ribs without leaning backward.",
+      image: seatedRowImage,
+    },
+    {
+      name: "Bike Finisher",
+      sets: "10 min",
+      equipment: "Stationary Bike",
+      kcal: 115,
+      level: "Intermediate",
+      rest: "—",
+      cue: "Alternate 30 seconds hard with 30 seconds easy.",
+      image: bikeFinisherImage,
+    },
+  ],
+
+  "Cardio & Core": [
+    {
+      name: "Incline Walk",
+      sets: "15 min",
+      equipment: "Treadmill",
+      kcal: 145,
+      level: "Beginner",
+      rest: "—",
+      cue: "Stay tall and avoid holding the rails.",
+      image: inclineWalkImage,
+    },
+    {
+      name: "Row Intervals",
+      sets: "8 × 45 sec",
+      equipment: "Rowing Machine",
+      kcal: 135,
+      level: "Intermediate",
+      rest: "45 sec",
+      cue: "Drive with the legs first, then finish with the arms.",
+      image: rowIntervalsImage,
+    },
+    {
+      name: "Cable Crunch",
+      sets: "3 × 15",
+      equipment: "Cable Machine",
+      kcal: 55,
+      level: "Intermediate",
+      rest: "45 sec",
+      cue: "Curl the ribs toward the hips rather than pulling with the arms.",
+      image: cableCrunchImage,
+    },
+    {
+      name: "Plank",
+      sets: "3 × 45 sec",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Beginner",
+      rest: "45 sec",
+      cue: "Keep the hips level and squeeze the glutes.",
+      image: gymPlankImage,
+    },
+  ],
+
+  Mobility: [
+    {
+      name: "Bike Recovery",
+      sets: "10 min",
+      equipment: "Stationary Bike",
+      kcal: 70,
+      level: "Beginner",
+      rest: "—",
+      cue: "Keep resistance light and breathing relaxed.",
+      image: bikeRecoveryImage,
+    },
+    {
+      name: "Hip Mobility Flow",
+      sets: "2 rounds",
+      equipment: "Exercise Mat",
+      kcal: 30,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Move slowly through the available range.",
+      image: hipMobilityFlowImage,
+    },
+    {
+      name: "Shoulder Mobility",
+      sets: "2 rounds",
+      equipment: "Resistance Band",
+      kcal: 25,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Use a pain-free range with no pinching sensation.",
+      image: shoulderMobilityImage,
+    },
+  ],
+
+  "Core & Mobility": [
+    {
+      name: "Cable Woodchop",
+      sets: "3 × 12/side",
+      equipment: "Cable Machine",
+      kcal: 60,
+      level: "Intermediate",
+      rest: "45 sec",
+      cue: "Rotate through the torso while keeping the hips controlled.",
+      image: cableWoodchopImage,
+    },
+    {
+      name: "Back Extension",
+      sets: "3 × 12",
+      equipment: "Back Extension Bench",
+      kcal: 55,
+      level: "Beginner",
+      rest: "45 sec",
+      cue: "Stop when the body reaches a neutral line.",
+      image: backExtensionImage,
+    },
+    {
+      name: "Dead Bug",
+      sets: "3 × 10/side",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Keep the lower back gently pressed into the mat.",
+      image: gymDeadBugImage,
+    },
+    {
+      name: "Mobility Flow",
+      sets: "8 min",
+      equipment: "Exercise Mat",
+      kcal: 30,
+      level: "Beginner",
+      rest: "—",
+      cue: "Match controlled movement with slow breathing.",
+      image: gymMobilityFlowImage,
+    },
+  ],
+};
 
 const homeCatalog: Record<string, Exercise[]> = {
   "Upper Body": [
@@ -1169,7 +1449,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "60 sec",
       cue: "Keep the body in one straight line from head to heels.",
-      image: inclinePushUpImage,
+      image: homeInclinePushUpImage,
     },
     {
       name: "Backpack Row",
@@ -1179,7 +1459,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "60 sec",
       cue: "Pull the elbows behind the body without shrugging.",
-      image: backpackRowImage,
+      image: homeBackpackRowImage,
     },
     {
       name: "Pike Push-up",
@@ -1189,7 +1469,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "60 sec",
       cue: "Let the head travel between the hands.",
-      image: pikePushUpImage,
+      image: homePikePushUpImage,
     },
     {
       name: "Chair Tricep Dip",
@@ -1199,7 +1479,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "45 sec",
       cue: "Keep the shoulders away from the ears.",
-      image: chairTricepDipImage,
+      image: homeChairTricepDipImage,
     },
   ],
 
@@ -1212,7 +1492,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "60 sec",
       cue: "Sit between the hips and keep the knees over the toes.",
-      image: bodyweightSquatImage,
+      image: homeBodyweightSquatImage,
     },
     {
       name: "Reverse Lunge",
@@ -1222,7 +1502,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "60 sec",
       cue: "Keep the front heel grounded throughout the rep.",
-      image: reverseLungeImage,
+      image: homeReverseLungeImage,
     },
     {
       name: "Single-leg Glute Bridge",
@@ -1232,7 +1512,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "45 sec",
       cue: "Keep the pelvis level as the hips rise.",
-      image: singleLegGluteBridgeImage,
+      image: homeSingleLegGluteBridgeImage,
     },
     {
       name: "Calf Raise",
@@ -1242,7 +1522,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "30 sec",
       cue: "Pause at the top and lower slowly.",
-      image: calfRaiseImage,
+      image: homeCalfRaiseImage,
     },
   ],
 
@@ -1255,7 +1535,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "—",
       cue: "Build the pace gradually and swing the arms naturally.",
-      image: marchingWarmUpImage,
+      image: homeMarchingWarmUpImage,
     },
     {
       name: "Squat to Reach",
@@ -1265,7 +1545,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "60 sec",
       cue: "Stand tall and reach overhead at the top.",
-      image: squatToReachImage,
+      image: homeSquatToReachImage,
     },
     {
       name: "Incline Push-up",
@@ -1275,7 +1555,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "60 sec",
       cue: "Keep the ribs stacked and elbows at roughly 45 degrees.",
-      image: inclinePushUpImage,
+      image: homeInclinePushUpImage,
     },
     {
       name: "Reverse Lunge",
@@ -1285,7 +1565,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "60 sec",
       cue: "Step back softly and drive through the front foot.",
-      image: reverseLungeImage,
+      image: homeReverseLungeImage,
     },
     {
       name: "Mountain Climber",
@@ -1295,7 +1575,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "30 sec",
       cue: "Keep the shoulders over the wrists and hips steady.",
-      image: mountainClimberImage,
+      image: homeMountainClimberImage,
     },
   ],
 
@@ -1308,7 +1588,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "30 sec",
       cue: "Land softly and keep a steady rhythm.",
-      image: jumpingJackImage,
+      image: homeJumpingJackImage,
     },
     {
       name: "Mountain Climber",
@@ -1318,7 +1598,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "30 sec",
       cue: "Drive the knees without bouncing the hips.",
-      image: mountainClimberImage,
+      image: homeMountainClimberImage,
     },
     {
       name: "Dead Bug",
@@ -1328,7 +1608,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "30 sec",
       cue: "Keep the lower back in contact with the mat.",
-      image: deadBugImage,
+      image: homeDeadBugImage,
     },
     {
       name: "Plank",
@@ -1338,7 +1618,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "40 sec",
       cue: "Brace the abdomen and squeeze the glutes.",
-      image: plankImage,
+      image: homePlankImage,
     },
   ],
 
@@ -1351,7 +1631,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "20 sec",
       cue: "Move smoothly one vertebra at a time.",
-      image: catCowImage,
+      image: homeCatCowImage,
     },
     {
       name: "World's Greatest Stretch",
@@ -1361,7 +1641,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "20 sec",
       cue: "Breathe into the rotation and avoid forcing range.",
-      image: worldsGreatestStretchImage,
+      image: homeWorldsGreatestStretchImage,
     },
     {
       name: "90/90 Hip Switch",
@@ -1371,7 +1651,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "20 sec",
       cue: "Stay tall and keep the movement controlled.",
-      image: hipSwitch9090Image,
+      image: homeHipSwitch9090Image,
     },
   ],
 
@@ -1384,7 +1664,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "30 sec",
       cue: "Keep the lower back gently down.",
-      image: deadBugImage,
+      image: homeDeadBugImage,
     },
     {
       name: "Side Plank",
@@ -1394,7 +1674,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Intermediate",
       rest: "30 sec",
       cue: "Stack the hips and keep the body long.",
-      image: sidePlankImage,
+      image: homeSidePlankImage,
     },
     {
       name: "Bird Dog",
@@ -1404,7 +1684,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "30 sec",
       cue: "Reach long without rotating the hips.",
-      image: birdDogImage,
+      image: homeBirdDogImage,
     },
     {
       name: "Mobility Flow",
@@ -1414,7 +1694,7 @@ const homeCatalog: Record<string, Exercise[]> = {
       level: "Beginner",
       rest: "—",
       cue: "Use controlled breathing throughout the flow.",
-      image: mobilityFlowImage,
+      image: homeMobilityFlowImage,
     },
   ],
 };
@@ -1607,9 +1887,9 @@ const homeCatalog: Record<string, Exercise[]> = {
                   type="button"
                   onClick={() => undefined}
                   className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-90 transition-transform"
-                  aria-label="Camera"
+                  aria-label="Video"
                 >
-                  <Camera size={20} className="text-white" />
+                  <Video size={20} className="text-white" />
                 </button>
               </div>
             </div>
