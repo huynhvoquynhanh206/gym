@@ -25,13 +25,31 @@ import {
   Bike,
 } from "lucide-react";
 import brandLogo from "../assets/core-bts-new-logo.svg";
-import cardioImage from "../assets/exercises/cardio.png";
-import lungeImage from "../assets/exercises/lunge.png";
-import mobilityImage from "../assets/exercises/mobility.png";
-import plankImage from "../assets/exercises/plank.png";
-import pressImage from "../assets/exercises/press.png";
-import pullImage from "../assets/exercises/pull.png";
-import squatImage from "../assets/exercises/squat.png";
+import inclinePushUpImage from "../assets/exercises/home/incline-push-up.jpg";
+import backpackRowImage from "../assets/exercises/home/backpack-row.jpg";
+import pikePushUpImage from "../assets/exercises/home/pike-push-up.jpg";
+import chairTricepDipImage from "../assets/exercises/home/chair-tricep-dip.jpg";
+
+import bodyweightSquatImage from "../assets/exercises/home/bodyweight-squat.jpg";
+import reverseLungeImage from "../assets/exercises/home/reverse-lunge.jpg";
+import singleLegGluteBridgeImage from "../assets/exercises/home/single-leg-glute-bridge.jpg";
+import calfRaiseImage from "../assets/exercises/home/calf-raise.jpg";
+
+import marchingWarmUpImage from "../assets/exercises/home/marching-warm-up.jpg";
+import squatToReachImage from "../assets/exercises/home/squat-to-reach.jpg";
+import mountainClimberImage from "../assets/exercises/home/mountain-climber.jpg";
+
+import jumpingJackImage from "../assets/exercises/home/jumping-jack.jpg";
+import deadBugImage from "../assets/exercises/home/dead-bug.jpg";
+import plankImage from "../assets/exercises/home/plank.jpg";
+
+import catCowImage from "../assets/exercises/home/cat-cow.jpg";
+import worldsGreatestStretchImage from "../assets/exercises/home/worlds-greatest-stretch.jpg";
+import hipSwitch9090Image from "../assets/exercises/home/hip-switch-90-90.jpg";
+
+import sidePlankImage from "../assets/exercises/home/side-plank.jpg";
+import birdDogImage from "../assets/exercises/home/bird-dog.jpg";
+import mobilityFlowImage from "../assets/exercises/home/mobility-flow.jpg";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -44,6 +62,7 @@ type Exercise = {
   level: "Beginner" | "Intermediate" | "Advanced";
   rest: string;
   cue: string;
+  image: string;
 };
 
 interface UserData {
@@ -96,9 +115,9 @@ type BrandLogoProps = {
 
 function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
   const frames = {
-    sm: "w-[230px] sm:w-[260px]",
-    md: "w-[310px] sm:w-[340px]",
-    lg: "w-[94vw] min-w-[340px] max-w-[760px]",
+    sm: "w-[190px] sm:w-[215px]",
+    md: "w-[230px] sm:w-[260px]",
+    lg: "w-[88vw] min-w-[320px] max-w-[700px]",
   };
 
   return (
@@ -118,11 +137,11 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
 
 function PageBrandBar() {
   return (
-    <div className="px-4 pt-3 pb-3 border-b border-border/70 bg-background">
+    <div className="px-4 pt-3 pb-0 bg-background">
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[250px] max-w-[65vw] h-auto object-contain object-left"
+        className="w-[195px] max-w-[58vw] h-auto object-contain object-left"
       />
     </div>
   );
@@ -155,20 +174,17 @@ function SplashScreen({ onComplete }: { onComplete: () => void }) {
           <BrandLogo variant="dark" size="lg" />
         </div>
 
-        <div className="flex items-center gap-4 max-w-md mx-auto my-7">
+        <div className="flex items-center gap-4 max-w-md mx-auto mt-4 mb-3">
           <div className="h-px flex-1 bg-white/20" />
           <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_20px_rgba(37,99,235,0.9)]" />
           <div className="h-px flex-1 bg-white/20" />
         </div>
 
-        <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 backdrop-blur-sm">
-          <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-white/50">Presented by</span>
-          <span className="font-sans text-sm sm:text-base font-medium uppercase tracking-[0.25em] text-white">
-            DTB7_<span className="text-primary">Group 3</span>
-          </span>
-        </div>
+        <p className="font-sans text-xs sm:text-sm font-medium uppercase tracking-[0.28em] text-white/70">
+          DTB7_<span className="text-primary">Group 3</span>
+        </p>
 
-        <div className="w-28 h-0.5 bg-white/10 rounded-full overflow-hidden mx-auto mt-10">
+        <div className="w-28 h-0.5 bg-white/10 rounded-full overflow-hidden mx-auto mt-6">
           <div className="h-full bg-primary splash-progress" />
         </div>
       </div>
@@ -189,9 +205,9 @@ function StepPersonal({
   return (
     <div className="w-full max-w-sm px-6">
       <div className="mb-10">
-        <div className="mb-8 flex flex-col items-start">
+        <div className="mb-4 flex flex-col items-start">
           <BrandLogo variant="dark" size="md" />
-          <div className="mt-4 h-[2px] w-12 rounded-full bg-primary" />
+          <div className="mt-2 h-[2px] w-12 rounded-full bg-primary" />
         </div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-3">
           Welcome<br />aboard!
@@ -593,40 +609,56 @@ function HomeTab({ user }: { user: UserData }) {
   ];
   
   const gymBranches = [
-  {
-    name: "Core Fitness & Yoga Lê Quang Định",
-    shortName: "Branch 1",
-    address:
-      "239 Lê Quang Định Street, Ward 7, Bình Thạnh District, Hồ Chí Minh City",
-    note: "Main gym branch",
-    currentLevel: 68,
-    traffic: [18, 34, 52, 45, 30, 42, 56, 64, 68, 62, 48, 28],
-  },
-  {
-    name: "Core Fitness & Yoga Xô Viết Nghệ Tĩnh",
-    shortName: "Branch 2",
-    address:
-      "168 Xô Viết Nghệ Tĩnh Street, Ward 21, Bình Thạnh District, Hồ Chí Minh City",
-    note: "Fitness branch",
-    currentLevel: 44,
-    traffic: [15, 28, 36, 33, 20, 26, 38, 42, 44, 39, 31, 18],
-  },
-  {
-    name: "Core Fitness & Yoga Bạch Đằng",
-    shortName: "Branch 3",
-    address:
-      "481–483 Bạch Đằng Street, Ward 2, Bình Thạnh District, Hồ Chí Minh City",
-    note: "Fitness branch",
-    currentLevel: 57,
-    traffic: [17, 35, 48, 41, 26, 32, 46, 54, 57, 51, 37, 24],
-  },
-];
+    {
+      name: "Core Fitness & Yoga Lê Quang Định",
+      shortName: "Branch 1",
+      address: "239 Lê Quang Định, Phường Bình Thạnh, TP.HCM.",
+      note: "Main gym branch",
+      currentLevel: 68,
+      traffic: [18, 34, 52, 45, 30, 42, 56, 64, 68, 62, 48, 28],
+    },
+    {
+      name: "Core Fitness & Yoga Xô Viết Nghệ Tĩnh",
+      shortName: "Branch 2",
+      address: "168 Xô Viết Nghệ Tĩnh, Phường Bình Thạnh, TP.HCM.",
+      note: "Fitness branch",
+      currentLevel: 38,
+      traffic: [14, 25, 34, 31, 20, 24, 35, 39, 38, 33, 27, 16],
+    },
+    {
+      name: "Core Fitness & Yoga Bạch Đằng",
+      shortName: "Branch 3",
+      address: "481–483 Bạch Đằng, Phường Bình Thạnh, TP.HCM.",
+      note: "Fitness branch",
+      currentLevel: 57,
+      traffic: [17, 35, 48, 41, 26, 32, 46, 54, 57, 51, 37, 24],
+    },
+    {
+      name: "Core Fitness & Yoga Nguyễn Chí Thanh",
+      shortName: "Branch 4",
+      address: "139 Nguyễn Chí Thanh, Phường An Đông, TP.HCM.",
+      note: "Fitness branch",
+      currentLevel: 81,
+      traffic: [28, 45, 58, 50, 34, 46, 61, 76, 81, 74, 59, 38],
+    },
+    {
+      name: "Core Boxing & Fitness Lý Thường Kiệt",
+      shortName: "Branch 5",
+      address: "741 Lý Thường Kiệt, Phường Bảy Hiền, TP.HCM.",
+      note: "Boxing & fitness branch",
+      currentLevel: 46,
+      traffic: [16, 29, 42, 38, 25, 31, 44, 49, 46, 41, 32, 20],
+    },
+  ];
   
   const getCrowdColor = (level: number) => {
-    if (level >= 75) return "#2563eb";
-    if (level >= 45) return "#3b82f6";
+    if (level >= 75) return "#ef4444";
+    if (level >= 45) return "#f59e0b";
     return "#2563eb";
   };
+
+  const getCrowdTextColor = (level: number) =>
+    level >= 45 && level < 75 ? "#111827" : "#ffffff";
   
   const getCrowdLabel = (level: number) => {
     if (level >= 75) return "Very Busy";
@@ -676,7 +708,7 @@ function HomeTab({ user }: { user: UserData }) {
 
   return (
     <div className="p-4 space-y-4 pb-4">
-      <div className="flex items-center justify-between pt-3">
+      <div className="flex items-center justify-between pt-1">
         <div>
   <p className="text-muted-foreground text-sm">
     Hello 👋
@@ -769,28 +801,29 @@ function HomeTab({ user }: { user: UserData }) {
 
   {/* Chi nhánh đang được chọn */}
   <div
-    className="rounded-xl p-3 mb-4"
+    className="rounded-xl p-3 mb-4 shadow-lg"
     style={{
-      backgroundColor: selectedCrowdColor + "12",
-      border: `1px solid ${selectedCrowdColor}35`,
+      backgroundColor: selectedCrowdColor,
+      color: getCrowdTextColor(selectedBranch.currentLevel),
+      boxShadow: `0 12px 28px ${selectedCrowdColor}35`,
     }}
   >
     <div className="flex items-start gap-2.5">
       <div
         className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1 animate-pulse"
         style={{
-          backgroundColor: selectedCrowdColor,
+          backgroundColor: getCrowdTextColor(selectedBranch.currentLevel),
         }}
       />
 
       <div className="flex-1">
         <div className="flex items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-sm font-semibold" style={{ color: getCrowdTextColor(selectedBranch.currentLevel) }}>
               {selectedBranch.name}
             </p>
 
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <p className="text-[11px] mt-0.5 opacity-80" style={{ color: getCrowdTextColor(selectedBranch.currentLevel) }}>
               {selectedBranch.shortName}
             </p>
           </div>
@@ -798,14 +831,14 @@ function HomeTab({ user }: { user: UserData }) {
           <span
             className="text-xs font-bold flex-shrink-0"
             style={{
-              color: selectedCrowdColor,
+              color: getCrowdTextColor(selectedBranch.currentLevel),
             }}
           >
             {getCrowdLabel(selectedBranch.currentLevel)}
           </span>
         </div>
 
-        <p className="text-xs text-muted-foreground mt-2">
+        <p className="text-xs mt-2 opacity-90" style={{ color: getCrowdTextColor(selectedBranch.currentLevel) }}>
           {getCrowdMessage(selectedBranch.currentLevel)}
         </p>
       </div>
@@ -854,8 +887,8 @@ function HomeTab({ user }: { user: UserData }) {
   <div className="flex gap-4 mt-3 mb-4 flex-wrap">
     {[
       ["#2563eb", "Quiet"],
-      ["#3b82f6", "Moderate"],
-      ["#2563eb", "Very Busy"],
+      ["#f59e0b", "Moderate"],
+      ["#ef4444", "Very Busy"],
     ].map(([color, label]) => (
       <div
         key={label}
@@ -906,29 +939,28 @@ function HomeTab({ user }: { user: UserData }) {
       return (
         <button
           key={branch.name}
-          onClick={() =>
-            setSelectedBranchIndex(index)
-          }
-          className={`w-full rounded-xl border p-3 text-left transition-all ${
-            isSelected
-              ? "border-primary bg-primary/5"
-              : "border-border bg-background hover:border-primary/30"
-          }`}
+          onClick={() => setSelectedBranchIndex(index)}
+          className="w-full rounded-xl p-3 text-left transition-all active:scale-[0.99]"
+          style={{
+            backgroundColor: branchColor,
+            color: getCrowdTextColor(branch.currentLevel),
+            outline: isSelected ? "3px solid rgba(255,255,255,0.85)" : "1px solid rgba(255,255,255,0.10)",
+            boxShadow: isSelected ? `0 12px 28px ${branchColor}45` : "none",
+          }}
         >
           <div className="flex items-start gap-3">
             {/* Location icon */}
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
-                backgroundColor:
-                  branchColor + "18",
-                border: `1px solid ${branchColor}35`,
+                backgroundColor: "rgba(255,255,255,0.18)",
+                border: "1px solid rgba(255,255,255,0.30)",
               }}
             >
               <MapPin
                 size={16}
                 style={{
-                  color: branchColor,
+                  color: getCrowdTextColor(branch.currentLevel),
                 }}
               />
             </div>
@@ -936,30 +968,30 @@ function HomeTab({ user }: { user: UserData }) {
             {/* Thông tin cơ sở */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-sm font-semibold" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
                   {branch.name}
                 </p>
 
                 {isQuietest && (
-                  <span className="text-[9px] uppercase tracking-wider bg-primary/15 text-primary px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[9px] uppercase tracking-wider bg-black/20 px-2 py-0.5 rounded-full font-bold" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
                     Best choice
                   </span>
                 )}
               </div>
 
               <div className="mt-0.5">
-  <p className="text-xs text-primary">
+  <p className="text-xs font-semibold opacity-90" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
     {branch.shortName}
   </p>
 
   {branch.note && (
-    <p className="text-[11px] text-muted-foreground mt-0.5">
+    <p className="text-[11px] mt-0.5 opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
       {branch.note}
     </p>
   )}
 </div>
 
-              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+              <p className="text-[11px] mt-1 leading-relaxed opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
                 {branch.address}
               </p>
             </div>
@@ -969,15 +1001,14 @@ function HomeTab({ user }: { user: UserData }) {
               <span
                 className="inline-block text-[10px] px-2 py-1 rounded-full font-bold"
                 style={{
-                  color: branchColor,
-                  backgroundColor:
-                    branchColor + "18",
+                  color: getCrowdTextColor(branch.currentLevel),
+                  backgroundColor: "rgba(0,0,0,0.18)",
                 }}
               >
                 {branchLabel}
               </span>
 
-              <p className="text-[10px] text-muted-foreground mt-1">
+              <p className="text-[10px] mt-1 opacity-80" style={{ color: getCrowdTextColor(branch.currentLevel) }}>
                 {branch.currentLevel}%
               </p>
             </div>
@@ -1128,60 +1159,270 @@ function WorkoutTab({ user }: { user: UserData }) {
     ],
   };
 
-  const homeCatalog: Record<string, Exercise[]> = {
-    "Upper Body": [
-      { name: "Incline Push-up", sets: "4 × 10", equipment: "Chair / Bench", kcal: 70, level: "Beginner", rest: "60 sec", cue: "Keep the body in one straight line from head to heels." },
-      { name: "Backpack Row", sets: "4 × 12", equipment: "Loaded Backpack", kcal: 75, level: "Beginner", rest: "60 sec", cue: "Pull the elbows behind the body without shrugging." },
-      { name: "Pike Push-up", sets: "3 × 8", equipment: "Bodyweight", kcal: 65, level: "Intermediate", rest: "60 sec", cue: "Let the head travel between the hands." },
-      { name: "Chair Tricep Dip", sets: "3 × 10", equipment: "Stable Chair", kcal: 55, level: "Intermediate", rest: "45 sec", cue: "Keep the shoulders away from the ears." },
-    ],
-    "Lower Body": [
-      { name: "Bodyweight Squat", sets: "4 × 15", equipment: "Bodyweight", kcal: 100, level: "Beginner", rest: "60 sec", cue: "Sit between the hips and keep the knees over the toes." },
-      { name: "Reverse Lunge", sets: "3 × 10/side", equipment: "Bodyweight", kcal: 95, level: "Intermediate", rest: "60 sec", cue: "Keep the front heel grounded throughout the rep." },
-      { name: "Single-leg Glute Bridge", sets: "3 × 12/side", equipment: "Exercise Mat", kcal: 65, level: "Intermediate", rest: "45 sec", cue: "Keep the pelvis level as the hips rise." },
-      { name: "Calf Raise", sets: "4 × 18", equipment: "Step / Floor", kcal: 50, level: "Beginner", rest: "30 sec", cue: "Pause at the top and lower slowly." },
-    ],
-    "Full Body": [
-      { name: "Marching Warm-up", sets: "5 min", equipment: "No equipment", kcal: 40, level: "Beginner", rest: "—", cue: "Build the pace gradually and swing the arms naturally." },
-      { name: "Squat to Reach", sets: "4 × 12", equipment: "Bodyweight", kcal: 95, level: "Beginner", rest: "60 sec", cue: "Stand tall and reach overhead at the top." },
-      { name: "Incline Push-up", sets: "3 × 10", equipment: "Chair / Bench", kcal: 60, level: "Beginner", rest: "60 sec", cue: "Keep the ribs stacked and elbows at roughly 45 degrees." },
-      { name: "Reverse Lunge", sets: "3 × 10/side", equipment: "Bodyweight", kcal: 95, level: "Intermediate", rest: "60 sec", cue: "Step back softly and drive through the front foot." },
-      { name: "Mountain Climber", sets: "4 × 30 sec", equipment: "Exercise Mat", kcal: 90, level: "Intermediate", rest: "30 sec", cue: "Keep the shoulders over the wrists and hips steady." },
-    ],
-    "Cardio & Core": [
-      { name: "Jumping Jack", sets: "5 × 45 sec", equipment: "No equipment", kcal: 115, level: "Beginner", rest: "30 sec", cue: "Land softly and keep a steady rhythm." },
-      { name: "Mountain Climber", sets: "4 × 30 sec", equipment: "Exercise Mat", kcal: 90, level: "Intermediate", rest: "30 sec", cue: "Drive the knees without bouncing the hips." },
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep the lower back in contact with the mat." },
-      { name: "Plank", sets: "3 × 40 sec", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "40 sec", cue: "Brace the abdomen and squeeze the glutes." },
-    ],
-    Mobility: [
-      { name: "Cat–Cow", sets: "2 × 10", equipment: "Exercise Mat", kcal: 15, level: "Beginner", rest: "20 sec", cue: "Move smoothly one vertebra at a time." },
-      { name: "World's Greatest Stretch", sets: "2 × 6/side", equipment: "Exercise Mat", kcal: 25, level: "Beginner", rest: "20 sec", cue: "Breathe into the rotation and avoid forcing range." },
-      { name: "90/90 Hip Switch", sets: "2 × 10", equipment: "Exercise Mat", kcal: 20, level: "Beginner", rest: "20 sec", cue: "Stay tall and keep the movement controlled." },
-    ],
-    "Core & Mobility": [
-      { name: "Dead Bug", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 35, level: "Beginner", rest: "30 sec", cue: "Keep the lower back gently down." },
-      { name: "Side Plank", sets: "3 × 30 sec/side", equipment: "Exercise Mat", kcal: 35, level: "Intermediate", rest: "30 sec", cue: "Stack the hips and keep the body long." },
-      { name: "Bird Dog", sets: "3 × 10/side", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "30 sec", cue: "Reach long without rotating the hips." },
-      { name: "Mobility Flow", sets: "8 min", equipment: "Exercise Mat", kcal: 30, level: "Beginner", rest: "—", cue: "Use controlled breathing throughout the flow." },
-    ],
-  };
+const homeCatalog: Record<string, Exercise[]> = {
+  "Upper Body": [
+    {
+      name: "Incline Push-up",
+      sets: "4 × 10",
+      equipment: "Chair / Bench",
+      kcal: 70,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Keep the body in one straight line from head to heels.",
+      image: inclinePushUpImage,
+    },
+    {
+      name: "Backpack Row",
+      sets: "4 × 12",
+      equipment: "Loaded Backpack",
+      kcal: 75,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Pull the elbows behind the body without shrugging.",
+      image: backpackRowImage,
+    },
+    {
+      name: "Pike Push-up",
+      sets: "3 × 8",
+      equipment: "Bodyweight",
+      kcal: 65,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Let the head travel between the hands.",
+      image: pikePushUpImage,
+    },
+    {
+      name: "Chair Tricep Dip",
+      sets: "3 × 10",
+      equipment: "Stable Chair",
+      kcal: 55,
+      level: "Intermediate",
+      rest: "45 sec",
+      cue: "Keep the shoulders away from the ears.",
+      image: chairTricepDipImage,
+    },
+  ],
+
+  "Lower Body": [
+    {
+      name: "Bodyweight Squat",
+      sets: "4 × 15",
+      equipment: "Bodyweight",
+      kcal: 100,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Sit between the hips and keep the knees over the toes.",
+      image: bodyweightSquatImage,
+    },
+    {
+      name: "Reverse Lunge",
+      sets: "3 × 10/side",
+      equipment: "Bodyweight",
+      kcal: 95,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Keep the front heel grounded throughout the rep.",
+      image: reverseLungeImage,
+    },
+    {
+      name: "Single-leg Glute Bridge",
+      sets: "3 × 12/side",
+      equipment: "Exercise Mat",
+      kcal: 65,
+      level: "Intermediate",
+      rest: "45 sec",
+      cue: "Keep the pelvis level as the hips rise.",
+      image: singleLegGluteBridgeImage,
+    },
+    {
+      name: "Calf Raise",
+      sets: "4 × 18",
+      equipment: "Step / Floor",
+      kcal: 50,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Pause at the top and lower slowly.",
+      image: calfRaiseImage,
+    },
+  ],
+
+  "Full Body": [
+    {
+      name: "Marching Warm-up",
+      sets: "5 min",
+      equipment: "No equipment",
+      kcal: 40,
+      level: "Beginner",
+      rest: "—",
+      cue: "Build the pace gradually and swing the arms naturally.",
+      image: marchingWarmUpImage,
+    },
+    {
+      name: "Squat to Reach",
+      sets: "4 × 12",
+      equipment: "Bodyweight",
+      kcal: 95,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Stand tall and reach overhead at the top.",
+      image: squatToReachImage,
+    },
+    {
+      name: "Incline Push-up",
+      sets: "3 × 10",
+      equipment: "Chair / Bench",
+      kcal: 60,
+      level: "Beginner",
+      rest: "60 sec",
+      cue: "Keep the ribs stacked and elbows at roughly 45 degrees.",
+      image: inclinePushUpImage,
+    },
+    {
+      name: "Reverse Lunge",
+      sets: "3 × 10/side",
+      equipment: "Bodyweight",
+      kcal: 95,
+      level: "Intermediate",
+      rest: "60 sec",
+      cue: "Step back softly and drive through the front foot.",
+      image: reverseLungeImage,
+    },
+    {
+      name: "Mountain Climber",
+      sets: "4 × 30 sec",
+      equipment: "Exercise Mat",
+      kcal: 90,
+      level: "Intermediate",
+      rest: "30 sec",
+      cue: "Keep the shoulders over the wrists and hips steady.",
+      image: mountainClimberImage,
+    },
+  ],
+
+  "Cardio & Core": [
+    {
+      name: "Jumping Jack",
+      sets: "5 × 45 sec",
+      equipment: "No equipment",
+      kcal: 115,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Land softly and keep a steady rhythm.",
+      image: jumpingJackImage,
+    },
+    {
+      name: "Mountain Climber",
+      sets: "4 × 30 sec",
+      equipment: "Exercise Mat",
+      kcal: 90,
+      level: "Intermediate",
+      rest: "30 sec",
+      cue: "Drive the knees without bouncing the hips.",
+      image: mountainClimberImage,
+    },
+    {
+      name: "Dead Bug",
+      sets: "3 × 10/side",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Keep the lower back in contact with the mat.",
+      image: deadBugImage,
+    },
+    {
+      name: "Plank",
+      sets: "3 × 40 sec",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Beginner",
+      rest: "40 sec",
+      cue: "Brace the abdomen and squeeze the glutes.",
+      image: plankImage,
+    },
+  ],
+
+  Mobility: [
+    {
+      name: "Cat–Cow",
+      sets: "2 × 10",
+      equipment: "Exercise Mat",
+      kcal: 15,
+      level: "Beginner",
+      rest: "20 sec",
+      cue: "Move smoothly one vertebra at a time.",
+      image: catCowImage,
+    },
+    {
+      name: "World's Greatest Stretch",
+      sets: "2 × 6/side",
+      equipment: "Exercise Mat",
+      kcal: 25,
+      level: "Beginner",
+      rest: "20 sec",
+      cue: "Breathe into the rotation and avoid forcing range.",
+      image: worldsGreatestStretchImage,
+    },
+    {
+      name: "90/90 Hip Switch",
+      sets: "2 × 10",
+      equipment: "Exercise Mat",
+      kcal: 20,
+      level: "Beginner",
+      rest: "20 sec",
+      cue: "Stay tall and keep the movement controlled.",
+      image: hipSwitch9090Image,
+    },
+  ],
+
+  "Core & Mobility": [
+    {
+      name: "Dead Bug",
+      sets: "3 × 10/side",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Keep the lower back gently down.",
+      image: deadBugImage,
+    },
+    {
+      name: "Side Plank",
+      sets: "3 × 30 sec/side",
+      equipment: "Exercise Mat",
+      kcal: 35,
+      level: "Intermediate",
+      rest: "30 sec",
+      cue: "Stack the hips and keep the body long.",
+      image: sidePlankImage,
+    },
+    {
+      name: "Bird Dog",
+      sets: "3 × 10/side",
+      equipment: "Exercise Mat",
+      kcal: 30,
+      level: "Beginner",
+      rest: "30 sec",
+      cue: "Reach long without rotating the hips.",
+      image: birdDogImage,
+    },
+    {
+      name: "Mobility Flow",
+      sets: "8 min",
+      equipment: "Exercise Mat",
+      kcal: 30,
+      level: "Beginner",
+      rest: "—",
+      cue: "Use controlled breathing throughout the flow.",
+      image: mobilityFlowImage,
+    },
+  ],
+};
 
   const levelClasses: Record<Exercise["level"], string> = {
     Beginner: "text-primary bg-primary/15 border-primary/20",
     Intermediate: "text-blue-300 bg-blue-400/10 border-blue-300/20",
     Advanced: "text-white bg-white/10 border-white/15",
-  };
-
-  const getExerciseImage = (exercise: Exercise) => {
-    const key = `${exercise.name} ${exercise.equipment}`.toLowerCase();
-    if (/deadlift|row|pulldown|woodchop|backpack/.test(key)) return pullImage;
-    if (/lunge|split/.test(key)) return lungeImage;
-    if (/press|push-up|dip|tricep/.test(key)) return pressImage;
-    if (/plank|dead bug|bird dog|mountain climber|crunch|extension/.test(key)) return plankImage;
-    if (/mobility|stretch|cat|90\/90|recovery/.test(key)) return mobilityImage;
-    if (/squat|leg press|leg extension|leg curl|calf|bridge/.test(key)) return squatImage;
-    return cardioImage;
   };
 
   const roadmap = roadmapByGoal[user.goal];
@@ -1193,8 +1434,8 @@ function WorkoutTab({ user }: { user: UserData }) {
 
   return (
     <>
-      <div className="p-4 space-y-4 pb-4 relative">
-        <div className="pt-3 flex items-end justify-between gap-4">
+      <div className="px-4 pt-1 pb-4 space-y-4 relative">
+        <div className="pt-0">
           <div>
             <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Training<br />Roadmap</h2>
             <p className="text-muted-foreground text-sm mt-1.5">{goalLabels[user.goal]}</p>
@@ -1330,82 +1571,79 @@ function WorkoutTab({ user }: { user: UserData }) {
       </div>
 
       {activeExercise && (
-        <div className="fixed inset-0 z-[100] bg-background overflow-y-auto" role="dialog" aria-modal="true" aria-label={`${activeExercise.name} exercise guide`}>
-          <div className="min-h-full w-full max-w-sm mx-auto bg-background">
-            <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-border px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3">
+        <div
+          className="fixed inset-0 z-[100] bg-black"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activeExercise.name} exercise guide`}
+        >
+          <div className="relative w-[min(100vw,56.25dvh,1080px)] aspect-[9/16] overflow-hidden bg-black">
+            <img
+              key={activeExercise.name}
+              src={activeExercise.image}
+              alt={`${activeExercise.name} form demonstration`}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/5 to-black/65 pointer-events-none" />
+
+            <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-[max(14px,env(safe-area-inset-top))]">
               <div className="flex items-center justify-between gap-3">
                 <button
                   onClick={() => setActiveExercise(null)}
-                  className="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center active:scale-95 transition-transform"
+                  className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-95 transition-transform"
                   aria-label="Back to workout list"
                 >
-                  <ChevronLeft size={20} className="text-foreground" />
+                  <ChevronLeft size={22} className="text-white" />
                 </button>
 
-                <div className="flex-1 flex justify-center overflow-hidden">
-                  <BrandLogo variant="dark" size="sm" />
-                </div>
+                <img
+                  src={brandLogo}
+                  alt="CORE Fitness & Yoga x BTS"
+                  className="w-[155px] max-w-[48vw] h-auto object-contain"
+                />
 
                 <button
                   type="button"
                   onClick={() => undefined}
-                  className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center active:scale-90 transition-transform"
+                  className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-90 transition-transform"
                   aria-label="Camera"
                 >
-                  <Camera size={19} className="text-primary" />
+                  <Camera size={20} className="text-white" />
                 </button>
               </div>
             </div>
 
-            <div className="px-4 pt-5 pb-[max(28px,env(safe-area-inset-bottom))]">
-              <p className="font-sans text-[10px] uppercase tracking-[0.28em] text-primary font-semibold">Workout guide · DTB7_Group 3</p>
-              <h3 className="font-barlow text-4xl font-black text-foreground leading-none mt-2">{activeExercise.name}</h3>
-
-              <div className="flex gap-2 flex-wrap mt-3 mb-4">
+            <div className="absolute bottom-0 left-0 right-0 z-20 px-5 pb-[max(26px,env(safe-area-inset-bottom))] pt-20">
+              <div className="max-w-[88%]">
                 <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-full border font-bold ${levelClasses[activeExercise.level]}`}>
                   {activeExercise.level}
                 </span>
-                <span className="text-xs text-muted-foreground bg-card border border-border rounded-full px-2.5 py-1">{activeExercise.equipment}</span>
+
+                <h3 className="font-barlow text-4xl font-black text-white leading-none mt-3">
+                  {activeExercise.name}
+                </h3>
+                <p className="text-sm text-white/75 mt-2 flex items-center gap-1.5">
+                  <Dumbbell size={14} /> {activeExercise.equipment}
+                </p>
               </div>
 
-              <div className="rounded-3xl overflow-hidden border border-border bg-white shadow-[0_20px_70px_rgba(0,0,0,0.35)]">
-                <div className="aspect-[9/16] w-full flex items-center justify-center bg-white">
-                  <img
-                    key={activeExercise.name}
-                    src={getExerciseImage(activeExercise)}
-                    alt={`${activeExercise.name} form illustration`}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
+              <div className="flex gap-2 flex-wrap mt-4">
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  {activeExercise.sets}
+                </span>
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  Rest {activeExercise.rest}
+                </span>
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  ~{activeExercise.kcal} kcal
+                </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-4">
-                <div className="bg-card border border-border rounded-xl p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Volume</p>
-                  <p className="text-sm font-semibold text-foreground mt-1">{activeExercise.sets}</p>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Rest</p>
-                  <p className="text-sm font-semibold text-foreground mt-1">{activeExercise.rest}</p>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Energy</p>
-                  <p className="text-sm font-semibold text-primary mt-1">~{activeExercise.kcal} kcal</p>
-                </div>
+              <div className="mt-3 rounded-2xl border border-white/15 bg-black/45 p-4 backdrop-blur-xl">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-1.5">Technique</p>
+                <p className="text-sm text-white leading-relaxed">{activeExercise.cue}</p>
               </div>
-
-              <div className="bg-card border border-border rounded-2xl p-4 mt-4">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-2">Technique</p>
-                <p className="text-sm text-foreground leading-relaxed">{activeExercise.cue}</p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setActiveExercise(null)}
-                className="w-full mt-5 py-4 rounded-xl bg-primary text-primary-foreground font-bold active:scale-[0.99] transition-transform"
-              >
-                Back to workout
-              </button>
             </div>
           </div>
         </div>
