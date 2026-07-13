@@ -6,13 +6,108 @@ import { promisify } from "node:util";
 import { dirname, extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import pg from "pg";
+
+const { Pool } = pg;
+pg.types.setTypeParser(20, Number);
 
 const scrypt = promisify(scryptCallback);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
+const localEnvFile = join(projectRoot, ".env");
+if (existsSync(localEnvFile) && typeof process.loadEnvFile === "function") {
+  process.loadEnvFile(localEnvFile);
+}
 const DEFAULT_DB_FILE = join(__dirname, "data", "kho-mon-gym.sqlite");
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const MAX_BODY_BYTES = 1024 * 1024;
+
+const POSTGRES_SCHEMA = `
+  CREATE TABLE IF NOT EXISTS users (
+    id BIGSERIAL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS sessions (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_hash TEXT NOT NULL UNIQUE,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS profiles (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    height TEXT NOT NULL,
+    weight TEXT NOT NULL,
+    age TEXT NOT NULL,
+    gender TEXT NOT NULL CHECK (gender IN ('male','female')),
+    goal TEXT NOT NULL CHECK (goal IN ('lose_weight','gain_muscle','maintain','endurance')),
+    target_weight TEXT NOT NULL,
+    workouts_per_week INTEGER NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS checkins (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    checkin_date TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(user_id, checkin_date)
+  );
+  CREATE TABLE IF NOT EXISTS menu_items (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    calories INTEGER NOT NULL,
+    price_cents INTEGER NOT NULL,
+    image_url TEXT NOT NULL,
+    description TEXT NOT NULL,
+    protein INTEGER NOT NULL,
+    active INTEGER NOT NULL DEFAULT 1
+  );
+  CREATE TABLE IF NOT EXISTS orders (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    menu_item_id BIGINT REFERENCES menu_items(id),
+    calorie_target INTEGER NOT NULL,
+    notes TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'received',
+    total_cents INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS posts (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
+    topic TEXT NOT NULL CHECK (topic IN ('Training','Nutrition')),
+    author_name TEXT NOT NULL,
+    avatar TEXT NOT NULL,
+    body TEXT NOT NULL,
+    image_url TEXT,
+    base_likes INTEGER NOT NULL DEFAULT 0,
+    comments_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS post_likes (
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY(user_id, post_id)
+  );
+  CREATE INDEX IF NOT EXISTS sessions_user_id_idx ON sessions(user_id);
+  CREATE INDEX IF NOT EXISTS sessions_expires_at_idx ON sessions(expires_at);
+  CREATE INDEX IF NOT EXISTS checkins_user_id_idx ON checkins(user_id);
+  CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
+  CREATE INDEX IF NOT EXISTS posts_created_at_idx ON posts(created_at DESC);
+  CREATE INDEX IF NOT EXISTS post_likes_post_id_idx ON post_likes(post_id);
+  ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE checkins ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE menu_items ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE post_likes ENABLE ROW LEVEL SECURITY;
+`;
 
 const MENU_ITEMS = [
   ["Eggs & Sweet Potato", 300, 700, "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&h=400&fit=crop&auto=format", "Boiled eggs, roasted sweet potato and fresh vegetables.", 22],
@@ -30,9 +125,69 @@ const SEED_POSTS = [
   ["Nutrition", "Sophie Lee", "SL", "Meal prepped the whole week 💪 Each container is about 450 kcal and the macros follow my app plan. Drop a comment if you want the recipe!", "https://images.unsplash.com/photo-1547592180-85f173990554?w=480&h=320&fit=crop&auto=format", 91, 34, "2026-07-10T12:00:00.000Z"],
 ];
 
+function postgresQuery(sql) {
+  let parameter = 0;
+  return sql.replace(/\?/g, () => `$${++parameter}`);
+}
+
+class PostgresDatabase {
+  constructor(pool) {
+    this.pool = pool;
+    this.kind = "postgres";
+  }
+
+  async exec(sql) {
+    return this.pool.query(sql);
+  }
+
+  prepare(sql) {
+    const text = postgresQuery(sql);
+    return {
+      get: async (...params) => (await this.pool.query(text, params)).rows[0],
+      all: async (...params) => (await this.pool.query(text, params)).rows,
+      run: async (...params) => {
+        const shouldReturnId = /^\s*INSERT\s+INTO\s+(users|orders|posts)\b/i.test(text) && !/\bRETURNING\b/i.test(text);
+        const result = await this.pool.query(shouldReturnId ? `${text} RETURNING id` : text, params);
+        return { changes: result.rowCount, lastInsertRowid: result.rows[0]?.id };
+      },
+    };
+  }
+
+  async close() {
+    await this.pool.end();
+  }
+}
+
+async function openPostgresDatabase(databaseUrl) {
+  const pool = new Pool({
+    connectionString: databaseUrl,
+    ssl: process.env.DATABASE_SSL === "false" ? false : { rejectUnauthorized: false },
+    max: Number(process.env.DATABASE_POOL_SIZE ?? 5),
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 10_000,
+  });
+  const db = new PostgresDatabase(pool);
+  await db.exec(POSTGRES_SCHEMA);
+
+  const menuCount = Number((await db.prepare("SELECT COUNT(*) AS count FROM menu_items").get()).count);
+  if (menuCount === 0) {
+    const insertMenu = db.prepare("INSERT INTO menu_items (name, calories, price_cents, image_url, description, protein) VALUES (?, ?, ?, ?, ?, ?)");
+    for (const item of MENU_ITEMS) await insertMenu.run(...item);
+  }
+
+  const postCount = Number((await db.prepare("SELECT COUNT(*) AS count FROM posts").get()).count);
+  if (postCount === 0) {
+    const insertPost = db.prepare("INSERT INTO posts (topic, author_name, avatar, body, image_url, base_likes, comments_count, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    for (const post of SEED_POSTS) await insertPost.run(...post);
+  }
+
+  return db;
+}
+
 function openDatabase(dbFile) {
   mkdirSync(dirname(dbFile), { recursive: true });
   const db = new DatabaseSync(dbFile);
+  db.kind = "sqlite";
   db.exec("PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;");
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
@@ -179,35 +334,35 @@ function tokenHash(token) {
   return createHash("sha256").update(token).digest("hex");
 }
 
-function createSession(db, userId) {
+async function createSession(db, userId) {
   const token = randomBytes(32).toString("base64url");
   const now = new Date();
   const expires = new Date(now.getTime() + SESSION_TTL_MS);
-  db.prepare("DELETE FROM sessions WHERE expires_at <= ?").run(now.toISOString());
-  db.prepare("INSERT INTO sessions (user_id, token_hash, expires_at, created_at) VALUES (?, ?, ?, ?)")
+  await db.prepare("DELETE FROM sessions WHERE expires_at <= ?").run(now.toISOString());
+  await db.prepare("INSERT INTO sessions (user_id, token_hash, expires_at, created_at) VALUES (?, ?, ?, ?)")
     .run(userId, tokenHash(token), expires.toISOString(), now.toISOString());
   return token;
 }
 
-function getAuthUser(db, req) {
+async function getAuthUser(db, req) {
   const header = req.headers.authorization ?? "";
   const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
   if (!token) return null;
-  const row = db.prepare(`
+  const row = await db.prepare(`
     SELECT users.id, users.email, sessions.expires_at
     FROM sessions JOIN users ON users.id = sessions.user_id
     WHERE sessions.token_hash = ?
   `).get(tokenHash(token));
   if (!row) return null;
   if (new Date(row.expires_at).getTime() <= Date.now()) {
-    db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash(token));
+    await db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash(token));
     return null;
   }
   return { id: row.id, email: row.email, token };
 }
 
-function requireAuth(db, req, res) {
-  const user = getAuthUser(db, req);
+async function requireAuth(db, req, res) {
+  const user = await getAuthUser(db, req);
   if (!user) error(res, 401, "Please sign in to continue.", "UNAUTHORIZED");
   return user;
 }
@@ -324,9 +479,15 @@ async function serveStatic(res, pathname, distDir) {
 
 export function createAppServer(options = {}) {
   const dbFile = options.dbFile ?? process.env.DB_FILE ?? DEFAULT_DB_FILE;
+  const databaseUrl = Object.hasOwn(options, "databaseUrl") ? options.databaseUrl : process.env.DATABASE_URL;
   const distDir = options.distDir ?? join(projectRoot, "dist");
   const devOrigin = options.devOrigin ?? process.env.DEV_ORIGIN ?? "http://localhost:5173";
-  const db = openDatabase(dbFile);
+  const dbPromise = databaseUrl
+    ? openPostgresDatabase(databaseUrl)
+    : Promise.resolve(openDatabase(dbFile));
+  dbPromise.catch((cause) => {
+    console.error(`Database initialization failed: ${cause.message}`);
+  });
 
   const server = createHttpServer(async (req, res) => {
     const origin = req.headers.origin;
@@ -350,8 +511,10 @@ export function createAppServer(options = {}) {
     const path = url.pathname;
 
     try {
+      const db = await dbPromise;
       if (path === "/api/health" && req.method === "GET") {
-        json(res, 200, { ok: true, database: "sqlite", time: new Date().toISOString() });
+        await db.prepare("SELECT 1 AS ok").get();
+        json(res, 200, { ok: true, database: db.kind ?? "sqlite", time: new Date().toISOString() });
         return;
       }
 
@@ -361,12 +524,12 @@ export function createAppServer(options = {}) {
         const password = String(body.password ?? "");
         if (!isEmail(email)) return error(res, 400, "Enter a valid email address.", "INVALID_EMAIL");
         if (password.length < 8 || password.length > 128) return error(res, 400, "Password must contain 8 to 128 characters.", "INVALID_PASSWORD");
-        if (db.prepare("SELECT id FROM users WHERE email = ?").get(email)) return error(res, 409, "An account with this email already exists.", "EMAIL_EXISTS");
+        if (await db.prepare("SELECT id FROM users WHERE email = ?").get(email)) return error(res, 409, "An account with this email already exists.", "EMAIL_EXISTS");
         const passwordHash = await hashPassword(password);
         const now = new Date().toISOString();
-        const result = db.prepare("INSERT INTO users (email, password_hash, created_at) VALUES (?, ?, ?)").run(email, passwordHash, now);
+        const result = await db.prepare("INSERT INTO users (email, password_hash, created_at) VALUES (?, ?, ?)").run(email, passwordHash, now);
         const userId = Number(result.lastInsertRowid);
-        const token = createSession(db, userId);
+        const token = await createSession(db, userId);
         json(res, 201, { token, user: { id: userId, email }, profile: null });
         return;
       }
@@ -375,41 +538,41 @@ export function createAppServer(options = {}) {
         const body = await readJson(req);
         const email = normalizeEmail(body.email);
         const password = String(body.password ?? "");
-        const row = db.prepare("SELECT id, email, password_hash FROM users WHERE email = ?").get(email);
+        const row = await db.prepare("SELECT id, email, password_hash FROM users WHERE email = ?").get(email);
         if (!row || !(await verifyPassword(password, row.password_hash))) return error(res, 401, "Email or password is incorrect.", "INVALID_CREDENTIALS");
-        const token = createSession(db, row.id);
-        const profile = profileFromRow(db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(row.id));
+        const token = await createSession(db, row.id);
+        const profile = profileFromRow(await db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(row.id));
         json(res, 200, { token, user: { id: row.id, email: row.email }, profile });
         return;
       }
 
       if (path === "/api/auth/me" && req.method === "GET") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        const profile = profileFromRow(db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id));
+        const user = await requireAuth(db, req, res); if (!user) return;
+        const profile = profileFromRow(await db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id));
         json(res, 200, { user: { id: user.id, email: user.email }, profile });
         return;
       }
 
       if (path === "/api/auth/logout" && req.method === "POST") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash(user.token));
+        const user = await requireAuth(db, req, res); if (!user) return;
+        await db.prepare("DELETE FROM sessions WHERE token_hash = ?").run(tokenHash(user.token));
         json(res, 200, { ok: true });
         return;
       }
 
       if (path === "/api/profile" && req.method === "GET") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        json(res, 200, { profile: profileFromRow(db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id)) });
+        const user = await requireAuth(db, req, res); if (!user) return;
+        json(res, 200, { profile: profileFromRow(await db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id)) });
         return;
       }
 
       if (path === "/api/profile" && req.method === "PUT") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const body = await readJson(req);
         const validationError = validateProfile(body);
         if (validationError) return error(res, 400, validationError, "INVALID_PROFILE");
         const now = new Date().toISOString();
-        db.prepare(`
+        await db.prepare(`
           INSERT INTO profiles (user_id, name, height, weight, age, gender, goal, target_weight, workouts_per_week, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(user_id) DO UPDATE SET
@@ -417,58 +580,51 @@ export function createAppServer(options = {}) {
             gender=excluded.gender, goal=excluded.goal, target_weight=excluded.target_weight,
             workouts_per_week=excluded.workouts_per_week, updated_at=excluded.updated_at
         `).run(user.id, String(body.name).trim(), String(body.height), String(body.weight), String(body.age), body.gender, body.goal, String(body.targetWeight), Number(body.workoutsPerWeek), now);
-        json(res, 200, { profile: profileFromRow(db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id)) });
+        json(res, 200, { profile: profileFromRow(await db.prepare("SELECT * FROM profiles WHERE user_id = ?").get(user.id)) });
         return;
       }
 
       if (path === "/api/profile" && req.method === "DELETE") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        db.exec("BEGIN");
-        try {
-          db.prepare("DELETE FROM checkins WHERE user_id = ?").run(user.id);
-          db.prepare("DELETE FROM profiles WHERE user_id = ?").run(user.id);
-          db.exec("COMMIT");
-        } catch (cause) {
-          db.exec("ROLLBACK");
-          throw cause;
-        }
+        const user = await requireAuth(db, req, res); if (!user) return;
+        await db.prepare("DELETE FROM checkins WHERE user_id = ?").run(user.id);
+        await db.prepare("DELETE FROM profiles WHERE user_id = ?").run(user.id);
         json(res, 200, { ok: true });
         return;
       }
 
       if (path === "/api/checkins" && req.method === "GET") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        const rows = db.prepare("SELECT checkin_date FROM checkins WHERE user_id = ? ORDER BY checkin_date DESC").all(user.id);
+        const user = await requireAuth(db, req, res); if (!user) return;
+        const rows = await db.prepare("SELECT checkin_date FROM checkins WHERE user_id = ? ORDER BY checkin_date DESC").all(user.id);
         const dates = rows.map((row) => row.checkin_date);
         json(res, 200, { dates, streak: calculateStreak(dates) });
         return;
       }
 
       if (path === "/api/checkins" && req.method === "POST") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const body = await readJson(req);
         const today = dateKeyInTimeZone();
         const date = String(body.date ?? today);
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return error(res, 400, "Check-in date is invalid.", "INVALID_DATE");
         if (date !== today) return error(res, 400, "Check-in is only available for today.", "INVALID_CHECKIN_DAY");
-        db.prepare("INSERT OR IGNORE INTO checkins (user_id, checkin_date, created_at) VALUES (?, ?, ?)").run(user.id, date, new Date().toISOString());
-        const dates = db.prepare("SELECT checkin_date FROM checkins WHERE user_id = ? ORDER BY checkin_date DESC").all(user.id).map((row) => row.checkin_date);
+        await db.prepare("INSERT INTO checkins (user_id, checkin_date, created_at) VALUES (?, ?, ?) ON CONFLICT(user_id, checkin_date) DO NOTHING").run(user.id, date, new Date().toISOString());
+        const dates = (await db.prepare("SELECT checkin_date FROM checkins WHERE user_id = ? ORDER BY checkin_date DESC").all(user.id)).map((row) => row.checkin_date);
         json(res, 201, { date, dates, streak: calculateStreak(dates) });
         return;
       }
 
       if (path === "/api/menu" && req.method === "GET") {
-        const items = db.prepare("SELECT id, name, calories, price_cents AS priceCents, image_url AS image, description, protein FROM menu_items WHERE active = 1 ORDER BY id").all();
+        const items = await db.prepare('SELECT id, name, calories, price_cents AS "priceCents", image_url AS image, description, protein FROM menu_items WHERE active = 1 ORDER BY id').all();
         json(res, 200, { items });
         return;
       }
 
       if (path === "/api/orders" && req.method === "GET") {
-        const user = requireAuth(db, req, res); if (!user) return;
-        const orders = db.prepare(`
-          SELECT orders.id, orders.calorie_target AS calorieTarget, orders.notes, orders.status,
-                 orders.total_cents AS totalCents, orders.created_at AS createdAt,
-                 menu_items.name AS mealName
+        const user = await requireAuth(db, req, res); if (!user) return;
+        const orders = await db.prepare(`
+          SELECT orders.id, orders.calorie_target AS "calorieTarget", orders.notes, orders.status,
+                 orders.total_cents AS "totalCents", orders.created_at AS "createdAt",
+                 menu_items.name AS "mealName"
           FROM orders LEFT JOIN menu_items ON menu_items.id = orders.menu_item_id
           WHERE orders.user_id = ? ORDER BY orders.id DESC LIMIT 20
         `).all(user.id);
@@ -477,7 +633,7 @@ export function createAppServer(options = {}) {
       }
 
       if (path === "/api/orders" && req.method === "POST") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const body = await readJson(req);
         const calorieTarget = Number(body.calorieTarget);
         const menuItemId = body.menuItemId == null ? null : Number(body.menuItemId);
@@ -485,43 +641,43 @@ export function createAppServer(options = {}) {
         if (!Number.isInteger(calorieTarget) || calorieTarget < 100 || calorieTarget > 1500) return error(res, 400, "Calorie target must be between 100 and 1500 kcal.", "INVALID_CALORIES");
         let item = null;
         if (menuItemId !== null) {
-          item = db.prepare("SELECT id, name, price_cents FROM menu_items WHERE id = ? AND active = 1").get(menuItemId);
+          item = await db.prepare("SELECT id, name, price_cents FROM menu_items WHERE id = ? AND active = 1").get(menuItemId);
           if (!item) return error(res, 404, "The selected meal is unavailable.", "MEAL_NOT_FOUND");
         }
         const now = new Date().toISOString();
-        const result = db.prepare("INSERT INTO orders (user_id, menu_item_id, calorie_target, notes, status, total_cents, created_at) VALUES (?, ?, ?, ?, 'received', ?, ?)")
+        const result = await db.prepare("INSERT INTO orders (user_id, menu_item_id, calorie_target, notes, status, total_cents, created_at) VALUES (?, ?, ?, ?, 'received', ?, ?)")
           .run(user.id, item?.id ?? null, calorieTarget, notes, item?.price_cents ?? 0, now);
         json(res, 201, { order: { id: Number(result.lastInsertRowid), calorieTarget, notes, status: "received", totalCents: item?.price_cents ?? 0, createdAt: now, mealName: item?.name ?? null } });
         return;
       }
 
       if (path === "/api/posts" && req.method === "GET") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const topic = url.searchParams.get("topic");
         const rows = topic && ["Training", "Nutrition"].includes(topic)
-          ? db.prepare(`SELECT posts.*, (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS user_likes, EXISTS(SELECT 1 FROM post_likes WHERE post_id = posts.id AND user_id = ?) AS liked FROM posts WHERE topic = ? ORDER BY created_at DESC`).all(user.id, topic)
-          : db.prepare(`SELECT posts.*, (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS user_likes, EXISTS(SELECT 1 FROM post_likes WHERE post_id = posts.id AND user_id = ?) AS liked FROM posts ORDER BY created_at DESC`).all(user.id);
+          ? await db.prepare(`SELECT posts.*, (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS user_likes, EXISTS(SELECT 1 FROM post_likes WHERE post_id = posts.id AND user_id = ?) AS liked FROM posts WHERE topic = ? ORDER BY created_at DESC`).all(user.id, topic)
+          : await db.prepare(`SELECT posts.*, (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS user_likes, EXISTS(SELECT 1 FROM post_likes WHERE post_id = posts.id AND user_id = ?) AS liked FROM posts ORDER BY created_at DESC`).all(user.id);
         const posts = rows.map((row) => ({
           id: String(row.id), topic: row.topic, user: row.author_name, avatar: row.avatar,
           time: timeAgo(row.created_at), body: row.body, img: row.image_url,
-          likes: row.base_likes + row.user_likes, comments: row.comments_count, liked: Boolean(row.liked),
+          likes: Number(row.base_likes) + Number(row.user_likes), comments: Number(row.comments_count), liked: Boolean(row.liked),
         }));
         json(res, 200, { posts });
         return;
       }
 
       if (path === "/api/posts" && req.method === "POST") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const body = await readJson(req);
         const topic = body.topic;
         const text = String(body.body ?? "").trim();
         const imageUrl = String(body.imageUrl ?? "").trim().slice(0, 1000) || null;
         if (!["Training", "Nutrition"].includes(topic)) return error(res, 400, "Post topic is invalid.", "INVALID_TOPIC");
         if (text.length < 3 || text.length > 1000) return error(res, 400, "Post must contain 3 to 1000 characters.", "INVALID_POST");
-        const profile = db.prepare("SELECT name FROM profiles WHERE user_id = ?").get(user.id);
+        const profile = await db.prepare("SELECT name FROM profiles WHERE user_id = ?").get(user.id);
         const authorName = profile?.name ?? user.email.split("@")[0];
         const now = new Date().toISOString();
-        const result = db.prepare("INSERT INTO posts (user_id, topic, author_name, avatar, body, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        const result = await db.prepare("INSERT INTO posts (user_id, topic, author_name, avatar, body, image_url, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
           .run(user.id, topic, authorName, initials(authorName), text, imageUrl, now);
         json(res, 201, { post: { id: String(result.lastInsertRowid), topic, user: authorName, avatar: initials(authorName), time: "just now", body: text, img: imageUrl, likes: 0, comments: 0, liked: false } });
         return;
@@ -529,22 +685,22 @@ export function createAppServer(options = {}) {
 
       const likeMatch = path.match(/^\/api\/posts\/(\d+)\/like$/);
       if (likeMatch && req.method === "POST") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const postId = Number(likeMatch[1]);
-        if (!db.prepare("SELECT id FROM posts WHERE id = ?").get(postId)) return error(res, 404, "Post not found.", "POST_NOT_FOUND");
-        db.prepare("INSERT OR IGNORE INTO post_likes (user_id, post_id, created_at) VALUES (?, ?, ?)").run(user.id, postId, new Date().toISOString());
-        const count = db.prepare("SELECT base_likes + (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS likes FROM posts WHERE id = ?").get(postId).likes;
-        json(res, 200, { liked: true, likes: count });
+        if (!await db.prepare("SELECT id FROM posts WHERE id = ?").get(postId)) return error(res, 404, "Post not found.", "POST_NOT_FOUND");
+        await db.prepare("INSERT INTO post_likes (user_id, post_id, created_at) VALUES (?, ?, ?) ON CONFLICT(user_id, post_id) DO NOTHING").run(user.id, postId, new Date().toISOString());
+        const count = (await db.prepare("SELECT base_likes + (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS likes FROM posts WHERE id = ?").get(postId)).likes;
+        json(res, 200, { liked: true, likes: Number(count) });
         return;
       }
 
       if (likeMatch && req.method === "DELETE") {
-        const user = requireAuth(db, req, res); if (!user) return;
+        const user = await requireAuth(db, req, res); if (!user) return;
         const postId = Number(likeMatch[1]);
-        db.prepare("DELETE FROM post_likes WHERE user_id = ? AND post_id = ?").run(user.id, postId);
-        const row = db.prepare("SELECT base_likes + (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS likes FROM posts WHERE id = ?").get(postId);
+        await db.prepare("DELETE FROM post_likes WHERE user_id = ? AND post_id = ?").run(user.id, postId);
+        const row = await db.prepare("SELECT base_likes + (SELECT COUNT(*) FROM post_likes WHERE post_id = posts.id) AS likes FROM posts WHERE id = ?").get(postId);
         if (!row) return error(res, 404, "Post not found.", "POST_NOT_FOUND");
-        json(res, 200, { liked: false, likes: row.likes });
+        json(res, 200, { liked: false, likes: Number(row.likes) });
         return;
       }
 
@@ -560,7 +716,7 @@ export function createAppServer(options = {}) {
     }
   });
 
-  server.on("close", () => db.close());
+  server.on("close", () => { void dbPromise.then((db) => db.close()).catch(() => undefined); });
   return server;
 }
 

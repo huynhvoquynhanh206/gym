@@ -175,7 +175,7 @@ function PageBrandBar({ email, onLogout }: { email: string; onLogout: () => void
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[120px] sm:w-[120px] h-auto object-contain object-left"
+        className="w-[150px] sm:w-[150px] h-auto object-contain object-left"
       />
       <button
         type="button"

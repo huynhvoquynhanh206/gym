@@ -2,7 +2,19 @@ services:
   - type: web
     name: core-fitness-bts
     runtime: node
+    region: singapore
     plan: free
     buildCommand: npm ci && npm run build
     startCommand: npm start
-    healthCheckPath: /healthz
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_TIME_ZONE
+        value: Asia/Ho_Chi_Minh
+      - key: DATABASE_SSL
+        value: "true"
+      - key: DATABASE_POOL_SIZE
+        value: "5"
+      - key: DATABASE_URL
+        sync: false

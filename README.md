@@ -25,3 +25,7 @@ npm run build
 ```
 
 Thư mục kết quả: `dist/`.
+
+## Deploy Render + Supabase
+
+Xem hướng dẫn chi tiết tại [DEPLOY_RENDER_SUPABASE.md](./DEPLOY_RENDER_SUPABASE.md).

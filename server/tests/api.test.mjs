@@ -26,7 +26,7 @@ async function jsonRequest(baseUrl, path, options = {}) {
 
 test("complete account, profile, check-in, order and community flow", async (t) => {
   const tempDir = await mkdtemp(join(tmpdir(), "kho-mon-gym-"));
-  const server = createAppServer({ dbFile: join(tempDir, "test.sqlite"), distDir: join(tempDir, "missing-dist") });
+  const server = createAppServer({ databaseUrl: "", dbFile: join(tempDir, "test.sqlite"), distDir: join(tempDir, "missing-dist") });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const address = server.address();
   const baseUrl = `http://127.0.0.1:${address.port}`;
@@ -39,6 +39,7 @@ test("complete account, profile, check-in, order and community flow", async (t) 
   const health = await jsonRequest(baseUrl, "/api/health");
   assert.equal(health.response.status, 200);
   assert.equal(health.payload.ok, true);
+  assert.equal(health.payload.database, "sqlite");
 
   const registration = await jsonRequest(baseUrl, "/api/auth/register", {
     method: "POST",

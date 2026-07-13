@@ -1,8 +1,11 @@
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+const viteCli = fileURLToPath(new URL("../node_modules/vite/bin/vite.js", import.meta.url));
 
 const children = [
   spawn(process.execPath, ["--watch", "server/index.mjs"], { stdio: "inherit", env: { ...process.env, PORT: "8787" } }),
-  spawn(process.platform === "win32" ? "npm.cmd" : "npm", ["exec", "vite", "--", "--host", "0.0.0.0"], { stdio: "inherit" }),
+  spawn(process.execPath, [viteCli, "--host", "0.0.0.0"], { stdio: "inherit" }),
 ];
 
 const stop = (signal = "SIGTERM") => {
@@ -13,6 +16,12 @@ process.on("SIGINT", () => { stop("SIGINT"); process.exit(0); });
 process.on("SIGTERM", () => { stop("SIGTERM"); process.exit(0); });
 
 for (const child of children) {
+  child.on("error", (error) => {
+    console.error(`Unable to start development process: ${error.message}`);
+    stop();
+    process.exit(1);
+  });
+
   child.on("exit", (code) => {
     if (code && code !== 0) {
       stop();
