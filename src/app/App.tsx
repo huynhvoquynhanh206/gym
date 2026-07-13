@@ -175,7 +175,7 @@ function PageBrandBar({ email, onLogout }: { email: string; onLogout: () => void
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[190px] sm:w-[190px] h-auto object-contain object-left"
+        className="w-[150px] sm:w-[150px] h-auto object-contain object-left"
       />
       <button
         type="button"
@@ -938,7 +938,7 @@ function HomeTab({ user }: { user: UserData }) {
             Hello 👋
           </p>
 
-          <h1 className="font-barlow text-[26px] font-black text-foreground mt-1.5 leading-none">
+          <h1 className="font-barlow text-3xl font-black text-foreground mt-1.5 leading-none">
             {user.name}
           </h1>
         </div>
@@ -2045,12 +2045,12 @@ const homeCatalog: Record<string, Exercise[]> = {
 
       {activeExercise && (
         <div
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-black"
           role="dialog"
           aria-modal="true"
           aria-label={`${activeExercise.name} exercise guide`}
         >
-          <div className="relative w-[min(100vw,56.25dvh)] aspect-[9/16] overflow-hidden bg-black">
+          <div className="relative w-[min(100vw,56.25dvh,1080px)] aspect-[9/16] overflow-hidden bg-black">
             <img
               key={activeExercise.name}
               src={activeExercise.image}
@@ -2058,14 +2058,58 @@ const homeCatalog: Record<string, Exercise[]> = {
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
 
-            <button
-              type="button"
-              onClick={() => setActiveExercise(null)}
-              className="absolute z-20 left-4 top-[max(14px,env(safe-area-inset-top))] w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-95 transition-transform"
-              aria-label="Back to workout list"
-            >
-              <ChevronLeft size={22} className="text-white" />
-            </button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/5 to-black/65 pointer-events-none" />
+
+            <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-[max(14px,env(safe-area-inset-top))]">
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  onClick={() => setActiveExercise(null)}
+                  className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-95 transition-transform"
+                  aria-label="Back to workout list"
+                >
+                  <ChevronLeft size={22} className="text-white" />
+                </button>
+
+                <img
+                  src={brandLogo}
+                  alt="CORE Fitness & Yoga x BTS"
+                  className="w-[155px] max-w-[48vw] h-auto object-contain"
+                />
+
+              </div>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 z-20 px-5 pb-[max(26px,env(safe-area-inset-bottom))] pt-20">
+              <div className="max-w-[88%]">
+                <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-full border font-bold ${levelClasses[activeExercise.level]}`}>
+                  {activeExercise.level}
+                </span>
+
+                <h3 className="font-barlow text-4xl font-black text-white leading-none mt-3">
+                  {activeExercise.name}
+                </h3>
+                <p className="text-sm text-white/75 mt-2 flex items-center gap-1.5">
+                  <Dumbbell size={14} /> {activeExercise.equipment}
+                </p>
+              </div>
+
+              <div className="flex gap-2 flex-wrap mt-4">
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  {activeExercise.sets}
+                </span>
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  Rest {activeExercise.rest}
+                </span>
+                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
+                  ~{activeExercise.kcal} kcal
+                </span>
+              </div>
+
+              <div className="mt-3 rounded-2xl border border-white/15 bg-black/45 p-4 backdrop-blur-xl">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-1.5">Technique</p>
+                <p className="text-sm text-white leading-relaxed">{activeExercise.cue}</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -2986,136 +3030,403 @@ function SocialTab() {
 
 
 function CheckinTab({ user }: { user: UserData }) {
-  const [checkedIn, setCheckedIn] = useState(false);
-  const streak = 47;
+  const baseStreak = 47;
   const goal = 100;
+
+  const [checkedIn, setCheckedIn] = useState(false);
+  const [streak, setStreak] = useState(baseStreak);
+  const [displayStreak, setDisplayStreak] = useState(baseStreak);
+  const [celebrating, setCelebrating] = useState(false);
+
+  const storageSuffix = user.name.trim().toLowerCase().replace(/\s+/g, "-") || "member";
+  const streakStorageKey = `core-streak-${storageSuffix}`;
+  const checkinDateStorageKey = `core-checkin-date-${storageSuffix}`;
+
+  const getLocalDateKey = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    const savedStreak = Number(window.localStorage.getItem(streakStorageKey));
+    const safeStreak = Number.isFinite(savedStreak) && savedStreak > 0
+      ? savedStreak
+      : baseStreak;
+
+    const alreadyCheckedIn =
+      window.localStorage.getItem(checkinDateStorageKey) === getLocalDateKey();
+
+    setStreak(safeStreak);
+    setDisplayStreak(safeStreak);
+    setCheckedIn(alreadyCheckedIn);
+  }, [checkinDateStorageKey, streakStorageKey]);
+
+  const handleCheckIn = () => {
+    if (checkedIn || celebrating) return;
+
+    const nextStreak = streak + 1;
+
+    setCheckedIn(true);
+    setCelebrating(true);
+    setDisplayStreak(streak);
+
+    window.setTimeout(() => {
+      setStreak(nextStreak);
+      setDisplayStreak(nextStreak);
+      window.localStorage.setItem(streakStorageKey, String(nextStreak));
+      window.localStorage.setItem(checkinDateStorageKey, getLocalDateKey());
+    }, 620);
+
+    window.setTimeout(() => {
+      setCelebrating(false);
+    }, 1900);
+  };
 
   const week = [
     { label: "Mo", date: "7", done: true },
     { label: "Tu", date: "8", done: false },
-    { label: "We", date: "9", done: true, today: true },
+    { label: "We", date: "9", done: false, today: true },
     { label: "Th", date: "10", done: false },
     { label: "Fr", date: "11", done: false },
     { label: "Sa", date: "12", done: false },
     { label: "Su", date: "13", done: false },
   ];
 
-
   const friends = [
-    { name: user.name, streak, avatar: user.name.slice(0, 2).toUpperCase(), isMe: true },
+    {
+      name: user.name,
+      streak,
+      avatar: user.name.slice(0, 2).toUpperCase(),
+      isMe: true,
+    },
     { name: "Jake Morgan", streak: 52, avatar: "JM", isMe: false },
     { name: "Sophie Lee", streak: 31, avatar: "SL", isMe: false },
     { name: "Marcus Hill", streak: 18, avatar: "MH", isMe: false },
   ];
 
   return (
-    <div className="p-4 space-y-4 pb-4">
-      <div className="pt-3">
-        <h2 className="font-barlow text-4xl font-black text-foreground leading-none">Streak</h2>
-        <p className="text-muted-foreground text-sm mt-1.5">
-          Keep up {user.workoutsPerWeek} sessions/week to maintain your streak
-        </p>
-      </div>
+    <>
+      <style>{`
+        @keyframes streakOverlayIn {
+          0% { opacity: 0; transform: scale(1.08); }
+          18% { opacity: 1; transform: scale(1); }
+          82% { opacity: 1; transform: scale(1); }
+          100% { opacity: 0; transform: scale(1.03); }
+        }
 
-      <div className="bg-card rounded-2xl p-5 border border-border relative overflow-hidden">
+        @keyframes streakFlameBurst {
+          0% {
+            opacity: 0;
+            transform: translateY(40px) scale(0.25) rotate(-10deg);
+            filter: drop-shadow(0 0 0 rgba(255,255,255,0));
+          }
+          38% {
+            opacity: 1;
+            transform: translateY(-8px) scale(1.2) rotate(5deg);
+            filter: drop-shadow(0 0 34px rgba(255,255,255,0.85));
+          }
+          58% {
+            transform: translateY(0) scale(0.96) rotate(-2deg);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotate(0deg);
+            filter: drop-shadow(0 0 22px rgba(255,255,255,0.5));
+          }
+        }
+
+        @keyframes streakNumberJump {
+          0%, 42% {
+            opacity: 0.35;
+            transform: translateY(16px) scale(0.78);
+          }
+          58% {
+            opacity: 1;
+            transform: translateY(-18px) scale(1.3);
+          }
+          76% {
+            transform: translateY(3px) scale(0.96);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes streakRingPulse {
+          0% { opacity: 0; transform: scale(0.35); }
+          45% { opacity: 0.65; }
+          100% { opacity: 0; transform: scale(2.15); }
+        }
+
+        @keyframes streakButtonPop {
+          0% { transform: scale(1); }
+          45% { transform: scale(0.96); }
+          72% { transform: scale(1.035); }
+          100% { transform: scale(1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .streak-overlay,
+          .streak-flame,
+          .streak-number,
+          .streak-ring,
+          .streak-button-pop {
+            animation: none !important;
+          }
+        }
+      `}</style>
+
+      {celebrating && (
         <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.10) 0%, transparent 60%)" }}
-        />
-        <div className="text-center mb-5">
-          <div className="font-barlow text-7xl font-black text-primary leading-none">{streak}</div>
-          <div className="flex items-center justify-center gap-1 mt-1 text-sm text-muted-foreground">
-            <Flame size={14} className="text-accent" />
-            days in a row
-          </div>
-        </div>
-        <div className="mb-2">
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
+          className="streak-overlay fixed inset-0 z-[300] bg-primary flex items-center justify-center overflow-hidden"
+          style={{ animation: "streakOverlayIn 1.9s ease-out forwards" }}
+          role="status"
+          aria-live="polite"
+          aria-label={`Streak increased to ${displayStreak} days`}
+        >
+          <div
+            className="streak-ring absolute w-44 h-44 rounded-full border-[10px] border-white/35"
+            style={{ animation: "streakRingPulse 1.2s ease-out 0.22s forwards" }}
+          />
+          <div
+            className="streak-ring absolute w-44 h-44 rounded-full border-[6px] border-white/25"
+            style={{ animation: "streakRingPulse 1.2s ease-out 0.5s forwards" }}
+          />
+
+          <div className="relative z-10 text-center text-white px-6">
             <div
-              className="h-full bg-primary rounded-full"
-              style={{ width: `${(streak / goal) * 100}%` }}
-            />
+              className="streak-flame mx-auto w-40 h-40 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center"
+              style={{ animation: "streakFlameBurst 1.05s cubic-bezier(.2,.9,.25,1.2) forwards" }}
+            >
+              <Flame
+                size={108}
+                strokeWidth={1.8}
+                fill="currentColor"
+                className="text-white"
+              />
+            </div>
+
+            <div
+              className="streak-number font-barlow text-8xl font-black leading-none mt-5"
+              style={{ animation: "streakNumberJump 1.05s cubic-bezier(.2,.9,.25,1.2) forwards" }}
+            >
+              {displayStreak}
+            </div>
+
+            <p className="text-sm font-black uppercase tracking-[0.28em] mt-3">
+              Day streak!
+            </p>
+
+            <div className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-full bg-white text-primary font-black">
+              <Flame size={17} fill="currentColor" />
+              +1
+            </div>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground text-center mb-5">
-          {streak}/{goal} days — {goal - streak} days to the next reward
-        </p>
-        <button
-          onClick={() => setCheckedIn(true)}
-          className={`w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+      )}
+
+      <div className="p-4 space-y-4 pb-4">
+        <div className="pt-3">
+          <h2 className="font-barlow text-4xl font-black text-foreground leading-none">
+            Streak
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1.5">
+            Keep up {user.workoutsPerWeek} sessions/week to maintain your streak
+          </p>
+        </div>
+
+        <div
+          className={`rounded-2xl p-5 border relative overflow-hidden transition-all duration-500 ${
             checkedIn
-              ? "bg-muted text-muted-foreground cursor-default"
-              : "bg-primary text-primary-foreground hover:opacity-90"
+              ? "bg-primary border-primary shadow-[0_18px_50px_rgba(37,99,235,0.32)]"
+              : "bg-card border-border"
           }`}
         >
-          {checkedIn ? (
-            <><Check size={16} /> Checked in today!</>
-          ) : (
-            <><MapPin size={16} /> Check In Workout</>
-          )}
-        </button>
-      </div>
-
-      <div className="bg-card rounded-2xl p-4 border border-border">
-        <h3 className="font-barlow text-lg font-bold text-foreground mb-3">This Week</h3>
-        <div className="flex gap-1">
-          {week.map(({ label, date, done, today }) => (
-            <div key={label} className="flex-1 flex flex-col items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">{label}</span>
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                  done
-                    ? "bg-primary text-primary-foreground"
-                    : today
-                    ? "border-2 border-primary text-primary"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {done ? <Check size={13} /> : date}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-card rounded-2xl p-4 border border-border">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-barlow text-lg font-bold text-foreground">Friends Leaderboard</h3>
-          <button className="text-xs text-primary font-medium">Invite More</button>
-        </div>
-        <div className="space-y-2">
-          {[...friends].sort((a, b) => b.streak - a.streak).map(({ name, streak: s, avatar, isMe }, rank) => (
+          {!checkedIn && (
             <div
-              key={name}
-              className={`flex items-center gap-3 p-2.5 rounded-xl ${
-                isMe ? "bg-primary/10 border border-primary/25" : ""
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.10) 0%, transparent 60%)",
+              }}
+            />
+          )}
+
+          <div className="relative text-center mb-5">
+            <div
+              className={`font-barlow text-7xl font-black leading-none transition-all duration-500 ${
+                checkedIn ? "text-white" : "text-primary"
               }`}
             >
-              <span
-                className="text-xs font-barlow font-bold w-4 flex-shrink-0"
-                style={{ color: rank === 0 ? "#3b82f6" : "#94a3b8" }}
-              >
-                {rank + 1}
-              </span>
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                  isMe ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {avatar}
-              </div>
-              <span className="text-sm text-foreground flex-1">{name}{isMe ? " (you)" : ""}</span>
-              <div className="flex items-center gap-1">
-                <Flame size={12} className="text-accent" />
-                <span className="font-barlow text-sm font-bold text-foreground">{s}</span>
-              </div>
+              {streak}
             </div>
-          ))}
+
+            <div
+              className={`flex items-center justify-center gap-1 mt-1 text-sm transition-colors ${
+                checkedIn ? "text-white/85" : "text-muted-foreground"
+              }`}
+            >
+              <Flame
+                size={15}
+                fill="currentColor"
+                className={checkedIn ? "text-white" : "text-primary"}
+              />
+              days in a row
+            </div>
+          </div>
+
+          <div className="relative mb-2">
+            <div
+              className={`h-2 rounded-full overflow-hidden ${
+                checkedIn ? "bg-white/20" : "bg-muted"
+              }`}
+            >
+              <div
+                className={`h-full rounded-full transition-all duration-700 ${
+                  checkedIn ? "bg-white" : "bg-primary"
+                }`}
+                style={{ width: `${(streak / goal) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          <p
+            className={`relative text-xs text-center mb-5 ${
+              checkedIn ? "text-white/80" : "text-muted-foreground"
+            }`}
+          >
+            {streak}/{goal} days — {goal - streak} days to the next reward
+          </p>
+
+          <button
+            type="button"
+            onClick={handleCheckIn}
+            disabled={checkedIn || celebrating}
+            className={`streak-button-pop relative w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+              checkedIn
+                ? "bg-white text-primary cursor-default"
+                : "bg-primary text-primary-foreground hover:brightness-110 active:scale-[0.98]"
+            }`}
+            style={{
+              animation: checkedIn
+                ? "streakButtonPop 0.55s ease-out"
+                : undefined,
+            }}
+          >
+            {checkedIn ? (
+              <>
+                <Check size={16} />
+                Checked in today!
+              </>
+            ) : (
+              <>
+                <Flame size={17} fill="currentColor" />
+                Check In Workout
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <h3 className="font-barlow text-lg font-bold text-foreground mb-3">
+            This Week
+          </h3>
+
+          <div className="flex gap-1">
+            {week.map(({ label, date, done, today }) => {
+              const completed = done || Boolean(today && checkedIn);
+
+              return (
+                <div
+                  key={label}
+                  className="flex-1 flex flex-col items-center gap-1.5"
+                >
+                  <span className="text-xs text-muted-foreground">{label}</span>
+
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-500 ${
+                      completed
+                        ? "bg-primary text-primary-foreground shadow-[0_0_18px_rgba(37,99,235,0.4)]"
+                        : today
+                        ? "border-2 border-primary text-primary"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {completed ? <Check size={13} /> : date}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="bg-card rounded-2xl p-4 border border-border">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-barlow text-lg font-bold text-foreground">
+              Friends Leaderboard
+            </h3>
+            <button className="text-xs text-primary font-medium">
+              Invite More
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {[...friends]
+              .sort((a, b) => b.streak - a.streak)
+              .map(({ name, streak: friendStreak, avatar, isMe }, rank) => (
+                <div
+                  key={name}
+                  className={`flex items-center gap-3 p-2.5 rounded-xl ${
+                    isMe ? "bg-primary/10 border border-primary/25" : ""
+                  }`}
+                >
+                  <span
+                    className="text-xs font-barlow font-bold w-4 flex-shrink-0"
+                    style={{
+                      color: rank === 0 ? "#3b82f6" : "#94a3b8",
+                    }}
+                  >
+                    {rank + 1}
+                  </span>
+
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                      isMe
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {avatar}
+                  </div>
+
+                  <span className="text-sm text-foreground flex-1">
+                    {name}
+                    {isMe ? " (you)" : ""}
+                  </span>
+
+                  <div className="flex items-center gap-1">
+                    <Flame
+                      size={12}
+                      fill="currentColor"
+                      className="text-primary"
+                    />
+                    <span className="font-barlow text-sm font-bold text-foreground">
+                      {friendStreak}
+                    </span>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
+
 
 function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) {
   const tabs: { id: Tab; Icon: typeof Activity; label: string }[] = [
