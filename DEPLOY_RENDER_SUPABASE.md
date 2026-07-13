@@ -100,7 +100,7 @@ Repository đã có `render.yaml`.
 Blueprint tự cấu hình:
 
 - Region Render: Singapore
-- Build command: `npm ci && npm run build`
+- Build command: `npm ci --include=dev && npm run build`
 - Start command: `npm start`
 - Health check: `/api/health`
 - `NODE_ENV=production`
@@ -115,7 +115,7 @@ Thay vì Blueprint, chọn **New +** -> **Web Service** và nhập:
 | Thiết lập | Giá trị |
 | --- | --- |
 | Runtime | Node |
-| Build Command | `npm ci && npm run build` |
+| Build Command | `npm ci --include=dev && npm run build` |
 | Start Command | `npm start` |
 | Health Check Path | `/api/health` |
 
