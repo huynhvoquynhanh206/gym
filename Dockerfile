@@ -13,7 +13,7 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/server.mjs ./server.mjs
+COPY --from=build /app/server ./server
 
 EXPOSE 10000
-CMD ["node", "server.mjs"]
+CMD ["node", "server/index.mjs"]

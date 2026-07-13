@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   Activity,
   Dumbbell,
@@ -24,63 +24,66 @@ import {
   Share2,
   ArrowRight,
   Bike,
+  LogOut,
+  LoaderCircle,
 } from "lucide-react";
+import { api, ApiError, getToken, setToken, type Account } from "../lib/api";
 import brandLogo from "../assets/core-bts-new-logo.svg";
-import chestPressImage from "../assets/exercises/gym/chest-press.jpg";
-import latPulldownImage from "../assets/exercises/gym/lat-pulldown.jpg";
-import seatedRowImage from "../assets/exercises/gym/seated-row.jpg";
-import shoulderPressImage from "../assets/exercises/gym/shoulder-press.jpg";
-import tricepPushdownImage from "../assets/exercises/gym/tricep-pushdown.jpg";
+import chestPressImage from "../assets/exercises/gym/chest-press.png";
+import latPulldownImage from "../assets/exercises/gym/lat-pulldown.png";
+import seatedRowImage from "../assets/exercises/gym/seated-row.png";
+import shoulderPressImage from "../assets/exercises/gym/shoulder-press.png";
+import tricepPushdownImage from "../assets/exercises/gym/tricep-pushdown.png";
 
-import legPressImage from "../assets/exercises/gym/leg-press.jpg";
-import romanianDeadliftImage from "../assets/exercises/gym/romanian-deadlift.jpg";
-import legCurlImage from "../assets/exercises/gym/leg-curl.jpg";
-import legExtensionImage from "../assets/exercises/gym/leg-extension.jpg";
-import gymCalfRaiseImage from "../assets/exercises/gym/calf-raise.jpg";
+import legPressImage from "../assets/exercises/gym/leg-press.png";
+import romanianDeadliftImage from "../assets/exercises/gym/romanian-deadlift.png";
+import legCurlImage from "../assets/exercises/gym/leg-curl.png";
+import legExtensionImage from "../assets/exercises/gym/leg-extension.png";
+import gymCalfRaiseImage from "../assets/exercises/gym/calf-raise.png";
 
-import treadmillWarmUpImage from "../assets/exercises/gym/treadmill-warm-up.jpg";
-import gobletSquatImage from "../assets/exercises/gym/goblet-squat.jpg";
-import bikeFinisherImage from "../assets/exercises/gym/bike-finisher.jpg";
+import treadmillWarmUpImage from "../assets/exercises/gym/treadmill-warm-up.png";
+import gobletSquatImage from "../assets/exercises/gym/goblet-squat.png";
+import bikeFinisherImage from "../assets/exercises/gym/bike-finisher.png";
 
-import inclineWalkImage from "../assets/exercises/gym/incline-walk.jpg";
-import rowIntervalsImage from "../assets/exercises/gym/row-intervals.jpg";
-import cableCrunchImage from "../assets/exercises/gym/cable-crunch.jpg";
-import gymPlankImage from "../assets/exercises/gym/plank.jpg";
+import inclineWalkImage from "../assets/exercises/gym/incline-walk.png";
+import rowIntervalsImage from "../assets/exercises/gym/row-intervals.png";
+import cableCrunchImage from "../assets/exercises/gym/cable-crunch.png";
+import gymPlankImage from "../assets/exercises/gym/plank.png";
 
-import bikeRecoveryImage from "../assets/exercises/gym/bike-recovery.jpg";
-import hipMobilityFlowImage from "../assets/exercises/gym/hip-mobility-flow.jpg";
-import shoulderMobilityImage from "../assets/exercises/gym/shoulder-mobility.jpg";
+import bikeRecoveryImage from "../assets/exercises/gym/bike-recovery.png";
+import hipMobilityFlowImage from "../assets/exercises/gym/hip-mobility-flow.png";
+import shoulderMobilityImage from "../assets/exercises/gym/shoulder-mobility.png";
 
-import cableWoodchopImage from "../assets/exercises/gym/cable-woodchop.jpg";
-import backExtensionImage from "../assets/exercises/gym/back-extension.jpg";
-import gymDeadBugImage from "../assets/exercises/gym/dead-bug.jpg";
-import gymMobilityFlowImage from "../assets/exercises/gym/mobility-flow.jpg";
+import cableWoodchopImage from "../assets/exercises/gym/cable-woodchop.png";
+import backExtensionImage from "../assets/exercises/gym/back-extension.png";
+import gymDeadBugImage from "../assets/exercises/gym/dead-bug.png";
+import gymMobilityFlowImage from "../assets/exercises/gym/mobility-flow.png";
 
-import homeInclinePushUpImage from "../assets/exercises/home/incline-push-up.jpg";
-import homeBackpackRowImage from "../assets/exercises/home/backpack-row.jpg";
-import homePikePushUpImage from "../assets/exercises/home/pike-push-up.jpg";
-import homeChairTricepDipImage from "../assets/exercises/home/chair-tricep-dip.jpg";
+import homeInclinePushUpImage from "../assets/exercises/home/incline-push-up.png";
+import homeBackpackRowImage from "../assets/exercises/gym/backpack-row.png";
+import homePikePushUpImage from "../assets/exercises/home/pike-push-up.png";
+import homeChairTricepDipImage from "../assets/exercises/home/chair-tricep-dip.png";
 
-import homeBodyweightSquatImage from "../assets/exercises/home/bodyweight-squat.jpg";
-import homeReverseLungeImage from "../assets/exercises/home/reverse-lunge.jpg";
-import homeSingleLegGluteBridgeImage from "../assets/exercises/home/single-leg-glute-bridge.jpg";
-import homeCalfRaiseImage from "../assets/exercises/home/calf-raise.jpg";
+import homeBodyweightSquatImage from "../assets/exercises/home/bodyweight-squat.png";
+import homeReverseLungeImage from "../assets/exercises/home/reverse-lunge.png";
+import homeSingleLegGluteBridgeImage from "../assets/exercises/home/single-leg-glute-bridge.png";
+import homeCalfRaiseImage from "../assets/exercises/home/calf-raise.png";
 
-import homeMarchingWarmUpImage from "../assets/exercises/home/marching-warm-up.jpg";
-import homeSquatToReachImage from "../assets/exercises/home/squat-to-reach.jpg";
-import homeMountainClimberImage from "../assets/exercises/home/mountain-climber.jpg";
+import homeMarchingWarmUpImage from "../assets/exercises/home/marching-warm-up.png";
+import homeSquatToReachImage from "../assets/exercises/home/squat-to-reach.png";
+import homeMountainClimberImage from "../assets/exercises/home/mountain-climber.png";
 
-import homeJumpingJackImage from "../assets/exercises/home/jumping-jack.jpg";
-import homeDeadBugImage from "../assets/exercises/home/dead-bug.jpg";
-import homePlankImage from "../assets/exercises/home/plank.jpg";
+import homeJumpingJackImage from "../assets/exercises/home/jumping-jack.png";
+import homeDeadBugImage from "../assets/exercises/home/dead-bug.png";
+import homePlankImage from "../assets/exercises/home/plank.png";
 
-import homeCatCowImage from "../assets/exercises/home/cat-cow.jpg";
-import homeWorldsGreatestStretchImage from "../assets/exercises/home/worlds-greatest-stretch.jpg";
-import homeHipSwitch9090Image from "../assets/exercises/home/hip-switch-90-90.jpg";
+import homeCatCowImage from "../assets/exercises/home/cat-cow.png";
+import homeWorldsGreatestStretchImage from "../assets/exercises/home/worlds-greatest-stretch.png";
+import homeHipSwitch9090Image from "../assets/exercises/home/hip-switch-90-90.png";
 
-import homeSidePlankImage from "../assets/exercises/home/side-plank.jpg";
-import homeBirdDogImage from "../assets/exercises/home/bird-dog.jpg";
-import homeMobilityFlowImage from "../assets/exercises/home/mobility-flow.jpg";
+import homeSidePlankImage from "../assets/exercises/home/side-plank.png";
+import homeBirdDogImage from "../assets/exercises/home/bird-dog.png";
+import homeMobilityFlowImage from "../assets/exercises/home/mobility-flow.png";
 
 type Tab = "home" | "workout" | "nutrition" | "social" | "checkin";
 type Goal = "lose_weight" | "gain_muscle" | "maintain" | "endurance";
@@ -166,14 +169,174 @@ function BrandLogo({ variant = "dark", size = "md" }: BrandLogoProps) {
   );
 }
 
-function PageBrandBar() {
+function PageBrandBar({ email, onLogout }: { email: string; onLogout: () => void }) {
   return (
-    <div className="px-4 pt-2 pb-0 bg-background">
+    <div className="px-4 pt-2 pb-0 bg-background flex items-center justify-between gap-3">
       <img
         src={brandLogo}
         alt="CORE Fitness & Yoga x BTS"
-        className="w-[112px] sm:w-[120px] h-auto object-contain object-left"
+        className="w-[120px] sm:w-[120px] h-auto object-contain object-left"
       />
+      <button
+        type="button"
+        onClick={onLogout}
+        className="w-9 h-9 rounded-xl border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+        aria-label={`Sign out ${email}`}
+        title={`Sign out ${email}`}
+      >
+        <LogOut size={16} />
+      </button>
+    </div>
+  );
+}
+
+function AuthScreen({
+  onAuthenticated,
+}: {
+  onAuthenticated: (account: Account, profile: UserData | null) => void;
+}) {
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const switchMode = (nextMode: "login" | "register") => {
+    setMode(nextMode);
+    setPassword("");
+    setConfirmPassword("");
+    setErrorMessage("");
+  };
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (mode === "register" && password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    setSubmitting(true);
+    setErrorMessage("");
+    try {
+      const result = mode === "login"
+        ? await api.login(email, password)
+        : await api.register(email, password);
+      setToken(result.token);
+      onAuthenticated(result.user, result.profile);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof ApiError
+          ? error.message
+          : "Unable to connect to the server. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6 py-10">
+      <div className="w-full max-w-sm">
+        <div className="flex justify-center mb-8">
+          <BrandLogo variant="dark" size="md" />
+        </div>
+
+        <div className="mb-7">
+          <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold mb-3">
+            Member access
+          </p>
+          <h1 className="font-barlow text-5xl font-black leading-none">
+            {mode === "login" ? "Welcome back" : "Join the journey"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+            {mode === "login"
+              ? "Sign in to continue with your saved profile and training plan."
+              : "Create an account, then build your personalized fitness profile."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-1 bg-muted p-1 rounded-xl mb-5">
+          {(["login", "register"] as const).map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => switchMode(item)}
+              className={`py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                mode === item ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              {item === "login" ? "Sign In" : "Create Account"}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={submit} className="space-y-4" noValidate>
+          <div>
+            <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">
+              Email
+            </label>
+            <input
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">
+              Password
+            </label>
+            <input
+              type="password"
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              minLength={8}
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              placeholder="At least 8 characters"
+            />
+          </div>
+
+          {mode === "register" && (
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5 block">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                placeholder="Enter the password again"
+              />
+            </div>
+          )}
+
+          {errorMessage && (
+            <div role="alert" className="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">
+              {errorMessage}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={submitting || !email.trim() || password.length < 8 || (mode === "register" && confirmPassword.length < 8)}
+            className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-40 hover:opacity-90 transition-opacity"
+          >
+            {submitting ? <LoaderCircle size={18} className="animate-spin" /> : <ArrowRight size={17} />}
+            {submitting ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
@@ -495,11 +658,13 @@ function StepGoal({
   onChange,
   onBack,
   onComplete,
+  saving,
 }: {
   data: UserData;
   onChange: (d: UserData) => void;
   onBack: () => void;
   onComplete: () => void;
+  saving: boolean;
 }) {
   const goals: { id: Goal; desc: string; Icon: typeof TrendingUp }[] = [
     { id: "lose_weight", desc: "Burn fat and improve body composition", Icon: TrendingUp },
@@ -578,21 +743,40 @@ function StepGoal({
 
       <button
         onClick={onComplete}
-        disabled={!data.targetWeight}
+        disabled={!data.targetWeight || saving}
         className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-30 hover:opacity-90 transition-opacity"
       >
-        Let's Go! <Zap size={17} />
+        {saving ? <><LoaderCircle size={17} className="animate-spin" /> Saving Profile...</> : <>Let's Go! <Zap size={17} /></>}
       </button>
     </div>
   );
 }
 
-function OnboardingFlow({ onComplete }: { onComplete: (d: UserData) => void }) {
+function OnboardingFlow({
+  onComplete,
+  onLogout,
+  saving = false,
+  errorMessage = "",
+}: {
+  onComplete: (d: UserData) => void;
+  onLogout: () => void;
+  saving?: boolean;
+  errorMessage?: string;
+}) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<UserData>(defaultUser);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-start pt-[max(18px,env(safe-area-inset-top))] pb-10">
+      <button
+        type="button"
+        onClick={onLogout}
+        className="fixed z-10 top-[max(12px,env(safe-area-inset-top))] right-4 w-9 h-9 rounded-xl border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+        aria-label="Sign out"
+        title="Sign out"
+      >
+        <LogOut size={16} />
+      </button>
       <div className="flex gap-1.5 mb-6">
         {[0, 1, 2, 3].map((i) => (
           <div
@@ -609,7 +793,16 @@ function OnboardingFlow({ onComplete }: { onComplete: (d: UserData) => void }) {
       {step === 1 && <StepMetrics data={data} onChange={setData} onBack={() => setStep(0)} onNext={() => setStep(2)} />}
       {step === 2 && <StepBMIResult data={data} onBack={() => setStep(1)} onNext={() => setStep(3)} />}
       {step === 3 && (
-        <StepGoal data={data} onChange={setData} onBack={() => setStep(2)} onComplete={() => onComplete(data)} />
+        <>
+          <StepGoal data={data} onChange={setData} onBack={() => setStep(2)} onComplete={() => onComplete(data)} saving={saving} />
+          {errorMessage && (
+            <div role="alert" className="w-full max-w-sm px-6 mt-3">
+              <div className="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">
+                {errorMessage}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -643,7 +836,7 @@ function HomeTab({ user }: { user: UserData }) {
     {
       name: "Core Fitness & Yoga Lê Quang Định",
       shortName: "Branch 1",
-      address: "239 Lê Quang Định, Phường Bình Thạnh, TP.HCM.",
+      address: "239 Lê Quang Định Street, Bình Thạnh Ward, Hồ Chí Minh City.",
       note: "Main gym branch",
       currentLevel: 68,
       traffic: [18, 34, 52, 45, 30, 42, 56, 64, 68, 62, 48, 28],
@@ -651,7 +844,7 @@ function HomeTab({ user }: { user: UserData }) {
     {
       name: "Core Fitness & Yoga Xô Viết Nghệ Tĩnh",
       shortName: "Branch 2",
-      address: "168 Xô Viết Nghệ Tĩnh, Phường Bình Thạnh, TP.HCM.",
+      address: "168 Xô Viết Nghệ Tĩnh, Bình Thạnh Ward, Hồ Chí Minh City.",
       note: "Fitness branch",
       currentLevel: 38,
       traffic: [14, 25, 34, 31, 20, 24, 35, 39, 38, 33, 27, 16],
@@ -659,7 +852,7 @@ function HomeTab({ user }: { user: UserData }) {
     {
       name: "Core Fitness & Yoga Bạch Đằng",
       shortName: "Branch 3",
-      address: "481–483 Bạch Đằng, Phường Bình Thạnh, TP.HCM.",
+      address: "481–483 Bạch Đằng Street, Bình Thạnh Ward, Hồ Chí Minh City.",
       note: "Fitness branch",
       currentLevel: 57,
       traffic: [17, 35, 48, 41, 26, 32, 46, 54, 57, 51, 37, 24],
@@ -667,7 +860,7 @@ function HomeTab({ user }: { user: UserData }) {
     {
       name: "Core Fitness & Yoga Nguyễn Chí Thanh",
       shortName: "Branch 4",
-      address: "139 Nguyễn Chí Thanh, Phường An Đông, TP.HCM.",
+      address: "139 Nguyễn Chí Thanh Street, An Đông Ward, Hồ Chí Minh City.",
       note: "Fitness branch",
       currentLevel: 81,
       traffic: [28, 45, 58, 50, 34, 46, 61, 76, 81, 74, 59, 38],
@@ -675,7 +868,7 @@ function HomeTab({ user }: { user: UserData }) {
     {
       name: "Core Boxing & Fitness Lý Thường Kiệt",
       shortName: "Branch 5",
-      address: "741 Lý Thường Kiệt, Phường Bảy Hiền, TP.HCM.",
+      address: "741 Lý Thường Kiệt Street, Bảy Hiền Ward, Hồ Chí Minh City.",
       note: "Boxing & fitness branch",
       currentLevel: 46,
       traffic: [16, 29, 42, 38, 25, 31, 44, 49, 46, 41, 32, 20],
@@ -745,7 +938,7 @@ function HomeTab({ user }: { user: UserData }) {
             Hello 👋
           </p>
 
-          <h1 className="font-barlow text-4xl font-black text-foreground mt-1.5 leading-none">
+          <h1 className="font-barlow text-3xl font-black text-foreground mt-1.5 leading-none">
             {user.name}
           </h1>
         </div>
@@ -1883,14 +2076,6 @@ const homeCatalog: Record<string, Exercise[]> = {
                   className="w-[155px] max-w-[48vw] h-auto object-contain"
                 />
 
-                <button
-                  type="button"
-                  onClick={() => undefined}
-                  className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-90 transition-transform"
-                  aria-label="Video"
-                >
-                  <Video size={20} className="text-white" />
-                </button>
               </div>
             </div>
 
@@ -3020,20 +3205,114 @@ function BottomNav({ active, onChange }: { active: Tab; onChange: (t: Tab) => vo
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [account, setAccount] = useState<Account | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("home");
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileError, setProfileError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const restoreSession = async () => {
+      if (!getToken()) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const result = await api.me();
+        if (!cancelled) {
+          setAccount(result.user);
+          setUser(result.profile);
+        }
+      } catch {
+        setToken(null);
+      } finally {
+        if (!cancelled) setAuthLoading(false);
+      }
+    };
+
+    void restoreSession();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleAuthenticated = (nextAccount: Account, profile: UserData | null) => {
+    setAccount(nextAccount);
+    setUser(profile);
+    setActiveTab("home");
+    setProfileError("");
+  };
+
+  const handleProfileComplete = async (profile: UserData) => {
+    setProfileSaving(true);
+    setProfileError("");
+    try {
+      const result = await api.saveProfile(profile);
+      setUser(result.profile);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        setAccount(null);
+        setUser(null);
+      }
+      setProfileError(
+        error instanceof ApiError
+          ? error.message
+          : "Unable to save your profile. Please try again."
+      );
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (getToken()) await api.logout();
+    } catch {
+      // Local sign-out must still succeed if the server is unavailable.
+    } finally {
+      setToken(null);
+      setAccount(null);
+      setUser(null);
+      setActiveTab("home");
+      setProfileError("");
+    }
+  };
 
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center gap-3">
+        <LoaderCircle size={28} className="text-primary animate-spin" />
+        <p className="text-sm text-muted-foreground">Restoring your session...</p>
+      </div>
+    );
+  }
+
+  if (!account) {
+    return <AuthScreen onAuthenticated={handleAuthenticated} />;
+  }
+
   if (!user) {
-    return <OnboardingFlow onComplete={setUser} />;
+    return (
+      <OnboardingFlow
+        onComplete={(profile) => void handleProfileComplete(profile)}
+        onLogout={() => void handleLogout()}
+        saving={profileSaving}
+        errorMessage={profileError}
+      />
+    );
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground max-w-sm mx-auto relative">
-      <PageBrandBar />
+      <PageBrandBar email={account.email} onLogout={() => void handleLogout()} />
       {activeTab === "home" && <HomeTab user={user} />}
       {activeTab === "workout" && <WorkoutTab user={user} />}
       {activeTab === "nutrition" && <NutritionTab />}
