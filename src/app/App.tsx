@@ -2045,12 +2045,12 @@ const homeCatalog: Record<string, Exercise[]> = {
 
       {activeExercise && (
         <div
-          className="fixed inset-0 z-[100] bg-black"
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
           role="dialog"
           aria-modal="true"
           aria-label={`${activeExercise.name} exercise guide`}
         >
-          <div className="relative w-[min(100vw,56.25dvh,1080px)] aspect-[9/16] overflow-hidden bg-black">
+          <div className="relative w-[min(100vw,56.25dvh)] aspect-[9/16] overflow-hidden bg-black">
             <img
               key={activeExercise.name}
               src={activeExercise.image}
@@ -2058,58 +2058,14 @@ const homeCatalog: Record<string, Exercise[]> = {
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/5 to-black/65 pointer-events-none" />
-
-            <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-[max(14px,env(safe-area-inset-top))]">
-              <div className="flex items-center justify-between gap-3">
-                <button
-                  onClick={() => setActiveExercise(null)}
-                  className="w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-95 transition-transform"
-                  aria-label="Back to workout list"
-                >
-                  <ChevronLeft size={22} className="text-white" />
-                </button>
-
-                <img
-                  src={brandLogo}
-                  alt="CORE Fitness & Yoga x BTS"
-                  className="w-[155px] max-w-[48vw] h-auto object-contain"
-                />
-
-              </div>
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 z-20 px-5 pb-[max(26px,env(safe-area-inset-bottom))] pt-20">
-              <div className="max-w-[88%]">
-                <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-full border font-bold ${levelClasses[activeExercise.level]}`}>
-                  {activeExercise.level}
-                </span>
-
-                <h3 className="font-barlow text-4xl font-black text-white leading-none mt-3">
-                  {activeExercise.name}
-                </h3>
-                <p className="text-sm text-white/75 mt-2 flex items-center gap-1.5">
-                  <Dumbbell size={14} /> {activeExercise.equipment}
-                </p>
-              </div>
-
-              <div className="flex gap-2 flex-wrap mt-4">
-                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
-                  {activeExercise.sets}
-                </span>
-                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
-                  Rest {activeExercise.rest}
-                </span>
-                <span className="text-xs text-white bg-black/45 border border-white/15 rounded-full px-3 py-1.5 backdrop-blur-md">
-                  ~{activeExercise.kcal} kcal
-                </span>
-              </div>
-
-              <div className="mt-3 rounded-2xl border border-white/15 bg-black/45 p-4 backdrop-blur-xl">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-primary font-bold mb-1.5">Technique</p>
-                <p className="text-sm text-white leading-relaxed">{activeExercise.cue}</p>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setActiveExercise(null)}
+              className="absolute z-20 left-4 top-[max(14px,env(safe-area-inset-top))] w-11 h-11 rounded-full bg-black/45 border border-white/20 backdrop-blur-md flex items-center justify-center active:scale-95 transition-transform"
+              aria-label="Back to workout list"
+            >
+              <ChevronLeft size={22} className="text-white" />
+            </button>
           </div>
         </div>
       )}
