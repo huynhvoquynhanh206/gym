@@ -3029,9 +3029,10 @@ function SocialTab() {
 }
 
 
-function CheckinTab({ user }: { user: UserData }) {
+function CheckinTab({ user, accountId }: { user: UserData; accountId: number }) {
   const baseStreak = 47;
   const goal = 100;
+  const checkinCooldownMs = 30 * 60 * 1000;
 
   const [checkedIn, setCheckedIn] = useState(false);
   const [streak, setStreak] = useState(baseStreak);
@@ -3039,22 +3040,18 @@ function CheckinTab({ user }: { user: UserData }) {
   const [celebrating, setCelebrating] = useState(false);
   const [celebrationTarget, setCelebrationTarget] = useState(baseStreak + 1);
 
-  const storageSuffix = user.name.trim().toLowerCase().replace(/\s+/g, "-") || "member";
-  const streakStorageKey = `core-streak-${storageSuffix}`;
-  const checkinDateStorageKey = `core-checkin-date-${storageSuffix}`;
-
-  const getLocalDateKey = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  const streakStorageKey = `core-streak-account-${accountId}`;
+  const lastCheckinStorageKey = `core-last-checkin-at-account-${accountId}`;
 
   useEffect(() => {
     const savedStreak = Number(window.localStorage.getItem(streakStorageKey));
+    const lastCheckinAt = Number(
+      window.localStorage.getItem(lastCheckinStorageKey)
+    );
     const alreadyCheckedIn =
-      window.localStorage.getItem(checkinDateStorageKey) === getLocalDateKey();
+      Number.isFinite(lastCheckinAt) &&
+      lastCheckinAt > 0 &&
+      Date.now() - lastCheckinAt < checkinCooldownMs;
     const safeStreak = Number.isFinite(savedStreak) && savedStreak > 0
       ? savedStreak
       : alreadyCheckedIn
@@ -3065,7 +3062,32 @@ function CheckinTab({ user }: { user: UserData }) {
     setDisplayStreak(safeStreak);
     setCheckedIn(alreadyCheckedIn);
     setCelebrating(false);
-  }, [checkinDateStorageKey, streakStorageKey]);
+    if (!alreadyCheckedIn) {
+      window.localStorage.removeItem(lastCheckinStorageKey);
+    }
+  }, [lastCheckinStorageKey, streakStorageKey]);
+
+  useEffect(() => {
+    if (!checkedIn) return;
+
+    const lastCheckinAt = Number(
+      window.localStorage.getItem(lastCheckinStorageKey)
+    );
+    const remainingMs = checkinCooldownMs - (Date.now() - lastCheckinAt);
+
+    if (!Number.isFinite(remainingMs) || remainingMs <= 0) {
+      window.localStorage.removeItem(lastCheckinStorageKey);
+      setCheckedIn(false);
+      return;
+    }
+
+    const resetTimer = window.setTimeout(() => {
+      window.localStorage.removeItem(lastCheckinStorageKey);
+      setCheckedIn(false);
+    }, remainingMs);
+
+    return () => window.clearTimeout(resetTimer);
+  }, [checkedIn, lastCheckinStorageKey]);
 
   useEffect(() => {
     if (!celebrating) return;
@@ -3088,9 +3110,9 @@ function CheckinTab({ user }: { user: UserData }) {
 
     const nextStreak = streak + 1;
 
-    // Persist first so a refresh/closed tab cannot award the same day twice.
+    // Persist first so reload/logout cannot bypass the 30-minute cooldown.
     window.localStorage.setItem(streakStorageKey, String(nextStreak));
-    window.localStorage.setItem(checkinDateStorageKey, getLocalDateKey());
+    window.localStorage.setItem(lastCheckinStorageKey, String(Date.now()));
 
     setCheckedIn(true);
     setDisplayStreak(streak);
@@ -3341,7 +3363,7 @@ function CheckinTab({ user }: { user: UserData }) {
             {checkedIn ? (
               <>
                 <Check size={16} />
-                Checked in today!
+                Checked in! Available again in 30 min
               </>
             ) : (
               <>
@@ -3605,7 +3627,7 @@ export default function App() {
       {activeTab === "workout" && <WorkoutTab user={user} />}
       {activeTab === "nutrition" && <NutritionTab />}
       {activeTab === "social" && <SocialTab />}
-      {activeTab === "checkin" && <CheckinTab user={user} />}
+      {activeTab === "checkin" && <CheckinTab user={user} accountId={account.id} />}
 
       <div className="sticky bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border">
         <div className="grid grid-cols-5 px-2 py-2">
