@@ -1146,9 +1146,12 @@ function HomeTab({ user }: { user: UserData }) {
   {/* Danh sách chi nhánh nằm dưới biểu đồ */}
   <div className="space-y-2">
   {gymBranches.map((branch, index) => {
-      const branchLabel = getCrowdLabel(branch.currentLevel);
-      const isSelected = selectedBranchIndex === index;
-      const isQuietest = quietestBranchIndex === index;
+    const branchLabel = getCrowdLabel(branch.currentLevel);
+    const branchColor = getCrowdColor(branch.currentLevel);
+    const branchTextColor = getCrowdTextColor(branch.currentLevel);
+
+    const isSelected = selectedBranchIndex === index;
+    const isQuietest = quietestBranchIndex === index;
 
       return (
         <button
@@ -1157,9 +1160,18 @@ function HomeTab({ user }: { user: UserData }) {
           onClick={() => setSelectedBranchIndex(index)}
           className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
             isSelected
-              ? "border-primary bg-primary shadow-[0_12px_35px_rgba(70,98,235,0.30)]"
+              ? "shadow-[0_12px_35px_rgba(0,0,0,0.30)]"
               : "border-primary bg-background hover:bg-primary/5"
           }`}
+          style={
+            isSelected
+              ? {
+                  backgroundColor: branchColor,
+                  borderColor: branchColor,
+                  boxShadow: `0 12px 35px ${branchColor}45`,
+                }
+              : undefined
+          }
         >
           <div className="flex items-start gap-3">
             <div
@@ -1180,8 +1192,9 @@ function HomeTab({ user }: { user: UserData }) {
                 <div className="min-w-0">
                   <p
                     className={`text-base font-bold leading-snug ${
-                      isSelected ? "text-white" : "text-foreground"
+                      !isSelected ? "text-foreground" : ""
                     }`}
+                    style={isSelected ? { color: branchTextColor } : undefined}
                   >
                     {branch.name}
                   </p>
@@ -1220,13 +1233,18 @@ function HomeTab({ user }: { user: UserData }) {
                 </div>
               </div>
 
-              <p
-                className={`text-sm mt-1 ${
-                  isSelected ? "text-white" : "text-primary"
-                }`}
-              >
-                {branch.shortName}
-              </p>
+                <p
+                  className={`text-sm mt-1 ${
+                    !isSelected ? "text-primary" : ""
+                  }`}
+                  style={
+                    isSelected
+                      ? { color: branchTextColor, opacity: 0.9 }
+                      : undefined
+                  }
+                >
+                  {branch.shortName}
+                </p>
 
               {branch.note && (
                 <p
@@ -2883,7 +2901,7 @@ function SocialTab() {
       user: "Jake Morgan",
       avatar: "JM",
       time: "2 hours ago",
-      body: "Just hit a new personal record — squat 120kg 🔥 After 3 months on the Khơ Mon Gym plan, feeling incredible. Anyone training legs, drop a comment and ask me anything!",
+      body: "Just hit a new personal record — squat 120kg 🔥 After 3 months on the Core Fitness & Yoga plan, feeling incredible. Anyone training legs, drop a comment and ask me anything!",
       img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=480&h=320&fit=crop&auto=format",
       likes: 48,
       comments: 12,
