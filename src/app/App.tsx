@@ -1176,14 +1176,27 @@ function HomeTab({ user }: { user: UserData }) {
           <div className="flex items-start gap-3">
             <div
               className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 border ${
-                isSelected
-                  ? "bg-white/15 border-white/35"
-                  : "bg-primary/10 border-primary/40"
+                !isSelected ? "bg-primary/10 border-primary/40" : ""
               }`}
+              style={
+                isSelected
+                  ? {
+                      backgroundColor:
+                        branchTextColor === "#111827"
+                          ? "rgba(17,24,39,0.10)"
+                          : "rgba(255,255,255,0.16)",
+                      borderColor:
+                        branchTextColor === "#111827"
+                          ? "rgba(17,24,39,0.25)"
+                          : "rgba(255,255,255,0.35)",
+                    }
+                  : undefined
+              }
             >
               <MapPin
                 size={20}
-                className={isSelected ? "text-white" : "text-primary"}
+                className={!isSelected ? "text-primary" : ""}
+                style={isSelected ? { color: branchTextColor } : undefined}
               />
             </div>
 
@@ -1213,23 +1226,43 @@ function HomeTab({ user }: { user: UserData }) {
                 </div>
 
                 <div className="text-right flex-shrink-0">
-                  <span
-                    className={`inline-block text-[10px] px-2.5 py-1 rounded-full font-bold border ${
-                      isSelected
-                        ? "bg-blue-700 border-blue-600 text-white"
-                        : "bg-primary/15 border-primary/30 text-primary"
-                    }`}
-                  >
-                    {branchLabel}
-                  </span>
+                <span
+                  className={`inline-block text-[10px] px-2.5 py-1 rounded-full font-bold border ${
+                    !isSelected
+                      ? "bg-primary/15 border-primary/30 text-primary"
+                      : ""
+                  }`}
+                  style={
+                    isSelected
+                      ? {
+                          color: branchTextColor,
+                          backgroundColor:
+                            branchTextColor === "#111827"
+                              ? "rgba(17,24,39,0.12)"
+                              : "rgba(0,0,0,0.18)",
+                          borderColor:
+                            branchTextColor === "#111827"
+                              ? "rgba(17,24,39,0.20)"
+                              : "rgba(255,255,255,0.20)",
+                        }
+                      : undefined
+                  }
+                >
+                  {branchLabel}
+                </span>
 
-                  <p
-                    className={`text-xs mt-1 ${
-                      isSelected ? "text-white/85" : "text-muted-foreground"
-                    }`}
-                  >
-                    {branch.currentLevel}%
-                  </p>
+                <p
+                  className={`text-xs mt-1 ${
+                    !isSelected ? "text-muted-foreground" : ""
+                  }`}
+                  style={
+                    isSelected
+                      ? { color: branchTextColor, opacity: 0.85 }
+                      : undefined
+                  }
+                >
+                  {branch.currentLevel}%
+                </p>
                 </div>
               </div>
 
@@ -1246,20 +1279,30 @@ function HomeTab({ user }: { user: UserData }) {
                   {branch.shortName}
                 </p>
 
-              {branch.note && (
-                <p
-                  className={`text-sm mt-1 ${
-                    isSelected ? "text-white/80" : "text-muted-foreground"
-                  }`}
-                >
-                  {branch.note}
-                </p>
-              )}
+                {branch.note && (
+                  <p
+                    className={`text-sm mt-1 ${
+                      !isSelected ? "text-muted-foreground" : ""
+                    }`}
+                    style={
+                      isSelected
+                        ? { color: branchTextColor, opacity: 0.78 }
+                        : undefined
+                    }
+                  >
+                    {branch.note}
+                  </p>
+                )}
 
               <p
                 className={`text-sm mt-3 leading-relaxed ${
-                  isSelected ? "text-white/85" : "text-muted-foreground"
+                  !isSelected ? "text-muted-foreground" : ""
                 }`}
+                style={
+                  isSelected
+                    ? { color: branchTextColor, opacity: 0.85 }
+                    : undefined
+                }
               >
                 {branch.address}
               </p>
