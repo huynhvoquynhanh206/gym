@@ -1144,174 +1144,163 @@ function HomeTab({ user }: { user: UserData }) {
   </div>
 
   {/* Danh sách chi nhánh nằm dưới biểu đồ */}
-  <div className="space-y-2">
-  {gymBranches.map((branch, index) => {
-    const branchLabel = getCrowdLabel(branch.currentLevel);
-    const branchColor = getCrowdColor(branch.currentLevel);
-    const branchTextColor = getCrowdTextColor(branch.currentLevel);
+    <div className="space-y-2">
+      {gymBranches.map((branch, index) => {
+        const branchLabel = getCrowdLabel(branch.currentLevel);
+        const branchColor = getCrowdColor(branch.currentLevel);
+        const branchTextColor = getCrowdTextColor(branch.currentLevel);
 
-    const isSelected = selectedBranchIndex === index;
-    const isQuietest = quietestBranchIndex === index;
+        const isSelected = selectedBranchIndex === index;
+        const isQuietest = quietestBranchIndex === index;
 
-      return (
-        <button
-          key={branch.name}
-          type="button"
-          onClick={() => setSelectedBranchIndex(index)}
-          className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
-            isSelected
-              ? "shadow-[0_12px_35px_rgba(0,0,0,0.30)]"
-              : "border-primary bg-background hover:bg-primary/5"
-          }`}
-          style={
-            isSelected
-              ? {
-                  backgroundColor: branchColor,
-                  borderColor: branchColor,
-                  boxShadow: `0 12px 35px ${branchColor}45`,
-                }
-              : undefined
-          }
-        >
-          <div className="flex items-start gap-3">
-            <div
-              className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 border ${
-                !isSelected ? "bg-primary/10 border-primary/40" : ""
-              }`}
-              style={
-                isSelected
-                  ? {
-                      backgroundColor:
-                        branchTextColor === "#111827"
-                          ? "rgba(17,24,39,0.10)"
-                          : "rgba(255,255,255,0.16)",
-                      borderColor:
-                        branchTextColor === "#111827"
-                          ? "rgba(17,24,39,0.25)"
-                          : "rgba(255,255,255,0.35)",
-                    }
-                  : undefined
-              }
-            >
-              <MapPin
-                size={20}
-                className={!isSelected ? "text-primary" : ""}
-                style={isSelected ? { color: branchTextColor } : undefined}
-              />
-            </div>
+        const isDarkText = branchTextColor === "#111827";
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p
-                    className={`text-base font-bold leading-snug ${
-                      !isSelected ? "text-foreground" : ""
-                    }`}
-                    style={isSelected ? { color: branchTextColor } : undefined}
-                  >
-                    {branch.name}
-                  </p>
+        return (
+          <button
+            key={branch.name}
+            type="button"
+            onClick={() => setSelectedBranchIndex(index)}
+            className={`w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
+              isSelected ? "scale-[1.01]" : "hover:scale-[1.005]"
+            }`}
+            style={{
+              backgroundColor: branchColor,
+              borderColor: isSelected
+                ? "#ffffff"
+                : isDarkText
+                ? "rgba(17,24,39,0.22)"
+                : "rgba(255,255,255,0.22)",
 
-                  {isQuietest && (
-                    <span
-                      className={`inline-block mt-2 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-bold ${
-                        isSelected
-                          ? "bg-blue-700 text-white"
-                          : "bg-primary/15 text-primary"
-                      }`}
-                    >
-                      Best choice
-                    </span>
-                  )}
-                </div>
+              boxShadow: isSelected
+                ? `0 14px 38px ${branchColor}65`
+                : `0 8px 24px ${branchColor}28`,
+            }}
+          >
+            <div className="flex items-start gap-3">
+              {/* Icon vị trí */}
+              <div
+                className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 border"
+                style={{
+                  backgroundColor: isDarkText
+                    ? "rgba(17,24,39,0.10)"
+                    : "rgba(255,255,255,0.16)",
 
-                <div className="text-right flex-shrink-0">
-                <span
-                  className={`inline-block text-[10px] px-2.5 py-1 rounded-full font-bold border ${
-                    !isSelected
-                      ? "bg-primary/15 border-primary/30 text-primary"
-                      : ""
-                  }`}
-                  style={
-                    isSelected
-                      ? {
-                          color: branchTextColor,
-                          backgroundColor:
-                            branchTextColor === "#111827"
-                              ? "rgba(17,24,39,0.12)"
-                              : "rgba(0,0,0,0.18)",
-                          borderColor:
-                            branchTextColor === "#111827"
-                              ? "rgba(17,24,39,0.20)"
-                              : "rgba(255,255,255,0.20)",
-                        }
-                      : undefined
-                  }
-                >
-                  {branchLabel}
-                </span>
-
-                <p
-                  className={`text-xs mt-1 ${
-                    !isSelected ? "text-muted-foreground" : ""
-                  }`}
-                  style={
-                    isSelected
-                      ? { color: branchTextColor, opacity: 0.85 }
-                      : undefined
-                  }
-                >
-                  {branch.currentLevel}%
-                </p>
-                </div>
+                  borderColor: isDarkText
+                    ? "rgba(17,24,39,0.25)"
+                    : "rgba(255,255,255,0.35)",
+                }}
+              >
+                <MapPin
+                  size={20}
+                  style={{
+                    color: branchTextColor,
+                  }}
+                />
               </div>
 
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    {/* Tên chi nhánh */}
+                    <p
+                      className="text-base font-bold leading-snug"
+                      style={{
+                        color: branchTextColor,
+                      }}
+                    >
+                      {branch.name}
+                    </p>
+
+                    {/* Best choice */}
+                    {isQuietest && (
+                      <span
+                        className="inline-block mt-2 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-bold border"
+                        style={{
+                          color: branchTextColor,
+                          backgroundColor: isDarkText
+                            ? "rgba(17,24,39,0.12)"
+                            : "rgba(0,0,0,0.18)",
+
+                          borderColor: isDarkText
+                            ? "rgba(17,24,39,0.20)"
+                            : "rgba(255,255,255,0.20)",
+                        }}
+                      >
+                        Best choice
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Trạng thái và phần trăm */}
+                  <div className="text-right flex-shrink-0">
+                    <span
+                      className="inline-block text-[10px] px-2.5 py-1 rounded-full font-bold border"
+                      style={{
+                        color: branchTextColor,
+                        backgroundColor: isDarkText
+                          ? "rgba(17,24,39,0.12)"
+                          : "rgba(0,0,0,0.18)",
+
+                        borderColor: isDarkText
+                          ? "rgba(17,24,39,0.20)"
+                          : "rgba(255,255,255,0.20)",
+                      }}
+                    >
+                      {branchLabel}
+                    </span>
+
+                    <p
+                      className="text-xs mt-1"
+                      style={{
+                        color: branchTextColor,
+                        opacity: 0.85,
+                      }}
+                    >
+                      {branch.currentLevel}%
+                    </p>
+                  </div>
+                </div>
+
+                {/* Branch */}
                 <p
-                  className={`text-sm mt-1 ${
-                    !isSelected ? "text-primary" : ""
-                  }`}
-                  style={
-                    isSelected
-                      ? { color: branchTextColor, opacity: 0.9 }
-                      : undefined
-                  }
+                  className="text-sm mt-1"
+                  style={{
+                    color: branchTextColor,
+                    opacity: 0.92,
+                  }}
                 >
                   {branch.shortName}
                 </p>
 
+                {/* Ghi chú */}
                 {branch.note && (
                   <p
-                    className={`text-sm mt-1 ${
-                      !isSelected ? "text-muted-foreground" : ""
-                    }`}
-                    style={
-                      isSelected
-                        ? { color: branchTextColor, opacity: 0.78 }
-                        : undefined
-                    }
+                    className="text-sm mt-1"
+                    style={{
+                      color: branchTextColor,
+                      opacity: 0.78,
+                    }}
                   >
                     {branch.note}
                   </p>
                 )}
 
-              <p
-                className={`text-sm mt-3 leading-relaxed ${
-                  !isSelected ? "text-muted-foreground" : ""
-                }`}
-                style={
-                  isSelected
-                    ? { color: branchTextColor, opacity: 0.85 }
-                    : undefined
-                }
-              >
-                {branch.address}
-              </p>
+                {/* Địa chỉ */}
+                <p
+                  className="text-sm mt-3 leading-relaxed"
+                  style={{
+                    color: branchTextColor,
+                    opacity: 0.86,
+                  }}
+                >
+                  {branch.address}
+                </p>
+              </div>
             </div>
-          </div>
-        </button>
-      );
-    })}
-</div>
+          </button>
+        );
+      })}
+    </div>
 </div>
 
       <div className="bg-card rounded-2xl p-4 border border-border">
