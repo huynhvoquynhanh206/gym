@@ -584,6 +584,7 @@ function StepTDEEResult({
   const tdee = calcTDEE(data);
   if (!bmr || !tdee) return null;
   const activity = getActivityInfo(data.workoutsPerWeek);
+  const genderAdjustment = data.gender === "male" ? "+ 5" : "− 161";
 
   return (
     <div className="w-full max-w-sm px-6">
@@ -626,6 +627,41 @@ function StepTDEEResult({
         <div className="bg-card rounded-xl p-3 border border-border">
           <p className="text-xs text-muted-foreground mb-0.5">Weight</p>
           <p className="font-barlow text-2xl font-bold text-foreground">{data.weight}<span className="text-sm font-normal text-muted-foreground ml-0.5">kg</span></p>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-2xl p-4 border border-border mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Activity size={16} className="text-primary" />
+          <h2 className="font-bold text-foreground">How it’s calculated</h2>
+        </div>
+
+        <div className="space-y-3 text-xs">
+          <div>
+            <p className="text-muted-foreground mb-1">Mifflin–St Jeor BMR formula</p>
+            <p className="text-foreground leading-relaxed">
+              BMR = 10 × weight (kg) + 6.25 × height (cm) − 5 × age {genderAdjustment}
+            </p>
+            <p className="text-muted-foreground mt-1">Male: +5 · Female: −161</p>
+          </div>
+
+          <div className="rounded-xl bg-muted/40 p-3 border border-border/70">
+            <p className="text-muted-foreground mb-1">Your BMR</p>
+            <p className="text-foreground leading-relaxed">
+              10 × {data.weight} + 6.25 × {data.height} − 5 × {data.age} {genderAdjustment}
+            </p>
+            <p className="font-bold text-primary mt-1">= {bmr.toLocaleString()} kcal/day</p>
+          </div>
+
+          <div className="rounded-xl bg-primary/10 p-3 border border-primary/20">
+            <p className="text-muted-foreground mb-1">Your TDEE</p>
+            <p className="text-foreground">
+              BMR × activity multiplier
+            </p>
+            <p className="font-bold text-primary mt-1">
+              {bmr.toLocaleString()} × {activity.multiplier} = {tdee.toLocaleString()} kcal/day
+            </p>
+          </div>
         </div>
       </div>
 
