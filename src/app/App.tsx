@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   ChevronRight,
   ChevronLeft,
-  Camera,
   Video,
   Flame,
   Clock,
@@ -121,18 +120,27 @@ const defaultUser: UserData = {
   workoutsPerWeek: 3,
 };
 
-function calcBMI(weight: string, height: string): string | null {
-  const w = parseFloat(weight);
-  const h = parseFloat(height) / 100;
-  if (!w || !h) return null;
-  return (w / (h * h)).toFixed(1);
+function calcBMR(data: UserData): number | null {
+  const weight = parseFloat(data.weight);
+  const height = parseFloat(data.height);
+  const age = parseFloat(data.age);
+  if (!weight || !height || !age) return null;
+
+  const base = 10 * weight + 6.25 * height - 5 * age;
+  return Math.round(base + (data.gender === "male" ? 5 : -161));
 }
 
-function getBMIInfo(bmi: number) {
-  if (bmi < 18.5) return { label: "Underweight", color: "#3b82f6", bg: "#0f2857" };
-  if (bmi < 25) return { label: "Normal", color: "#2563eb", bg: "#0d1f3c" };
-  if (bmi < 30) return { label: "Overweight", color: "#3b82f6", bg: "#10254d" };
-  return { label: "Obese", color: "#2563eb", bg: "#0b1f45" };
+function getActivityInfo(workoutsPerWeek: number) {
+  if (workoutsPerWeek <= 1) return { label: "Lightly active", multiplier: 1.2 };
+  if (workoutsPerWeek <= 3) return { label: "Moderately active", multiplier: 1.375 };
+  if (workoutsPerWeek <= 5) return { label: "Very active", multiplier: 1.55 };
+  return { label: "Extra active", multiplier: 1.725 };
+}
+
+function calcTDEE(data: UserData): number | null {
+  const bmr = calcBMR(data);
+  if (!bmr) return null;
+  return Math.round(bmr * getActivityInfo(data.workoutsPerWeek).multiplier);
 }
 
 const goalLabels: Record<Goal, string> = {
@@ -473,8 +481,8 @@ function StepMetrics({
   onBack: () => void;
   onNext: () => void;
 }) {
-  const bmi = calcBMI(data.weight, data.height);
-  const info = bmi ? getBMIInfo(parseFloat(bmi)) : null;
+  const tdee = calcTDEE(data);
+  const activity = getActivityInfo(data.workoutsPerWeek);
 
   return (
     <div className="w-full max-w-sm px-6">
@@ -484,7 +492,7 @@ function StepMetrics({
       <div className="mb-8">
         <div className="mb-5 flex justify-start"><BrandLogo variant="dark" size="sm" /></div>
         <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">Body<br />Metrics</h1>
-        <p className="text-muted-foreground text-sm">Enter your measurements for an accurate BMI</p>
+        <p className="text-muted-foreground text-sm">Enter your measurements to estimate your daily calorie needs</p>
       </div>
       <div className="space-y-4">
         <div>
@@ -513,22 +521,41 @@ function StepMetrics({
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">kg</span>
           </div>
         </div>
-        {info && bmi && (
+        <div>
+          <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Workouts per Week</label>
+          <div className="flex gap-2">
+            {[2, 3, 4, 5, 6].map((n) => (
+              <button
+                type="button"
+                key={n}
+                onClick={() => onChange({ ...data, workoutsPerWeek: n })}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
+                  data.workoutsPerWeek === n
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card border border-border text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
+        {tdee && (
           <div
             className="p-4 rounded-xl border transition-all"
-            style={{ borderColor: info.color + "50", backgroundColor: info.bg }}
+            style={{ borderColor: "#2563eb50", backgroundColor: "#0d1f3c" }}
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Your BMI</span>
+              <span className="text-sm text-muted-foreground">Estimated TDEE</span>
               <span
                 className="text-xs px-2.5 py-0.5 rounded-full font-semibold"
-                style={{ color: info.color, backgroundColor: info.color + "20" }}
+                style={{ color: "#3b82f6", backgroundColor: "#3b82f620" }}
               >
-                {info.label}
+                {activity.label}
               </span>
             </div>
-            <div className="font-barlow text-4xl font-black mt-1" style={{ color: info.color }}>
-              {bmi}
+            <div className="font-barlow text-4xl font-black mt-1 text-primary">
+              {tdee.toLocaleString()} <span className="text-sm font-medium text-muted-foreground">kcal/day</span>
             </div>
           </div>
         )}
@@ -544,7 +571,7 @@ function StepMetrics({
   );
 }
 
-function StepBMIResult({
+function StepTDEEResult({
   data,
   onBack,
   onNext,
@@ -553,25 +580,10 @@ function StepBMIResult({
   onBack: () => void;
   onNext: () => void;
 }) {
-  const bmi = calcBMI(data.weight, data.height);
-  if (!bmi) return null;
-  const bmiNum = parseFloat(bmi);
-  const info = getBMIInfo(bmiNum);
-  const pct = Math.min(Math.max(((bmiNum - 10) / 30) * 100, 2), 98);
-
-  const advice: Record<string, string> = {
-    "Underweight": "You need to boost your nutrition and training to reach your ideal weight. The app will design a suitable mass-gain program for you.",
-    "Normal": "Great job! Your numbers are in the ideal range. Keep it up and continue improving your fitness.",
-    "Overweight": "Combining cardio and portion control will help you reach your ideal range in 8–12 weeks.",
-    "Obese": "Don't worry — start with small changes. The app will build a safe and sustainable roadmap for you.",
-  };
-
-  const ranges = [
-    { label: "Underweight", range: "< 18.5", color: "#3b82f6" },
-    { label: "Normal", range: "18.5–24.9", color: "#2563eb" },
-    { label: "Overweight", range: "25–29.9", color: "#3b82f6" },
-    { label: "Obese", range: "≥ 30", color: "#2563eb" },
-  ];
+  const bmr = calcBMR(data);
+  const tdee = calcTDEE(data);
+  if (!bmr || !tdee) return null;
+  const activity = getActivityInfo(data.workoutsPerWeek);
 
   return (
     <div className="w-full max-w-sm px-6">
@@ -580,48 +592,29 @@ function StepBMIResult({
       </button>
       <div className="mb-6">
         <div className="mb-5 flex justify-start"><BrandLogo variant="dark" size="sm" /></div>
-        <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">BMI<br />Results</h1>
+        <h1 className="font-barlow text-5xl font-black text-foreground leading-none mb-2">TDEE<br />Results</h1>
+        <p className="text-muted-foreground text-sm">Your estimated total daily energy expenditure</p>
       </div>
 
       <div className="bg-card rounded-2xl p-6 border border-border mb-4">
         <div className="text-center mb-6">
-          <div className="font-barlow text-8xl font-black mb-2" style={{ color: info.color }}>
-            {bmi}
+          <div className="font-barlow text-7xl font-black mb-2 text-primary">
+            {tdee.toLocaleString()}
           </div>
-          <span
-            className="text-sm px-4 py-1 rounded-full font-semibold"
-            style={{ color: info.color, backgroundColor: info.color + "20" }}
-          >
-            {info.label}
+          <p className="text-sm text-muted-foreground mb-3">kcal per day</p>
+          <span className="text-sm px-4 py-1 rounded-full font-semibold text-primary bg-primary/10">
+            {activity.label}
           </span>
         </div>
-        <div className="relative mb-3">
-          <div
-            className="h-3 rounded-full overflow-hidden"
-            style={{ background: "linear-gradient(to right, #3b82f6 0%, #2563eb 30%, #3b82f6 58%, #2563eb 100%)" }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white shadow-lg border-2 transition-all"
-            style={{ left: `calc(${pct}% - 10px)`, borderColor: info.color }}
-          />
-        </div>
         <div className="grid grid-cols-2 gap-2 mt-4">
-          {ranges.map(({ label, range, color }) => (
-            <div
-              key={label}
-              className="flex items-center gap-2 p-2 rounded-lg"
-              style={{
-                backgroundColor: info.label === label ? color + "15" : "transparent",
-                border: `1px solid ${info.label === label ? color + "40" : "transparent"}`,
-              }}
-            >
-              <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-              <div>
-                <p className="text-xs font-medium" style={{ color: info.label === label ? color : "#94a3b8" }}>{label}</p>
-                <p className="text-xs text-muted-foreground">{range}</p>
-              </div>
-            </div>
-          ))}
+          <div className="p-3 rounded-lg bg-muted/40 border border-border">
+            <p className="text-xs text-muted-foreground mb-1">Basal Metabolic Rate</p>
+            <p className="font-barlow text-xl font-bold text-foreground">{bmr.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">kcal</span></p>
+          </div>
+          <div className="p-3 rounded-lg bg-muted/40 border border-border">
+            <p className="text-xs text-muted-foreground mb-1">Activity multiplier</p>
+            <p className="font-barlow text-xl font-bold text-foreground">{activity.multiplier}×</p>
+          </div>
         </div>
       </div>
 
@@ -638,9 +631,9 @@ function StepBMIResult({
 
       <div
         className="p-4 rounded-xl mb-6 text-sm text-foreground leading-relaxed"
-        style={{ backgroundColor: info.bg, borderLeft: `3px solid ${info.color}` }}
+        style={{ backgroundColor: "#0d1f3c", borderLeft: "3px solid #2563eb" }}
       >
-        {advice[info.label]}
+        This is the estimated number of calories you burn each day. Eating around this amount helps maintain your current weight; your goal selection will personalize the plan.
       </div>
 
       <button
@@ -722,25 +715,6 @@ function StepGoal({
         </div>
       </div>
 
-      <div className="mb-8">
-        <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Workouts per Week</label>
-        <div className="flex gap-2">
-          {[2, 3, 4, 5, 6].map((n) => (
-            <button
-              key={n}
-              onClick={() => onChange({ ...data, workoutsPerWeek: n })}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
-                data.workoutsPerWeek === n
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:border-primary/40"
-              }`}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <button
         onClick={onComplete}
         disabled={!data.targetWeight || saving}
@@ -791,7 +765,7 @@ function OnboardingFlow({
       </div>
       {step === 0 && <StepPersonal data={data} onChange={setData} onNext={() => setStep(1)} />}
       {step === 1 && <StepMetrics data={data} onChange={setData} onBack={() => setStep(0)} onNext={() => setStep(2)} />}
-      {step === 2 && <StepBMIResult data={data} onBack={() => setStep(1)} onNext={() => setStep(3)} />}
+      {step === 2 && <StepTDEEResult data={data} onBack={() => setStep(1)} onNext={() => setStep(3)} />}
       {step === 3 && (
         <>
           <StepGoal data={data} onChange={setData} onBack={() => setStep(2)} onComplete={() => onComplete(data)} saving={saving} />
@@ -811,9 +785,8 @@ function OnboardingFlow({
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
 function HomeTab({ user }: { user: UserData }) {
-  const bmi = calcBMI(user.weight, user.height);
-  const bmiNum = bmi ? parseFloat(bmi) : 0;
-  const info = bmi ? getBMIInfo(bmiNum) : null;
+  const tdee = calcTDEE(user);
+  const activity = getActivityInfo(user.workoutsPerWeek);
 
   const [selectedBranchIndex, setSelectedBranchIndex] = useState(0);
 
@@ -921,15 +894,6 @@ function HomeTab({ user }: { user: UserData }) {
     selectedBranch.currentLevel
   );
 
-  const progress = bmi && user.targetWeight
-    ? Math.min(
-        (Math.abs(bmiNum - parseFloat(user.targetWeight) / ((parseFloat(user.height) / 100) ** 2)) /
-          Math.max(Math.abs(bmiNum - 22), 0.1)) *
-          100,
-        65
-      )
-    : 32;
-
   return (
     <div className="px-4 pt-1 pb-4 space-y-4">
       <div className="flex items-start justify-between">
@@ -950,22 +914,19 @@ function HomeTab({ user }: { user: UserData }) {
         </div>
       </div>
 
-      {info && bmi && (
+      {tdee && (
         <div
           className="rounded-2xl p-5 border relative overflow-hidden"
-          style={{ borderColor: info.color + "35", background: `linear-gradient(135deg, ${info.bg} 0%, #141b26 100%)` }}
+          style={{ borderColor: "#2563eb35", background: "linear-gradient(135deg, #0d1f3c 0%, #141b26 100%)" }}
         >
           <div className="flex items-start justify-between mb-4">
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">BMI Index</p>
-              <div className="font-barlow text-6xl font-black leading-none mb-2" style={{ color: info.color }}>
-                {bmi}
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Daily Energy Burn</p>
+              <div className="font-barlow text-5xl font-black leading-none mb-2 text-primary">
+                {tdee.toLocaleString()}
               </div>
-              <span
-                className="text-xs px-2.5 py-0.5 rounded-full font-semibold"
-                style={{ color: info.color, backgroundColor: info.color + "20" }}
-              >
-                {info.label}
+              <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold text-primary bg-primary/10">
+                kcal/day · {activity.label}
               </span>
             </div>
             <div className="text-right">
@@ -978,12 +939,6 @@ function HomeTab({ user }: { user: UserData }) {
             <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
               <span>Current: {user.weight}kg</span>
               <span>Target: {user.targetWeight}kg</span>
-            </div>
-            <div className="h-1.5 bg-black/30 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full"
-                style={{ width: `${progress}%`, backgroundColor: info.color }}
-              />
             </div>
           </div>
         </div>
@@ -2058,15 +2013,6 @@ const homeCatalog: Record<string, Exercise[]> = {
                         </span>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={(event) => event.stopPropagation()}
-                        onKeyDown={(event) => event.stopPropagation()}
-                        className="w-10 h-10 rounded-xl border border-primary/30 bg-primary/10 flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
-                        aria-label={`Camera button for ${exercise.name}`}
-                      >
-                        <Camera size={17} className="text-primary" />
-                      </button>
                     </div>
 
                     <p className="text-sm text-primary mb-2 flex items-center gap-1.5">
